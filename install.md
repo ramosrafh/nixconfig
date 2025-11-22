@@ -112,9 +112,9 @@ This is configured in the flake automatically.
 ### 10. Clone Your Flake Configuration
 
 ```bash
-mkdir -p /mnt/etc/nixos
-cd /mnt/etc/nixos
-git clone <your-repo-url> .
+mkdir -p /mnt/home/ramos
+cd /mnt/home/ramos
+git clone https://github.com/ramosrafh/nixconfig.git nixconfig
 ```
 
 ### 11. Update Hardware Configuration with UUIDs
@@ -124,7 +124,7 @@ blkid ${DISK}p1  # Note the UUID for boot
 blkid ${DISK}p2  # Note the UUID for LUKS
 
 # Edit the hardware.nix files with the correct UUIDs
-nano /mnt/etc/nixos/hosts/book/hardware.nix  # or hosts/desk/hardware.nix
+nano /mnt/home/ramos/nixconfig/hosts/book/hardware.nix  # or hosts/desk/hardware.nix
 ```
 
 ### 12. Generate Hardware Configuration (Optional)
@@ -139,12 +139,12 @@ Compare the output with your hardware.nix and adjust if needed.
 
 For laptop (book):
 ```bash
-nixos-install --flake /mnt/etc/nixos#book
+nixos-install --flake /mnt/home/ramos/nixconfig#book
 ```
 
 For desktop (desk):
 ```bash
-nixos-install --flake /mnt/etc/nixos#desk
+nixos-install --flake /mnt/home/ramos/nixconfig#desk
 ```
 
 ### 14. Set Root Password
@@ -194,13 +194,13 @@ niri
 All services are configured via the flake. To rebuild after changes:
 
 ```bash
-sudo nixos-rebuild switch --flake /etc/nixos#book  # or #desk
+sudo nixos-rebuild switch --flake ~/nixconfig#book  # or #desk
 ```
 
 ### 4. Update Flake
 
 ```bash
-cd /etc/nixos
+cd ~/nixconfig
 nix flake update
 sudo nixos-rebuild switch --flake .#book  # or #desk
 ```

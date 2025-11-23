@@ -8,7 +8,7 @@
     ./fish.nix
     ./waybar.nix
     ./swww.nix
-    ./niri.nix
+    # ./niri.nix
   ];
 
   home.stateVersion = "25.05";

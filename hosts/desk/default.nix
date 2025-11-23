@@ -2,21 +2,20 @@
   imports = [
     ./hardware.nix
     ../../modules/nixos
-    inputs.niri.nixosModules.niri
+    # inputs.niri.nixosModules.niri
   ];
 
-  networking.hostName = "desk";
+  networking.hostName = "nix";
   
-  boot.loader.timeout = 2;
+  boot.loader.timeout = 3;
 
   hardware.enableRedistributableFirmware = true;
   
   services.xserver.videoDrivers = [ "amdgpu" ];
   hardware.opengl = {
     enable = true;
-    driSupport = true;
     driSupport32Bit = true;
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.05";
 }

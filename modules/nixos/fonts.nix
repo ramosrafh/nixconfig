@@ -3,9 +3,9 @@
     enableDefaultPackages = true;
     packages = with pkgs; [
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       noto-fonts-emoji
-      (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" ]; })
+      #(nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" ]; })
     ];
     fontconfig = {
       defaultFonts = {

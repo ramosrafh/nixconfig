@@ -8,9 +8,10 @@
     ./fish.nix
     ./waybar.nix
     ./swww.nix
+    ./niri.nix
   ];
 
-  home.stateVersion = "24.05";
+  home.stateVersion = "25.05";
   
   home.packages = with pkgs; [
     firefox

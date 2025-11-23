@@ -6,7 +6,7 @@
   boot.kernelModules = [ "kvm-amd" ];
   
   boot.initrd.luks.devices."cryptroot" = {
-    device = "/dev/disk/by-uuid/REPLACE_WITH_YOUR_LUKS_UUID";
+    device = "/dev/disk/by-uuid/b57fe4ad-f15c-44f3-94df-ad7234b8a998";
     allowDiscards = true;
   };
 
@@ -34,14 +34,15 @@
     options = [ "subvol=@log" "compress=zstd" "noatime" ];
   };
 
-  fileSystems."/var/lib/docker" = {
+  # NoCoW enabled in btrfs already
+  fileSystems."/docker" = {
     device = "/dev/vg0/root";
     fsType = "btrfs";
-    options = [ "subvol=@docker" "noatime" "nodatacow" ];
+    options = [ "subvol=@docker" "noatime" ];
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/REPLACE_WITH_YOUR_BOOT_UUID";
+    device = "/dev/disk/by-uuid/134C-AC1A";
     fsType = "vfat";
   };
 

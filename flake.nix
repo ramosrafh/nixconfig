@@ -12,7 +12,6 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs = { self, nixpkgs, home-manager, niri, ... }@inputs: 
@@ -22,31 +21,22 @@
       });
     in {
       nixosConfigurations = {
-        book = lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./hosts/book
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.ramos = import ./modules/home;
-            }
-          ];
-        };
-
         desk = lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
           modules = [
             ./hosts/desk
             niri.nixosModules.niri
+            {
+              nixpkgs.overlays = [ niri.overlays.niri ];
+            }
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.ramos = import ./modules/home;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.sharedModules = [ niri.homeModules.niri ];
             }
           ];
         };

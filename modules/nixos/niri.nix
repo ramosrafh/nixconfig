@@ -1,8 +1,14 @@
 { pkgs, ... }: {
   programs.niri.enable = true;
-  
+
   environment.systemPackages = with pkgs; [
     xwayland-satellite
+    waybar
+    swww
+    fuzzel
+    alacritty
+    swaylock
+    brightnessctl
   ];
 
   environment.sessionVariables = {

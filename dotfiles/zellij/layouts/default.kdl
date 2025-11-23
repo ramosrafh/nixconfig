@@ -1,0 +1,107 @@
+layout {
+
+  default_tab_template {
+    children
+    pane size=1 borderless=true {
+      plugin location="file:/home/ramos/dotfiles/.config/zellij/plugins/zjstatus.wasm" {
+
+        format_space ""
+
+        //
+        // LEFT SIDE: tabs (unchanged)
+        //
+        format_left "{tabs}"
+
+        //
+        // RIGHT SIDE: clean Catppuccin style (session + mode)
+        //
+        // format_right "#[fg=#89b4fa] {session} #[fg=#cdd6f4] {mode} "
+        format_right "#[fg=#89b4fa] #[fg=#cdd6f4] {mode}"
+
+        format_center ""
+        format_hide_on_overlength "true"
+        format_precedence "crl"
+        border_enabled "false"
+        border_char "─"
+        border_format "#[fg=#6C7086]{char}"
+        border_position "top"
+
+        //
+        // Modes (kept same Catppuccin scheme)
+        //
+        mode_normal "#[bg=#a6e3a1,fg=#313244,bold] NORMAL#[bg=#45475a,fg=#a6e3a1]█"
+        // mode_locked "#[bg=#585b70,fg=#313244,bold] LOCKED  #[bg=#45475a,fg=#585b70]█"
+        mode_locked "#[bg=#585b70,fg=#313244,bold] LOCKED#[bg=#45475a,fg=#585b70]█"
+        mode_resize "#[bg=#f38ba8,fg=#313244,bold] RESIZE#[bg=#45475a,fg=#f38ba8]█"
+        mode_pane "#[bg=#89b4fa,fg=#313244,bold] PANE#[bg=#45475a,fg=#89b4fa]█"
+        mode_tab "#[bg=#b4befe,fg=#313244,bold] TAB#[bg=#45475a,fg=#b4befe]█"
+        mode_scroll "#[bg=#f9e2af,fg=#313244,bold] SCROLL#[bg=#45475a,fg=#f9e2af]█"
+        mode_enter_search "#[bg=#89b4fa,fg=#313244,bold] ENT-SEARCH#[bg=#45475a,fg=#89b4fa]█"
+        mode_search "#[bg=#89b4fa,fg=#313244,bold] SEARCH#[bg=#45475a,fg=#89b4fa]█"
+        mode_rename_tab "#[bg=#b4befe,fg=#313244,bold] RENAME-TAB#[bg=#45475a,fg=#b4befe]█"
+        mode_rename_pane "#[bg=#89b4fa,fg=#313244,bold] RENAME-PANE#[bg=#45475a,fg=#89b4fa]█"
+        mode_session "#[bg=#cba6f7,fg=#313244,bold] SESSION#[bg=#45475a,fg=#cba6f7]█"
+        mode_move "#[bg=#f2cdcd,fg=#313244,bold] MOVE#[bg=#45475a,fg=#f2cdcd]█"
+        mode_prompt "#[bg=#89b4fa,fg=#313244,bold] PROMPT#[bg=#45475a,fg=#89b4fa]█"
+        mode_tmux "#[bg=#fab387,fg=#313244,bold] TMUX#[bg=#45475a,fg=#fab387]█"
+
+        //
+        // Tabs (unchanged)
+        //
+        tab_normal "#[bg=#45475a,fg=#89b4fa]█#[bg=#89b4fa,fg=#313244,bold]{index} #[bg=#313244,fg=#cdd6f4,bold] {name}{floating_indicator}#[bg=#45475a,fg=#313244,bold]█"
+        tab_active "#[bg=#45475a,fg=#fab387]█#[bg=#fab387,fg=#313244,bold]{index} #[bg=#313244,fg=#cdd6f4,bold] {name}{floating_indicator}#[bg=#45475a,fg=#313244,bold]█"
+
+        tab_separator "#[bg=#1e1e2e] "
+
+        tab_sync_indicator " "
+        tab_fullscreen_indicator " 󰊓"
+        tab_floating_indicator " 󰹙"
+
+        command_git_branch_command "git rev-parse --abbrev-ref HEAD"
+        command_git_branch_format "#[fg=blue] {stdout} "
+        command_git_branch_interval "10"
+        command_git_branch_rendermode "static"
+
+        datetime "#[fg=#6C7086,bold] {format} "
+        datetime_format "%A, %d %b %Y %H:%M"
+        datetime_timezone "Europe/London"
+      }
+    }
+  }
+
+  swap_floating_layout {
+    floating_panes exact_panes=1 {
+      pane name="1" x="5%" y=0 width="90%" height="90%"
+    }
+    floating_panes exact_panes=2 {
+      pane name="1" x="5%" y=0 width="90%" height="90%"
+      pane name="2" x="5%" y=1 width="90%" height="90%"
+    }
+    floating_panes exact_panes=3 {
+      pane name="1" x="5%" y=0 width="90%" height="90%"
+      pane name="2" x="5%" y=1 width="90%" height="90%"
+      pane name="3" x="5%" y=2 width="90%" height="90%"
+    }
+    floating_panes exact_panes=4 {
+      pane name="1" x="5%" y=0 width="90%" height="90%"
+      pane name="2" x="5%" y=1 width="90%" height="90%"
+      pane name="3" x="5%" y=2 width="90%" height="90%"
+      pane name="4" x="5%" y=3 width="90%" height="90%"
+    }
+    floating_panes exact_panes=5 {
+      pane name="1" x="5%" y=0 width="90%" height="90%"
+      pane name="2" x="5%" y=1 width="90%" height="90%"
+      pane name="3" x="5%" y=2 width="90%" height="90%"
+      pane name="4" x="5%" y=3 width="90%" height="90%"
+      pane name="5" x="5%" y=4 width="90%" height="90%"
+    }
+    floating_panes exact_panes=6 {
+      pane name="1" x="5%" y=0 width="90%" height="90%"
+      pane name="2" x="5%" y=1 width="90%" height="90%"
+      pane name="3" x="5%" y=2 width="90%" height="90%"
+      pane name="4" x="5%" y=3 width="90%" height="90%"
+      pane name="5" x="5%" y=4 width="90%" height="90%"
+      pane name="6" x="5%" y=5 width="90%" height="90%"
+    }
+  }
+}

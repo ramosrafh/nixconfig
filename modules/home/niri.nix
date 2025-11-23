@@ -43,7 +43,7 @@
         };
         keyboard = {
           xkb = {
-            layout = "br";
+            layout = "us";
             options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
           };
         };
@@ -342,4 +342,15 @@
       };
     };
   };
+
+  home.packages = with pkgs; [
+    niri
+    xwayland-satellite
+    waybar
+    swww
+    fuzzel
+    alacritty
+    swaylock
+    brightnessctl
+  ];
 }

@@ -8,7 +8,7 @@
     ./fish.nix
     ./waybar.nix
     ./swww.nix
-    # ./niri.nix
+    ./niri.nix
   ];
 
   home.stateVersion = "25.05";
@@ -21,6 +21,8 @@
     yazi
     waybar
     swww
+    zed-editor
+    nautilus
   ];
 
   home.sessionVariables = {

@@ -1,7 +1,7 @@
 { ... }: {
   imports = [
     ./desktop.nix
-    ./niri.nix
+    # ./niri.nix
     ./wayland.nix
     ./fonts.nix
     ./networking.nix

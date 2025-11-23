@@ -1,0 +1,102 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 8,
+  "modules-left": ["clock", "niri/workspaces"],
+  "modules-center": ["niri/window"],
+  "modules-right": [
+    "tray",
+    "custom/mem",
+    "network",
+    "backlight",
+    "pulseaudio",
+    "pulseaudio#source",
+    "battery",
+  ],
+
+  "hyprland/window": {
+    "format": "{}",
+    "max-length": 80,
+    // "on-click": "dunstify \"$(hyprctl activewindow -j | jq -r .title)\""
+  },
+
+  "hyprland/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": false,
+    "on-click": "activate",
+    // "format": "{icon}",
+    "format-icons": {
+      "urgent": "",
+      "active": "",
+      "default": "",
+      "sort-by-number": true,
+    },
+  },
+  "tray": {
+    "icon-size": 13,
+    "spacing": 10,
+  },
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon}  {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠"],
+    "on-scroll-up": "brightnessctl set 1%+",
+    "on-scroll-down": "brightnessctl set 1%-",
+    "min-length": 6,
+  },
+  "custom/mem": {
+    "format": "  {}",
+    "interval": 3,
+    "exec": "free -h | awk '/Mem:/{printf $3}'",
+    "tooltip": false,
+  },
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 20,
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄  {capacity}%",
+    "format-plugged": "󰂄  {capacity}%",
+    "format-alt": "{time}  {icon}",
+    "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+  },
+  "clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%R %A, %B %d, %Y}",
+    "tooltip-format": "<big>{calendar}</big>",
+  },
+  "network": {
+    "format-wifi": "󰤨  {essid}",
+    "format-ethernet": "  {essid}",
+    "format-linked": "{ifname} (No IP)  ",
+    "format-disconnected": "󰤭  Disconnected",
+    "tooltip-format-wifi": "Signal Strenght: {signalStrength}% | Down Speed: {bandwidthDownBits}, Up Speed: {bandwidthUpBits}",
+    "on-click": "sh $HOME/.config/rofi/config/network.sh",
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰖁",
+    "scroll-step": 1,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", "󰖀", ""],
+    },
+  },
+  "pulseaudio#source": {
+    "format": "{format_source}",
+    "format-source": "  {volume}%",
+    "format-source-muted": "",
+    "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+    "on-click-right": "/usr/bin/pavucontrol",
+    "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -1%",
+    "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +1%",
+  },
+}

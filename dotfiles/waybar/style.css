@@ -1,0 +1,110 @@
+@import url("colors.css");
+
+* {
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 14.5px;
+    border-radius: 0px;
+}
+
+window#waybar {
+    background-color: transparent;
+    color: @active-workspace;
+}
+
+.modules-left {
+    margin-left: 10px;
+}
+
+.modules-right {
+    margin-right: 10px;
+}
+
+#battery,
+#network,
+#pulseaudio,
+#backlight,
+#tray,
+#workspaces,
+#clock {
+    color: @light-blue;
+    background-color: @bg;
+    margin: 3px 0px;
+    padding: 2px 10px; /* top, right, bottom, left */
+}
+
+#clock {
+    color: @active-workspace;
+    background-color: @bg;
+    border-radius: 4px;
+    margin-left: 0px;
+}
+
+#network {
+    color: @light-purple;
+    border-radius: 4px 0px 0px 4px;
+}
+
+#battery {
+    color: @light-blue;
+    border-radius: 0px 4px 4px 0px;
+}
+
+#pulseaudio {
+    color: @light-yellow;
+}
+
+#backlight {
+    color: @light-orange;
+}
+
+#workspaces {
+    background-color: @bg;
+    color: @active-workspace;
+    margin-left: 10px;
+    margin-right: 0px;
+    padding: 0 3px 0 3px;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+#workspaces label {
+    font-size: 14px;
+}
+
+#workspaces button.active {
+    background-color: rgba(157, 170, 204, 1);
+    color: rgba(0, 0, 0, 1);
+    padding: 0px 3px 0px 3px;
+    border-radius: 4px;
+}
+
+#workspaces button {
+    color: @active-workspace;
+    padding: 0 3px 0 3px;
+    border-radius: 4px;
+}
+
+#custom-mem {
+    color: @active-workspace;
+    margin: 3px 0px;
+    margin-right: 10px;
+    padding: 0px 10px;
+    background-color: @bg;
+    border-radius: 4px;
+}
+
+#workspaces button:hover {
+    background-color: @active-workspace;
+    color: @bg;
+    background: @active-workspace;
+    box-shadow: none;
+}
+
+#tray {
+    margin: 3px 0px;
+    margin-right: 10px;
+    padding: 0px 10px;
+    background-color: @bg;
+    border-radius: 4px;
+}

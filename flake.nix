@@ -21,6 +21,7 @@
       lib = nixpkgs.lib.extend (self: super: {
         my = import ./lib { inherit inputs; lib = self; };
       });
+      overlays = import ./overlays { inherit inputs; };
     in {
       nixosConfigurations = {
         desk = lib.nixosSystem {
@@ -30,7 +31,7 @@
             ./hosts/desk
             niri-flake.nixosModules.niri
             {
-              nixpkgs.overlays = [ niri-flake.overlays.niri ];
+              nixpkgs.overlays = overlays;
             }
             home-manager.nixosModules.home-manager
             {

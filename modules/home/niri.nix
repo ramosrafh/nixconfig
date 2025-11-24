@@ -1,4 +1,7 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+  wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
+in {
   programs.niri = {
     settings = {
       # Output configuration
@@ -76,7 +79,7 @@
       # Spawn at startup
       spawn-at-startup = [
         { command = ["swww-daemon"]; }
-        { command = ["sh" "-c" "sleep 0.5 && swww img ~/.wallpapers/current_wallpaper.jpg"]; }
+        { command = ["sh" "-c" "sleep 0.5 && swww img ${wallpaper}"]; }
         { command = ["waybar"]; }
       ];
 

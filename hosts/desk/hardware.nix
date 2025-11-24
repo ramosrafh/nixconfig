@@ -4,7 +4,7 @@
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ "dm-snapshot" "amdgpu" ];
   boot.kernelModules = [ "kvm-amd" ];
-  
+
   boot.initrd.luks.devices."cryptroot" = {
     device = "/dev/disk/by-uuid/b57fe4ad-f15c-44f3-94df-ad7234b8a998";
     allowDiscards = true;

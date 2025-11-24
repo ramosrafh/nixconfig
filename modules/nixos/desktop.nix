@@ -6,6 +6,8 @@
     pulse.enable = true;
   };
 
+  services.udisks2.enable = true;
+
   # Enable SOF firmware for audio
   hardware.firmware = [ pkgs.sof-firmware ];
 
@@ -28,5 +30,7 @@
     eza
     pavucontrol
     pulseaudio
+    ntfs3g
+    gnome-disk-utility
   ];
 }

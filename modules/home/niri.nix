@@ -19,7 +19,7 @@
           mode = {
             width = 2560;
             height = 1440;
-            refresh = 170.0;
+            refresh = 169.831;
           };
           position = {
             x = 0;
@@ -53,7 +53,7 @@
       layout = {
         gaps = 14;
         center-focused-column = "never";
-        
+
         preset-column-widths = [
           { proportion = 0.33333; }
           { proportion = 0.5; }
@@ -105,7 +105,7 @@
 
       # Animations
       animations = {
-        workspace-switch = {
+        workspace-switch.kind = {
           spring = {
             damping-ratio = 1.0;
             stiffness = 1000;
@@ -113,7 +113,7 @@
           };
         };
 
-        horizontal-view-movement = {
+        horizontal-view-movement.kind = {
           spring = {
             damping-ratio = 0.95;
             stiffness = 1000;
@@ -121,7 +121,7 @@
           };
         };
 
-        window-movement = {
+        window-movement.kind = {
           spring = {
             damping-ratio = 0.95;
             stiffness = 1000;
@@ -129,7 +129,7 @@
           };
         };
 
-        window-resize = {
+        window-resize.kind = {
           spring = {
             damping-ratio = 0.95;
             stiffness = 1000;
@@ -137,7 +137,7 @@
           };
         };
 
-        config-notification-open-close = {
+        config-notification-open-close.kind = {
           spring = {
             damping-ratio = 0.6;
             stiffness = 1000;
@@ -145,7 +145,7 @@
           };
         };
 
-        exit-confirmation-open-close = {
+        exit-confirmation-open-close.kind = {
           spring = {
             damping-ratio = 0.6;
             stiffness = 500;
@@ -156,6 +156,7 @@
 
       # Cursor configuration
       cursor = {
+        size = 24;
         hide-when-typing = true;
         hide-after-inactive-ms = 10000;
       };
@@ -166,6 +167,7 @@
 
         # Application launchers
         "Mod+Return".action.spawn = ["alacritty"];
+        "Mod+E".action.spawn = ["nautilus"];
         "Mod+R".action.spawn = ["fuzzel"];
         "Mod+S".action.spawn = ["fuzzel-omnibar" "--command=search"];
         "Super+Alt+L".action.spawn = ["swaylock"];
@@ -198,7 +200,7 @@
 
         # Window management
         "Mod+Q".action.close-window = [];
-        
+
         # Focus navigation (arrows)
         "Mod+Left".action.focus-column-left = [];
         "Mod+Down".action.focus-window-down = [];

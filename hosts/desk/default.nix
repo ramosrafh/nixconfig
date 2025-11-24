@@ -6,15 +6,15 @@
   ];
 
   networking.hostName = "nix";
-  
+
   boot.loader.timeout = 3;
 
   hardware.enableRedistributableFirmware = true;
-  
+
   services.xserver.videoDrivers = [ "amdgpu" ];
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
 
   system.stateVersion = "25.05";

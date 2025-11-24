@@ -42,7 +42,7 @@
         };
 
         "custom/mem" = {
-          format = "  {}";
+          format = "  {}";
           interval = 3;
           exec = "free -h | awk '/Mem:/{printf $3}'";
           tooltip = false;
@@ -55,8 +55,8 @@
             critical = 20;
           };
           format = "{icon} {capacity}%";
-          format-charging = "󰂄  {capacity}%";
-          format-plugged = "󰂄  {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-plugged = "󰂄 {capacity}%";
           format-alt = "{time}  {icon}";
           format-icons = [ "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
         };
@@ -69,42 +69,42 @@
 
         network = {
           format-wifi = "󰤨  {essid}";
-          format-ethernet = "  {essid}";
-          format-linked = "{ifname} (No IP)  ";
+          format-ethernet = "󰒍 {essid}";
+          format-linked = "󰲛 {ifname}";
           format-disconnected = "󰤭  Disconnected";
           tooltip-format-wifi = "Signal Strenght: {signalStrength}% | Down Speed: {bandwidthDownBits}, Up Speed: {bandwidthUpBits}";
         };
 
         pulseaudio = {
-          format = "{icon}  {volume}%";
-          format-muted = "󰖁";
+          format = "{icon} {volume}%";
+          format-muted = " ";
           scroll-step = 1;
           on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           format-icons = {
-            headphone = "";
+            headphone = "󰋋";
             hands-free = "";
-            headset = "";
+            headset = "󰋋";
             phone = "";
             portable = "";
             car = "";
-            default = [ "" "󰖀" "" ];
+            default = [ " " " " " " ];
           };
         };
 
         "pulseaudio#source" = {
           format = "{format_source}";
-          format-source = "  {volume}%";
-          format-source-muted = "";
+          format-source = "󰍬 {volume}%";
+          format-source-muted = "";
           on-click = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
           on-scroll-down = "pactl set-source-volume @DEFAULT_SOURCE@ -1%";
           on-scroll-up = "pactl set-source-volume @DEFAULT_SOURCE@ +1%";
         };
       };
     };
-    
+
     style = ''
       * {
-        font-family: monospace;
+        font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font Mono", "Material Design Icons", monospace;
         font-weight: bold;
         font-size: 14.5px;
         border-radius: 0px;

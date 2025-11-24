@@ -6,11 +6,15 @@
     pulse.enable = true;
   };
 
+  # Enable SOF firmware for audio
+  hardware.firmware = [ pkgs.sof-firmware ];
+
   programs.dconf.enable = true;
-  
+
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.common.default = "*";
   };
 
   environment.systemPackages = with pkgs; [
@@ -22,5 +26,7 @@
     ripgrep
     fd
     eza
+    pavucontrol
+    pulseaudio
   ];
 }

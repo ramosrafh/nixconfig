@@ -30,6 +30,7 @@
     pavucontrol
     nerd-fonts.symbols-only
     font-awesome
+    onlyoffice-desktopeditors
   ];
 
   home.sessionVariables = {

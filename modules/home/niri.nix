@@ -5,7 +5,9 @@ in {
   programs.niri = {
     settings = {
       # Output configuration
+      # Multiple entries to handle different EDID readings during boot
       outputs = {
+        # Primary Acer monitor (left) - current EDID
         "Acer Technologies XB241YU #ASOV6yMzDgvd" = {
           mode = {
             width = 2560;
@@ -18,6 +20,7 @@ in {
           };
           scale = 1.0;
         };
+        # Secondary monitor (right/main) - current EDID
         "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 21330B005266" = {
           mode = {
             width = 2560;
@@ -30,12 +33,24 @@ in {
           };
           scale = 1.0;
         };
+        "eDP-1" = {
+          mode = {
+            width = 2880;
+            height = 1800;
+            refresh = 120;
+          };
+          position = {
+            x = 0;
+            y = 0;
+          };
+          scale = 1.0;
+        };
       };
 
       # Input configuration
       input = {
         focus-follows-mouse = {
-          enable = true;
+          enable = false;
         };
         mouse = {
           accel-speed = 0.15;
@@ -77,10 +92,11 @@ in {
       };
 
       # Spawn at startup
+      # Adding delays to prevent race conditions with monitor initialization
       spawn-at-startup = [
         { command = ["swww-daemon"]; }
-        { command = ["sh" "-c" "sleep 0.5 && swww img ${wallpaper}"]; }
-        { command = ["waybar"]; }
+        { command = ["sh" "-c" "sleep 1.5 && swww img ${wallpaper}"]; }
+        { command = ["sh" "-c" "sleep 1.0 && waybar"]; }
       ];
 
       hotkey-overlay = {

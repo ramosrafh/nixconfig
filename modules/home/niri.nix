@@ -14,6 +14,10 @@ in {
             refresh = 120.0;
           };
           scale = 1.5;
+          position = {
+            x = 0;
+            y = 0;
+          };
         };
         # Primary Acer monitor (left) - current EDID
         "Acer Technologies XB241YU #ASOV6yMzDgvd" = {
@@ -37,7 +41,7 @@ in {
           };
           position = {
             x = 0;
-            y = 0;
+            y = -1440;
           };
           scale = 1.0;
         };
@@ -289,18 +293,18 @@ in {
         # Workspace navigation
         "Mod+Page_Down".action.focus-workspace-down = [];
         "Mod+Page_Up".action.focus-workspace-up = [];
-        "Mod+U".action.focus-workspace-down = [];
-        "Mod+I".action.focus-workspace-up = [];
+        "Mod+I".action.focus-workspace-down = [];
+        "Mod+U".action.focus-workspace-up = [];
 
         "Mod+Shift+Page_Down".action.move-column-to-workspace-down = [];
         "Mod+Shift+Page_Up".action.move-column-to-workspace-up = [];
-        "Mod+Shift+U".action.move-column-to-workspace-down = [];
-        "Mod+Shift+I".action.move-column-to-workspace-up = [];
+        "Mod+Shift+I".action.move-column-to-workspace-down = [];
+        "Mod+Shift+U".action.move-column-to-workspace-up = [];
 
         "Mod+Ctrl+Page_Down".action.move-workspace-down = [];
         "Mod+Ctrl+Page_Up".action.move-workspace-up = [];
-        "Mod+Ctrl+U".action.move-workspace-down = [];
-        "Mod+Ctrl+I".action.move-workspace-up = [];
+        "Mod+Ctrl+I".action.move-workspace-down = [];
+        "Mod+Ctrl+U".action.move-workspace-up = [];
 
         # Mouse wheel
         "Mod+WheelScrollDown" = {

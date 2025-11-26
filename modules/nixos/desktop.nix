@@ -9,6 +9,19 @@
 
   security.rtkit.enable = true;
 
+  # GNOME services for GTK4/libadwaita apps like Nautilus
+  services.gnome.gnome-keyring.enable = true;
+  services.gvfs.enable = true;
+  services.gnome.at-spi2-core.enable = true;
+
+  # System-wide environment variables for GTK4 theme support
+  environment.sessionVariables = {
+    GTK_USE_PORTAL = "1";
+    GSETTINGS_BACKEND = "dconf";
+    XDG_CURRENT_DESKTOP = "niri:GNOME";
+    XDG_SESSION_DESKTOP = "niri";
+  };
+
   services.udisks2.enable = true;
 
   # Enable polkit for disk operations
@@ -46,8 +59,19 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config.common.default = "*";
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-gnome
+    ];
+    config = {
+      common = {
+        default = ["gtk"];
+      };
+      niri = {
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -64,5 +88,10 @@
     usbutils  # for lsusb
     ntfs3g
     gnome-disk-utility
+    # GTK4 and libadwaita support
+    gtk4
+    libadwaita
+    gsettings-desktop-schemas
+    adwaita-icon-theme
   ];
 }

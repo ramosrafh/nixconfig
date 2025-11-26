@@ -47,10 +47,9 @@
       sshCommand = ssh -i ~/.ssh/driva
   '';
 
-  # SSH configuration for Git
+  # SSH configuration for GitHub
   programs.ssh = {
     enable = true;
-    enableDefaultConfig = false;
 
     matchBlocks = {
       # Personal GitHub account

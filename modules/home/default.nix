@@ -10,6 +10,7 @@
     ./swaybg.nix
     ./niri.nix
     ./git.nix
+    ./ssh.nix
   ];
 
   home.stateVersion = "25.05";
@@ -28,6 +29,10 @@
     dbeaver-bin
     bottom
     nautilus
+    gnome-themes-extra
+    adw-gtk3
+    adwaita-icon-theme
+    libadwaita
     nerd-fonts.symbols-only
     font-awesome
     onlyoffice-desktopeditors
@@ -37,7 +42,9 @@
 
   home.sessionVariables = {
     EDITOR = "helix";
-    GTK_THEME = "Adwaita:dark";
+    GTK_THEME = "Adwaita-dark";
+    XDG_CURRENT_DESKTOP = "niri:GNOME";
+    XDG_SESSION_DESKTOP = "niri";
   };
 
   gtk = {
@@ -51,10 +58,10 @@
       package = pkgs.papirus-icon-theme;
     };
     gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
+      gtk-application-prefer-dark-theme = 1;
     };
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
+      gtk-application-prefer-dark-theme = 1;
     };
   };
 
@@ -63,6 +70,24 @@
       color-scheme = "prefer-dark";
       gtk-theme = "Adwaita-dark";
       icon-theme = "Papirus-Dark";
+    };
+    "org/gtk/gtk4/settings/file-chooser" = {
+      sort-directories-first = true;
+    };
+    "org/gtk/settings/file-chooser" = {
+      sort-directories-first = true;
+    };
+    "org/gnome/nautilus/preferences" = {
+      default-folder-viewer = "list-view";
+      search-filter-time-type = "last_modified";
+      show-hidden-files = true;
+    };
+    "org/gnome/nautilus/list-view" = {
+      use-tree-view = true;
+      default-zoom-level = "standard";
+    };
+    "org/gnome/nautilus/icon-view" = {
+      default-zoom-level = "standard";
     };
   };
 

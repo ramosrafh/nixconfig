@@ -3,7 +3,13 @@
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ "dm-snapshot" "i915" ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [
+    "kvm-intel"
+    "snd_hda_intel"
+    "snd_sof_pci_intel_lnl"
+    "snd_sof_intel_hda_common"
+    "snd_soc_hdac_hda"
+  ];
 
   boot.initrd.luks.devices."cryptroot" = {
     device = "/dev/disk/by-uuid/10e6b301-944e-44e2-b575-ea7175b1bf18";

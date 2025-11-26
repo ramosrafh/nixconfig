@@ -1,7 +1,6 @@
 { pkgs, ... }: {
   home.file.".config/fuzzel/fuzzel.ini".text = ''
     [main]
-    border-radius=0
     font=monospace:size=25
     image-size-ratio=0.9
     lines=5
@@ -18,6 +17,6 @@
     selection-text=cdd6f4ff
     selection-match=74c7ecff
     counter=7f849cff
-    bder=919191
+    border=919191ff
   '';
 }

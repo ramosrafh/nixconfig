@@ -7,7 +7,7 @@
     ./terminal.nix
     ./fish.nix
     ./waybar.nix
-    ./swww.nix
+    ./swaybg.nix
     ./niri.nix
     ./git.nix
   ];
@@ -22,17 +22,17 @@
     zellij
     yazi
     waybar
-    swww
+    swaybg
     zed-editor
     vscodium
     dbeaver-bin
     bottom
     nautilus
-    pavucontrol
     nerd-fonts.symbols-only
     font-awesome
     onlyoffice-desktopeditors
     localsend
+    papirus-icon-theme
   ];
 
   home.sessionVariables = {
@@ -46,6 +46,10 @@
       name = "Adwaita-dark";
       package = pkgs.gnome-themes-extra;
     };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = true;
     };
@@ -58,6 +62,7 @@
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "Adwaita-dark";
+      icon-theme = "Papirus-Dark";
     };
   };
 

@@ -13,7 +13,15 @@
     # Intel Ultra 7 258V - Lunar Lake with integrated Arc graphics
     kernelParams = [
       "i915.enable_guc=3"
+      # Suppress ACPI BIOS errors (these are firmware bugs, not real issues)
+      "acpi_osi=Linux"
+      "acpi_mask_gpe=0x6F"
+      # Disable Intel ISH (Integrated Sensor Hub) - fixes intel_ish_ipc errors
+      "intel_ish.dyndbg=+p"
+      "pci=noaer"
     ];
+    # Blacklist ISH driver if not needed
+    blacklistedKernelModules = [ "intel_ish_ipc" ];
   };
 
   # Hardware Configuration
@@ -24,6 +32,11 @@
       enable = true;
       extraPackages = with pkgs; [ intel-media-driver ];
     };
+    # Audio firmware for SOF
+    firmware = with pkgs; [
+      sof-firmware
+      alsa-firmware
+    ];
   };
 
   # Services Configuration

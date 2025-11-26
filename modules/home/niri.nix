@@ -33,18 +33,6 @@ in {
           };
           scale = 1.0;
         };
-        "eDP-1" = {
-          mode = {
-            width = 2880;
-            height = 1800;
-            refresh = 120;
-          };
-          position = {
-            x = 0;
-            y = 0;
-          };
-          scale = 1.0;
-        };
       };
 
       # Input configuration

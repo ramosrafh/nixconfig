@@ -38,7 +38,6 @@
   boot.kernelParams = [
     "i915.enable_guc=3"  # Enable GuC and HuC firmware loading for Intel Arc graphics
   ];
-</parameter>
 
-  system.stateVersion = "26.05";
+  system.stateVersion = "25.05";
 }

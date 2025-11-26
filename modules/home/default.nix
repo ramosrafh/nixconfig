@@ -31,6 +31,7 @@
     nerd-fonts.symbols-only
     font-awesome
     onlyoffice-desktopeditors
+    localsend
   ];
 
   home.sessionVariables = {

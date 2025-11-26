@@ -45,6 +45,27 @@
             }
           ];
         };
+        book = lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/book
+            niri-flake.nixosModules.niri
+            {
+              nixpkgs.overlays = overlays;
+            }
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.ramos = import ./modules/home;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              # home-manager.sharedModules = [
+              #   niri-flake.homeModules.niri
+              # ];
+            }
+          ];
+        };
       };
     };
 }

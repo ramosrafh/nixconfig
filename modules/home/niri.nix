@@ -5,45 +5,15 @@ in {
   programs.niri = {
     settings = {
       # Output configuration
-      # Multiple entries to handle different EDID readings during boot
+
       outputs = {
-        # Primary Acer monitor (left) - current EDID
-        "Acer Technologies XB241YU #ASOV6yMzDgvd" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 165.0;
-          };
-          position = {
-            x = -2560;
-            y = 0;
-          };
-          scale = 1.0;
-        };
-        # Secondary monitor (right/main) - current EDID
-        "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 21330B005266" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 169.831;
-          };
-          position = {
-            x = 0;
-            y = 0;
-          };
-          scale = 1.0;
-        };
         "eDP-1" = {
           mode = {
-            width = 2880;
-            height = 1800;
-            refresh = 120;
+            width=2880;
+            height=1800;
+            refresh = 120.0;
           };
-          position = {
-            x = 0;
-            y = 0;
-          };
-          scale = 1.0;
+          scale = 1.5;
         };
       };
 
@@ -58,10 +28,13 @@ in {
         touchpad = {
           tap = true;
           dwt = true;
+          natural-scroll = false;
         };
         keyboard = {
           xkb = {
-            layout = "us";
+            layout = "br";
+            # layout = "us";
+            # variant "intl"/
             options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
           };
         };

@@ -9,6 +9,7 @@
     ./waybar.nix
     ./swww.nix
     ./niri.nix
+    ./git.nix
   ];
 
   home.stateVersion = "25.05";
@@ -31,6 +32,7 @@
     nerd-fonts.symbols-only
     font-awesome
     onlyoffice-desktopeditors
+    localsend
   ];
 
   home.sessionVariables = {

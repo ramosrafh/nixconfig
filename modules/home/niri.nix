@@ -14,6 +14,7 @@ in {
             refresh = 120.0;
           };
           scale = 1.5;
+        };
         # Primary Acer monitor (left) - current EDID
         "Acer Technologies XB241YU #ASOV6yMzDgvd" = {
           mode = {
@@ -69,6 +70,7 @@ in {
       layout = {
         gaps = 14;
         center-focused-column = "never";
+        background-color = "transparent";
 
         preset-column-widths = [
           { proportion = 0.33333; }
@@ -90,16 +92,18 @@ in {
       };
 
       # Spawn at startup
-      # Adding delays to prevent race conditions with monitor initialization
       spawn-at-startup = [
-        { command = ["swww-daemon"]; }
-        { command = ["sh" "-c" "sleep 1.5 && swww img ${wallpaper}"]; }
+        { command = ["swaybg" "-m" "fill" "-i" wallpaper]; }
         { command = ["sh" "-c" "sleep 1.0 && waybar"]; }
       ];
 
-      hotkey-overlay = {
-        skip-at-startup = true;
-      };
+      # Layer rules for wallpaper
+      layer-rules = [
+        {
+          matches = [{ namespace = "^wallpaper$"; }];
+          place-within-backdrop = true;
+        }
+      ];
 
       prefer-no-csd = true;
 
@@ -117,6 +121,10 @@ in {
           matches = [{ title = "^meet.google.com is sharing your screen.$"; }];
           open-floating = true;
           open-focused = false;
+        }
+        {
+          clip-to-geometry = true;
+          draw-border-with-background = false;
         }
       ];
 
@@ -176,6 +184,16 @@ in {
         size = 24;
         hide-when-typing = true;
         hide-after-inactive-ms = 10000;
+      };
+
+      # Hotkey overlay configuration
+      hotkey-overlay = {
+        skip-at-startup = true;
+      };
+
+      # Overview configuration
+      overview = {
+        zoom = 0.65;
       };
 
       # Keybindings - using raw action syntax throughout
@@ -366,7 +384,7 @@ in {
     niri
     xwayland-satellite
     waybar
-    swww
+    swaybg
     fuzzel
     alacritty
     swaylock

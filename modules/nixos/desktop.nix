@@ -1,10 +1,13 @@
 { pkgs, ... }: {
+  # Minimal audio setup with PipeWire
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+
+  security.rtkit.enable = true;
 
   services.udisks2.enable = true;
 
@@ -39,9 +42,6 @@
     });
   '';
 
-  # Enable SOF firmware for audio
-  hardware.firmware = [ pkgs.sof-firmware ];
-
   programs.dconf.enable = true;
 
   xdg.portal = {
@@ -60,7 +60,8 @@
     fd
     eza
     pavucontrol
-    pulseaudio
+    pciutils  # for lspci
+    usbutils  # for lsusb
     ntfs3g
     gnome-disk-utility
   ];

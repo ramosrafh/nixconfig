@@ -5,8 +5,15 @@ in {
   programs.niri = {
     settings = {
       # Output configuration
-      # Multiple entries to handle different EDID readings during boot
+
       outputs = {
+        "eDP-1" = {
+          mode = {
+            width=2880;
+            height=1800;
+            refresh = 120.0;
+          };
+          scale = 1.5;
         # Primary Acer monitor (left) - current EDID
         "Acer Technologies XB241YU #ASOV6yMzDgvd" = {
           mode = {
@@ -46,10 +53,13 @@ in {
         touchpad = {
           tap = true;
           dwt = true;
+          natural-scroll = false;
         };
         keyboard = {
           xkb = {
-            layout = "us";
+            layout = "br";
+            # layout = "us";
+            # variant "intl"/
             options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
           };
         };

@@ -6,7 +6,7 @@
   boot.kernelModules = [ "kvm-intel" ];
 
   boot.initrd.luks.devices."cryptroot" = {
-    device = "/dev/disk/by-uuid/REPLACE_WITH_YOUR_LUKS_UUID";
+    device = "/dev/disk/by-uuid/10e6b301-944e-44e2-b575-ea7175b1bf18";
     allowDiscards = true;
   };
 
@@ -42,7 +42,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/REPLACE_WITH_YOUR_BOOT_UUID";
+    device = "/dev/disk/by-uuid/742A-04C2";
     fsType = "vfat";
   };
 

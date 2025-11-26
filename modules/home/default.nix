@@ -9,6 +9,7 @@
     ./waybar.nix
     ./swww.nix
     ./niri.nix
+    ./git.nix
   ];
 
   home.stateVersion = "25.05";

@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
 
     matchBlocks = {
       # Work machines - all use driva key
@@ -73,6 +74,36 @@
           ControlMaster = "auto";
           ControlPath = "~/.ssh/control-%r@%h:%p";
           ControlPersist = "10m";
+        };
+      };
+
+      # Github configs
+      "github.com-ramos" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/ramos";
+        extraOptions = {
+          AddKeysToAgent = "yes";
+        };
+      };
+
+      # Work GitHub account
+      "github.com-driva" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/driva";
+        extraOptions = {
+          AddKeysToAgent = "yes";
+        };
+      };
+
+      # Default to personal account
+      "github.com" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/ramos";
+        extraOptions = {
+          AddKeysToAgent = "yes";
         };
       };
     };

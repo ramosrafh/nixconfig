@@ -11,6 +11,7 @@
     ./niri.nix
     ./git.nix
     ./ssh.nix
+    ./fnott
   ];
 
   home.stateVersion = "25.05";

@@ -46,41 +46,4 @@
     [core]
       sshCommand = ssh -i ~/.ssh/driva
   '';
-
-  # SSH configuration for GitHub
-  programs.ssh = {
-    enable = true;
-
-    matchBlocks = {
-      # Personal GitHub account
-      "github.com-ramos" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/ramos";
-        extraOptions = {
-          AddKeysToAgent = "yes";
-        };
-      };
-
-      # Work GitHub account
-      "github.com-driva" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/driva";
-        extraOptions = {
-          AddKeysToAgent = "yes";
-        };
-      };
-
-      # Default to personal account
-      "github.com" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/ramos";
-        extraOptions = {
-          AddKeysToAgent = "yes";
-        };
-      };
-    };
-  };
 }

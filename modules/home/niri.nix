@@ -1,51 +1,15 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, hostConfig ? "desk", ... }:
 let
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
+  outputsPath = ./outputs + "/${hostConfig}.nix";
+  outputs = if builtins.pathExists outputsPath
+    then import outputsPath
+    else {};
 in {
   programs.niri = {
     settings = {
       # Output configuration
-
-      outputs = {
-        "eDP-1" = {
-          mode = {
-            width=2880;
-            height=1800;
-            refresh = 120.0;
-          };
-          scale = 1.5;
-          position = {
-            x = 0;
-            y = 0;
-          };
-        };
-        # Primary Acer monitor (left) - current EDID
-        "Acer Technologies XB241YU #ASOV6yMzDgvd" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 165.0;
-          };
-          position = {
-            x = -2560;
-            y = 0;
-          };
-          scale = 1.0;
-        };
-        # Secondary monitor (right/main) - current EDID
-        "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 21330B005266" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 169.831;
-          };
-          position = {
-            x = 0;
-            y = -1440;
-          };
-          scale = 1.0;
-        };
-      };
+      inherit outputs;
 
       # Input configuration
       input = {

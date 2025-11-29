@@ -18,7 +18,8 @@
   environment.sessionVariables = {
     GTK_USE_PORTAL = "1";
     GSETTINGS_BACKEND = "dconf";
-    XDG_CURRENT_DESKTOP = "niri:GNOME";
+    XDG_CURRENT_DESKTOP = "niri";
+    XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
   };
 
@@ -59,17 +60,21 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-gnome
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-gnome
     ];
     config = {
       common = {
-        default = ["gtk"];
+        default = [ "gtk" ];
       };
       niri = {
-        default = ["gtk"];
-        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+        default = [
+          "gtk"
+          "gnome"
+        ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
       };
     };
   };
@@ -93,5 +98,7 @@
     libadwaita
     gsettings-desktop-schemas
     adwaita-icon-theme
+    gnome-keyring
+    nautilus
   ];
 }

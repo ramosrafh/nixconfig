@@ -39,12 +39,18 @@
     onlyoffice-desktopeditors
     localsend
     papirus-icon-theme
+    gnumake
+    gcc
+    binutils
+    awscli
+    coreutils
   ];
 
   home.sessionVariables = {
     EDITOR = "helix";
     GTK_THEME = "Adwaita-dark";
-    XDG_CURRENT_DESKTOP = "niri:GNOME";
+    XDG_CURRENT_DESKTOP = "niri";
+    XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
   };
 

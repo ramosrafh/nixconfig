@@ -7,6 +7,7 @@
     ./networking.nix
     ./docker.nix
     ./users.nix
+    ./greetd.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

@@ -22,8 +22,8 @@
         padding-horizontal = 15;
         padding-vertical = 10;
 
-        max-timeout = 5;
-        default-timeout = 3;
+        max-timeout = 7;
+        default-timeout = 5;
 
         # Position
         anchor = "top-right";

@@ -1,15 +1,19 @@
 { config, pkgs, lib, hostConfig ? "desk", ... }:
 let
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
-  outputsPath = ./outputs + "/${hostConfig}.nix";
-  outputs = if builtins.pathExists outputsPath
-    then import outputsPath
-    else {};
+  # Outputs now managed by Kanshi instead of Niri
+  # outputsPath = ./outputs + "/${hostConfig}.nix";
+  # outputs = if builtins.pathExists outputsPath
+  #   then import outputsPath
+  #   else {};
+
+  # Per-host keyboard layout
+  keyboardLayout = if hostConfig == "book" then "br" else "us";
 in {
   programs.niri = {
     settings = {
-      # Output configuration
-      inherit outputs;
+      # Output configuration - disabled, using Kanshi instead
+      # inherit outputs;
 
       # Input configuration
       input = {
@@ -26,9 +30,8 @@ in {
         };
         keyboard = {
           xkb = {
-            layout = "br";
-            # layout = "us";
-            # variant "intl"/
+            layout = keyboardLayout;
+            variant = "intl";
             options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
           };
         };

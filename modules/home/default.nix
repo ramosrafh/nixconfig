@@ -9,6 +9,7 @@
     ./waybar.nix
     ./swaybg.nix
     ./niri.nix
+    ./kanshi.nix
     ./git.nix
     ./ssh.nix
     ./fnott

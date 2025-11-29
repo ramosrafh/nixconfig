@@ -115,7 +115,10 @@
   programs.atuin = {
     enable = true;
     enableFishIntegration = true;
+    flags = [ "--disable-up-arrow" ];
     settings = {
+      sync_address = "";
+      sync.records = false;
       # Use compact mode for minimal UI
       style = "compact";
 
@@ -136,9 +139,7 @@
       show_help = false;
       exit_mode = "return-original";
 
-      # Sync settings (optional - set to false if not using sync)
-      auto_sync = false;
-      sync_frequency = "0";
+
 
       # History settings
       history_filter = [
@@ -148,8 +149,5 @@
         "^clear"
       ];
     };
-    flags = [
-      "--disable-up-arrow"
-    ];
   };
 }

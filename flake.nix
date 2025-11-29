@@ -40,31 +40,29 @@
       # Overlays
       overlays = import ./overlays { inherit inputs; };
 
-      # Common modules shared between hosts
-      commonModules = [
-        niri-flake.nixosModules.niri
-        { nixpkgs.overlays = overlays; }
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.ramos = import ./modules/home;
-          home-manager.extraSpecialArgs = { inherit inputs; };
-        }
-      ];
-
       # Helper function to create host configuration
-      mkHost = hostPath: lib.nixosSystem {
+      mkHost = hostName: hostPath: lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs; };
-        modules = [ hostPath ] ++ commonModules;
+        modules = [
+          hostPath
+          niri-flake.nixosModules.niri
+          { nixpkgs.overlays = overlays; }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.ramos = import ./modules/home;
+            home-manager.extraSpecialArgs = { inherit inputs; hostConfig = hostName; };
+          }
+        ];
       };
     in
     {
       # NixOS Configurations
       nixosConfigurations = {
-        desk = mkHost ./hosts/desk;
-        book = mkHost ./hosts/book;
+        desk = mkHost "desk" ./hosts/desk;
+        book = mkHost "book" ./hosts/book;
       };
     };
 }

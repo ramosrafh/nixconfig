@@ -1,47 +1,15 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, hostConfig ? "desk", ... }:
 let
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
+  outputsPath = ./outputs + "/${hostConfig}.nix";
+  outputs = if builtins.pathExists outputsPath
+    then import outputsPath
+    else {};
 in {
   programs.niri = {
     settings = {
       # Output configuration
-
-      outputs = {
-        "eDP-1" = {
-          mode = {
-            width=2880;
-            height=1800;
-            refresh = 120.0;
-          };
-          scale = 1.5;
-        };
-        # Primary Acer monitor (left) - current EDID
-        "Acer Technologies XB241YU #ASOV6yMzDgvd" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 165.0;
-          };
-          position = {
-            x = -2560;
-            y = 0;
-          };
-          scale = 1.0;
-        };
-        # Secondary monitor (right/main) - current EDID
-        "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 21330B005266" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 169.831;
-          };
-          position = {
-            x = 0;
-            y = 0;
-          };
-          scale = 1.0;
-        };
-      };
+      inherit outputs;
 
       # Input configuration
       input = {
@@ -289,18 +257,18 @@ in {
         # Workspace navigation
         "Mod+Page_Down".action.focus-workspace-down = [];
         "Mod+Page_Up".action.focus-workspace-up = [];
-        "Mod+U".action.focus-workspace-down = [];
-        "Mod+I".action.focus-workspace-up = [];
+        "Mod+I".action.focus-workspace-down = [];
+        "Mod+U".action.focus-workspace-up = [];
 
         "Mod+Shift+Page_Down".action.move-column-to-workspace-down = [];
         "Mod+Shift+Page_Up".action.move-column-to-workspace-up = [];
-        "Mod+Shift+U".action.move-column-to-workspace-down = [];
-        "Mod+Shift+I".action.move-column-to-workspace-up = [];
+        "Mod+Shift+I".action.move-column-to-workspace-down = [];
+        "Mod+Shift+U".action.move-column-to-workspace-up = [];
 
         "Mod+Ctrl+Page_Down".action.move-workspace-down = [];
         "Mod+Ctrl+Page_Up".action.move-workspace-up = [];
-        "Mod+Ctrl+U".action.move-workspace-down = [];
-        "Mod+Ctrl+I".action.move-workspace-up = [];
+        "Mod+Ctrl+I".action.move-workspace-down = [];
+        "Mod+Ctrl+U".action.move-workspace-up = [];
 
         # Mouse wheel
         "Mod+WheelScrollDown" = {

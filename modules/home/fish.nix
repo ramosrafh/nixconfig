@@ -128,6 +128,9 @@
       invert = true;
       enter_accept = true;
 
+      # Disable up arrow key binding
+      keymap_mode = "vim-insert";
+
       # UI preferences
       show_preview = true;
       show_help = false;
@@ -145,5 +148,8 @@
         "^clear"
       ];
     };
+    flags = [
+      "--disable-up-arrow"
+    ];
   };
 }

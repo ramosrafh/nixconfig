@@ -17,4 +17,23 @@
     enable = true;
     enable32Bit = true;
   };
+
+  # Environment variables for gaming and refresh rate support
+  environment.sessionVariables = {
+    # Force games to use Wayland when possible
+    SDL_VIDEODRIVER = "wayland";
+    # AMD GPU optimizations
+    AMD_VULKAN_ICD = "RADV";
+    # Enable high refresh rate support
+    WLR_DRM_NO_ATOMIC = "0";
+    # Force VRR (Variable Refresh Rate) support
+    __GL_GSYNC_ALLOWED = "1";
+    __GL_VRR_ALLOWED = "1";
+  };
+
+  # Kernel parameters for AMD GPU
+  boot.kernelParams = [
+    "amdgpu.dc=1"
+    "amdgpu.dpm=1"
+  ];
 }

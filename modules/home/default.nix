@@ -10,6 +10,7 @@
     ./swaybg.nix
     ./niri.nix
     ./kanshi.nix
+    ./wireplumber.nix
     ./git.nix
     ./ssh.nix
     ./fnott
@@ -45,6 +46,7 @@
     binutils
     awscli
     coreutils
+    bitwarden-desktop
   ];
 
   home.sessionVariables = {

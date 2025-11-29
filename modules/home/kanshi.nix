@@ -3,15 +3,16 @@
 {
   services.kanshi = {
     enable = true;
-    systemdTarget = "niri.service";
+    # Use graphical-session.target for more reliable startup
+    systemdTarget = "graphical-session.target";
 
     profiles = if hostConfig == "desk" then {
       # Dual monitor configuration
       desk-dual = {
         outputs = [
           {
-            criteria = "Acer Technologies XB241YU ASOV6yMzDgvd";
-            mode = "2560x1440@165Hz";
+            criteria = "Acer Technologies XB241YU #ASOV6yMzDgvd";
+            mode = "2560x1440@165.000Hz";
             position = "-2560,0";
             scale = 1.0;
           }
@@ -28,8 +29,8 @@
       desk-single-acer = {
         outputs = [
           {
-            criteria = "Acer Technologies XB241YU ASOV6yMzDgvd";
-            mode = "2560x1440@165Hz";
+            criteria = "Acer Technologies XB241YU #ASOV6yMzDgvd";
+            mode = "2560x1440@165.000Hz";
             position = "0,0";
             scale = 1.0;
           }
@@ -51,10 +52,10 @@
       book-internal = {
         outputs = [
           {
-            criteria = "BOE 0x095F Unknown";
-            mode = "1920x1080@60Hz";
+            criteria = "e-DP1";
+            mode = "2880x1800@120.000Hz";
             position = "0,0";
-            scale = 1.0;
+            scale = 1.55;
           }
         ];
       };
@@ -62,14 +63,14 @@
       book-with-work-monitor = {
         outputs = [
           {
-            criteria = "BOE 0x095F Unknown";
-            mode = "1920x1080@60Hz";
+            criteria = "e-DP1";
+            mode = "2880x1800@120.000Hz";
             position = "0,0";
-            scale = 1.0;
+            scale = 1.55;
           }
           {
             criteria = "Samsung Electric Company LF24T450F HX5W500259";
-            mode = "1920x1080@60Hz";
+            mode = "1920x1080@60.000Hz";
             position = "1920,0";
             scale = 1.0;
           }
@@ -79,16 +80,16 @@
       book-with-tv = {
         outputs = [
           {
-            criteria = "BOE 0x095F Unknown";
-            mode = "1920x1080@60Hz";
+            criteria = "e-DP1";
+            mode = "2880x1800@120.000Hz";
             position = "0,0";
-            scale = 1.0;
+            scale = 1.55;
           }
           {
             criteria = "Samsung Electric Company SAMSUNG 0x01000E00";
-            mode = "3840x2160@60Hz";
-            position = "1920,0";
-            scale = 1.5;
+            mode = "3840x2160@60.000Hz";
+            position = "2880,0";
+            scale = 2.0;
           }
         ];
       };

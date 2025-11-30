@@ -30,8 +30,9 @@ in {
         };
         keyboard = {
           xkb = {
+            # layout = "br"
             layout = keyboardLayout;
-            variant = "intl";
+            # variant = "intl";
             options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
           };
         };

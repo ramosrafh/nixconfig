@@ -22,6 +22,9 @@
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
+    # Disable graphical SSH password prompts - prevent gnome-keyring from handling SSH
+    SSH_ASKPASS = "";
+    GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
   };
 
   services.udisks2.enable = true;

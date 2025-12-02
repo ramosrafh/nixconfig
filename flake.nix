@@ -31,6 +31,7 @@
     let
       # System configuration
       system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
 
       # Extended library with custom functions
       lib = nixpkgs.lib.extend (self: super: {
@@ -63,6 +64,52 @@
       nixosConfigurations = {
         desk = mkHost "desk" ./hosts/desk;
         book = mkHost "book" ./hosts/book;
+      };
+
+      devShells.${system} = let
+        mkPythonShell = { name, python ? pkgs.python311 }: pkgs.mkShell {
+          packages = with pkgs; [
+            python
+            uv
+            stdenv.cc.cc.lib
+            zlib
+          ];
+          shellHook = ''
+            export UV_PYTHON="${python}/bin/python"
+            VENV_PATH="$HOME/venvs/${name}"
+
+            if [ ! -d "$VENV_PATH" ]; then
+              uv venv "$VENV_PATH"
+            fi
+
+            unset UV_PYTHON
+
+            export VIRTUAL_ENV="$VENV_PATH"
+            export PATH="$VENV_PATH/bin:$PATH"
+
+            export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
+              pkgs.stdenv.cc.cc.lib
+              pkgs.zlib
+            ]}:$LD_LIBRARY_PATH"
+
+            exec fish
+          '';
+        };
+      in {
+        default = mkPythonShell {
+          name = "default";
+          python = pkgs.python314;
+        };
+
+        driva = mkPythonShell {
+          name = "driva";
+          python = pkgs.python311;
+        };
+
+        flatspot = mkPythonShell {
+          name = "flatspot";
+          python = pkgs.python314;
+        };
       };
     };
 }

@@ -55,6 +55,10 @@
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
+    # Disable graphical SSH password prompts, use terminal only
+    SSH_ASKPASS = "";
+    SSH_ASKPASS_REQUIRE = "never";
+    GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
   };
 
   gtk = {

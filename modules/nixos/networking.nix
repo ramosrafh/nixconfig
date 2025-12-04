@@ -1,4 +1,8 @@
 { ... }: {
+  services.resolved.enable = true;
+  services.resolved.dnssec = "allow-downgrade";
+  services.resolved.fallbackDns = [ "1.1.1.1" "8.8.8.8" "8.8.4.4" ];
+
   networking.networkmanager.enable = true;
   networking.firewall = {
     enable = true;

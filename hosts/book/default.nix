@@ -19,6 +19,8 @@
       # Disable Intel ISH (Integrated Sensor Hub) - fixes intel_ish_ipc errors
       "intel_ish.dyndbg=+p"
       "pci=noaer"
+      # Ensure intel_pstate driver is active for proper frequency control
+      "intel_pstate=active"
     ];
     # Blacklist ISH driver if not needed
     blacklistedKernelModules = [ "intel_ish_ipc" ];
@@ -48,11 +50,13 @@
       settings = {
         battery = {
           governor = "powersave";
-          turbo = "auto";
+          turbo = "never";
+          energy_performance_preference = "power";
         };
         charger = {
           governor = "powersave";
-          turbo = "auto";
+          turbo = "never";
+          energy_performance_preference = "balance_power";
         };
       };
     };

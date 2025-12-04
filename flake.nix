@@ -67,38 +67,44 @@
       };
 
       devShells.${system} = let
-        mkPythonShell = { name, python ? pkgs.python311 }: pkgs.mkShell {
-          packages = with pkgs; [
-            python
-            uv
+        mkPythonShell = { name, python ? pkgs.python314, extraPackages ? [], jdk ? null }: pkgs.mkShell {
+          packages = [ python pkgs.uv ] ++ extraPackages ++ (if jdk != null then [ jdk ] else []);
+
+          buildInputs = with pkgs; [
             stdenv.cc.cc.lib
             zlib
+            zeromq
           ];
+
           shellHook = ''
             export UV_PYTHON="${python}/bin/python"
-            VENV_PATH="$HOME/venvs/${name}"
+            VENV_PATH="''${XDG_DATA_HOME:-$HOME/.local/share}/venvs/${name}"
+            mkdir -p "$(dirname "$VENV_PATH")"
 
             if [ ! -d "$VENV_PATH" ]; then
               uv venv "$VENV_PATH"
             fi
 
             unset UV_PYTHON
-
             export VIRTUAL_ENV="$VENV_PATH"
             export PATH="$VENV_PATH/bin:$PATH"
-
             export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
               pkgs.stdenv.cc.cc.lib
               pkgs.zlib
+              pkgs.zeromq
             ]}:$LD_LIBRARY_PATH"
 
-            exec fish
+            ${if jdk != null then ''
+              export JAVA_HOME="${jdk}"
+              export PATH="$JAVA_HOME/bin:$PATH"
+            '' else ""}
+
+            exec ${pkgs.fish}/bin/fish
           '';
         };
       in {
         default = mkPythonShell {
           name = "default";
-          python = pkgs.python314;
         };
 
         driva = mkPythonShell {
@@ -108,7 +114,15 @@
 
         flatspot = mkPythonShell {
           name = "flatspot";
-          python = pkgs.python314;
+        };
+
+        areaseniority = mkPythonShell {
+          name = "areaseniority";
+          jdk = pkgs.jdk17;
+          # extraPackages = with pkgs.python314Packages; [
+          #   ipykernel
+          #   pyzmq
+          # ];
         };
       };
     };

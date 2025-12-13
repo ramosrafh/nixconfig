@@ -2,31 +2,36 @@
   imports = [
     ./hardware.nix
     ../../modules/nixos
+    ../../modules/nixos/acpi.nix
   ];
 
   system.stateVersion = "25.05";
   networking.hostName = "nix";
 
-  # Boot Configuration
   boot = {
     loader.timeout = 3;
     # Intel Ultra 7 258V - Lunar Lake with integrated Arc graphics
     kernelParams = [
       "i915.enable_guc=3"
-      # Suppress ACPI BIOS errors (these are firmware bugs, not real issues)
+      "i915.enable_dc=2"
+      "i915.enable_fbc=1"
+      "i915.enable_psr=1"
+      "i915.fastboot=1"
+      # ACPI settings for Lunar Lake
       "acpi_osi=Linux"
-      "acpi_mask_gpe=0x6F"
-      # Disable Intel ISH (Integrated Sensor Hub) - fixes intel_ish_ipc errors
-      "intel_ish.dyndbg=+p"
+      "acpi_backlight=native"
       "pci=noaer"
-      # Ensure intel_pstate driver is active for proper frequency control
+      # CPU governor
       "intel_pstate=active"
+      # NVMe power management
+      "nvme_core.default_ps_max_latency_us=0"
+      # Suspend/resume fixes
+      "button.lid_init_state=open"
     ];
-    # Blacklist ISH driver if not needed
-    blacklistedKernelModules = [ "intel_ish_ipc" ];
+    blacklistedKernelModules = [ "intel_ish_ipc" "intel_ishtp" ];
+    kernelModules = [ "i915" ];
   };
 
-  # Hardware Configuration
   hardware = {
     enableRedistributableFirmware = true;
     intel-gpu-tools.enable = true;
@@ -62,6 +67,19 @@
     };
   };
 
-  # Power Management
-  powerManagement.enable = true;
+  # Intel graphics power management
+  boot.extraModprobeConfig = ''
+    options i915 enable_guc=3 enable_dc=2 enable_fbc=1 enable_psr=1 fastboot=1
+  '';
+
+  # Ensure proper resume from suspend
+  systemd.services.intel-graphics-workaround = {
+    description = "Intel graphics workaround before suspend";
+    before = [ "sleep.target" ];
+    wantedBy = [ "sleep.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.kmod}/bin/rmmod i915 2>/dev/null || true; ${pkgs.kmod}/bin/modprobe i915'";
+    };
+  };
 }

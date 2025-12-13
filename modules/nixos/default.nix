@@ -8,6 +8,8 @@
     ./docker.nix
     ./users.nix
     ./greetd.nix
+    ./hyprlock.nix
+    ./suspend.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -33,10 +35,10 @@
   boot.kernelParams = [
         "quiet"
         "splash"
-        "loglevel=3"
+        "loglevel=0"
         "rd.systemd.show_status=false"
-        "rd.udev.log_level=3"
-        "udev.log_priority=3"
+        "rd.udev.log_level=0"
+        "udev.log_priority=0"
         "mem_sleep_default=deep"
       ];
 
@@ -60,4 +62,9 @@
   };
 
   security.rtkit.enable = true;
+
+  # Configure Java to use less memory system-wide
+  environment.variables = {
+    _JAVA_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
+  };
 }

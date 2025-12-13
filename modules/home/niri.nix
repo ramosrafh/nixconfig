@@ -177,7 +177,7 @@ in {
         "Mod+E".action.spawn = ["nautilus"];
         "Mod+R".action.spawn = ["fuzzel"];
         "Mod+S".action.spawn = ["fuzzel-omnibar" "--command=search"];
-        "Super+Alt+L".action.spawn = ["swaylock"];
+        "Super+Alt+L".action.spawn = ["hyprlock"];
 
         # Media keys
         "XF86AudioRaiseVolume" = {
@@ -359,7 +359,6 @@ in {
     swaybg
     fuzzel
     alacritty
-    swaylock
     brightnessctl
   ];
 }

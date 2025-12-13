@@ -14,6 +14,8 @@
     ./git.nix
     ./ssh.nix
     ./fnott
+    ./hyprlock.nix
+    ./hypridle.nix
   ];
 
   home.stateVersion = "25.05";
@@ -47,6 +49,9 @@
     awscli
     coreutils
     bitwarden-desktop
+    eog
+    libreoffice-fresh
+    # beekeeper-studio
   ];
 
   home.sessionVariables = {
@@ -59,6 +64,8 @@
     SSH_ASKPASS = "";
     SSH_ASKPASS_REQUIRE = "never";
     GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
+    # Limit Java memory usage for applications like DBeaver
+    _JAVA_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
   };
 
   gtk = {

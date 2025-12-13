@@ -31,7 +31,6 @@
     __GL_VRR_ALLOWED = "1";
   };
 
-  # Kernel parameters for AMD GPU
   boot.kernelParams = [
     "amdgpu.dc=1"
     "amdgpu.dpm=1"

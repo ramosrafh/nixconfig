@@ -16,7 +16,6 @@
     swaybg
     fuzzel
     alacritty
-    swaylock
     brightnessctl
   ];
 

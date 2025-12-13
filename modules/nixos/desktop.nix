@@ -65,6 +65,7 @@
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
+      xdg-desktop-portal
       xdg-desktop-portal-gtk
       xdg-desktop-portal-gnome
     ];
@@ -75,8 +76,8 @@
       niri = {
         default = [
           "gtk"
-          "gnome"
         ];
+        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
         "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
       };

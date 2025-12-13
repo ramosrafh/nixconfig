@@ -1,9 +1,10 @@
 { pkgs, ... }: {
   programs.helix = {
     enable = true;
+    extraPackages = [ pkgs.wl-clipboard ];
     settings = {
       theme = "mocha";
-      
+
       editor = {
         line-number = "relative";
         cursorline = true;
@@ -21,7 +22,7 @@
         C-j = ":sh zellij ac move-focus-or-tab down";
         C-k = ":sh zellij ac move-focus-or-tab up";
         C-l = ":sh zellij ac move-focus-or-tab right";
-        
+
         C-esc = [
           "goto_first_nonwhitespace"
           "select_mode"
@@ -34,7 +35,7 @@
           "collapse_selection"
           "normal_mode"
         ];
-        
+
         C-space = [
           "select_mode"
           "extend_to_line_bounds"
@@ -46,7 +47,7 @@
           "collapse_selection"
           "normal_mode"
         ];
-        
+
         C-a = {
           C-a = ":sh zellij ac toggle-floating-panes";
           h = ":sh zellij ac new-pane -d down";
@@ -58,7 +59,7 @@
           v = ":sh zellij ac new-pane -d right";
           z = ":sh zellij ac toggle-fullscreen";
         };
-        
+
         C-t = {
           n = ":sh zellij ac new-tab";
         };
@@ -75,7 +76,7 @@
           "collapse_selection"
           "insert_mode"
         ];
-        
+
         C-space = [
           "select_mode"
           "extend_to_line_bounds"
@@ -88,6 +89,12 @@
       };
 
       keys.select = {
+        y = [
+          "yank"
+          "yank_to_clipboard"
+          "normal_mode"
+        ];
+
         C-space = [
           ":sh zellij ac move-focus-or-tab right"
           ":pipe-to sh -c 'rg -v \"^[[:space:]]*$\" | zellij ac write-chars \"$(cat)\\n\"'"
@@ -100,7 +107,7 @@
         ];
       };
     };
-    
+
     themes = {
       mocha = builtins.fromTOML (builtins.readFile ./helix-mocha-theme.toml);
     };

@@ -1,4 +1,21 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+let
+  catppuccin-gtk-theme = pkgs.stdenv.mkDerivation {
+    pname = "catppuccin-gtk-theme";
+    version = "1.0.5";
+    src = pkgs.fetchzip {
+      url = "https://github.com/VanillaDaFur/catppuccin-gtk/releases/download/v1.0.5/catppuccin-mocha-mauve-standard.zip";
+      sha256 = "sha256-QRZUhYcI7pC8+7oWGO8wAv7B+KrIyYYfZ0hPrAMQGKo=";
+      stripRoot = false;
+    };
+    installPhase = ''
+      mkdir -p $out/share/themes
+      cp -r catppuccin-mocha-mauve-standard $out/share/themes/
+    '';
+  };
+  themeName = "catppuccin-mocha-mauve-standard";
+  themeDir = "${catppuccin-gtk-theme}/share/themes/${themeName}";
+in {
   imports = [
     ./helix.nix
     ./yazi.nix
@@ -34,6 +51,7 @@
     dbeaver-bin
     bottom
     nautilus
+    catppuccin-gtk-theme
     gnome-themes-extra
     adw-gtk3
     adwaita-icon-theme
@@ -56,7 +74,7 @@
 
   home.sessionVariables = {
     EDITOR = "helix";
-    GTK_THEME = "Adwaita-dark";
+    GTK_THEME = themeName;
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
@@ -71,8 +89,8 @@
   gtk = {
     enable = true;
     theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
+      name = themeName;
+      package = catppuccin-gtk-theme;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -86,10 +104,13 @@
     };
   };
 
+  # Symlink theme to ~/.themes for GTK3 discovery
+  home.file.".themes/${themeName}".source = themeDir;
+
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "Adwaita-dark";
+      gtk-theme = themeName;
       icon-theme = "Papirus-Dark";
     };
     "org/gtk/gtk4/settings/file-chooser" = {

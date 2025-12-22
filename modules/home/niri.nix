@@ -94,6 +94,7 @@ in {
           open-floating = true;
           open-focused = false;
         }
+
         {
           clip-to-geometry = true;
           draw-border-with-background = false;
@@ -348,6 +349,9 @@ in {
         # System
         "Mod+Shift+E".action.quit = [];
         "Mod+Shift+P".action.power-off-monitors = [];
+
+        # Toggle secondary monitor (useful for gaming to prevent mouse escape)
+        "Mod+Shift+M".action.spawn = ["sh" "-c" "niri msg output DP-2 off 2>/dev/null || niri msg output DP-2 on"];
       };
     };
   };

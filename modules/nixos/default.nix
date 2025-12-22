@@ -4,12 +4,12 @@
     # ./niri.nix
     ./wayland.nix
     ./fonts.nix
+    ./steam.nix
     ./networking.nix
     ./docker.nix
     ./users.nix
     ./greetd.nix
     ./hyprlock.nix
-    ./suspend.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

@@ -29,6 +29,9 @@
 
   services.udisks2.enable = true;
 
+  # Enable ratbagd for Piper (gaming mouse configuration)
+  services.ratbagd.enable = true;
+
   # Enable polkit for disk operations
   security.polkit.enable = true;
 

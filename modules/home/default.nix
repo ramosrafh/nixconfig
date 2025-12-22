@@ -51,6 +51,7 @@
     bitwarden-desktop
     eog
     libreoffice-fresh
+    piper
     # beekeeper-studio
   ];
 

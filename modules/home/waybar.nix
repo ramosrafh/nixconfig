@@ -178,14 +178,21 @@
       #workspaces button.active {
         background-color: rgba(157, 170, 204, 1);
         color: rgba(0, 0, 0, 1);
-        padding: 0px 3px 0px 3px;
+        padding: 0px;
+        margin: 0px;
         border-radius: 4px;
+        min-width: 28px;
+        min-height: 28px;
       }
 
       #workspaces button {
+        all: unset;
         color: #bac2df;
-        padding: 0 3px 0 3px;
+        padding: 0px;
+        margin: 0px;
         border-radius: 4px;
+        min-width: 28px;
+        min-height: 28px;
       }
 
       #custom-mem {

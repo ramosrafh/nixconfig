@@ -9,6 +9,7 @@ let
 
   # Per-host keyboard layout
   keyboardLayout = if hostConfig == "book" then "br" else "us";
+  keyboardVariant = if hostConfig == "book" then "" else "intl";
 in {
   programs.niri = {
     settings = {
@@ -30,9 +31,8 @@ in {
         };
         keyboard = {
           xkb = {
-            # layout = "br"
             layout = keyboardLayout;
-            # variant = "intl";
+            variant = keyboardVariant;
             options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
           };
         };

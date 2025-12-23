@@ -119,6 +119,7 @@
         areaseniority = mkPythonShell {
           name = "areaseniority";
           jdk = pkgs.jdk17;
+          python = pkgs.python311;
           # extraPackages = with pkgs.python314Packages; [
           #   ipykernel
           #   pyzmq

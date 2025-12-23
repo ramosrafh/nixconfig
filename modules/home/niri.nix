@@ -65,14 +65,16 @@ in {
 
       # Spawn at startup
       spawn-at-startup = [
-        { command = ["swaybg" "-m" "fill" "-i" wallpaper]; }
+        { command = ["sh" "-c" "swww-daemon & sleep 1 && swww img ${wallpaper}"]; }
         { command = ["sh" "-c" "sleep 1.0 && waybar"]; }
       ];
 
-      # Layer rules for wallpaper
+      # Layer rules for wallpaper (swww-daemon uses namespace "swww-daemon")
+      # place-within-backdrop puts wallpaper in the backdrop (visible in overview)
+      # Combined with transparent background-color, wallpaper shows through workspaces
       layer-rules = [
         {
-          matches = [{ namespace = "^wallpaper$"; }];
+          matches = [{ namespace = "^swww-daemon$"; }];
           place-within-backdrop = true;
         }
       ];
@@ -178,7 +180,7 @@ in {
         "Mod+E".action.spawn = ["nautilus"];
         "Mod+R".action.spawn = ["fuzzel"];
         "Mod+S".action.spawn = ["fuzzel-omnibar" "--command=search"];
-        "Super+Alt+L".action.spawn = ["hyprlock"];
+        "Alt+L".action.spawn = ["hyprlock"];
 
         # Media keys
         "XF86AudioRaiseVolume" = {
@@ -360,7 +362,7 @@ in {
     niri
     xwayland-satellite
     waybar
-    swaybg
+    swww
     fuzzel
     alacritty
     brightnessctl

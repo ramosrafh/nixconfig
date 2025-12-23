@@ -13,7 +13,7 @@
   environment.systemPackages = with pkgs; [
     xwayland-satellite
     waybar
-    swaybg
+    swww
     fuzzel
     alacritty
     brightnessctl

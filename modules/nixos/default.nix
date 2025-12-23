@@ -39,7 +39,7 @@
         "rd.systemd.show_status=false"
         "rd.udev.log_level=0"
         "udev.log_priority=0"
-        "mem_sleep_default=deep"
+        "mem_sleep_default=s2idle"
       ];
 
   nix.gc = {

@@ -24,7 +24,6 @@ in {
     ./terminal.nix
     ./fish.nix
     ./waybar.nix
-    ./swaybg.nix
     ./niri.nix
     ./kanshi.nix
     ./wireplumber.nix
@@ -45,7 +44,6 @@ in {
     zellij
     yazi
     waybar
-    swaybg
     zed-editor
     vscodium
     dbeaver-bin

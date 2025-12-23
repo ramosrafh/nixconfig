@@ -13,10 +13,10 @@
     # Intel Ultra 7 258V - Lunar Lake with integrated Arc graphics
     kernelParams = [
       "i915.enable_guc=3"
-      "i915.enable_dc=2"
-      "i915.enable_fbc=1"
-      "i915.enable_psr=1"
-      "i915.fastboot=1"
+      "i915.enable_dc=0"
+      "i915.enable_fbc=0"
+      "i915.enable_psr=0"
+      "i915.fastboot=0"
       # ACPI settings for Lunar Lake
       "acpi_osi=Linux"
       "acpi_backlight=native"
@@ -27,6 +27,7 @@
       "nvme_core.default_ps_max_latency_us=0"
       # Suspend/resume fixes
       "button.lid_init_state=open"
+      "mem_sleep_default=s2idle"
     ];
     blacklistedKernelModules = [ "intel_ish_ipc" "intel_ishtp" ];
     kernelModules = [ "i915" ];
@@ -67,19 +68,8 @@
     };
   };
 
-  # Intel graphics power management
+  # Intel graphics power management - PSR/DC disabled to fix suspend freeze
   boot.extraModprobeConfig = ''
-    options i915 enable_guc=3 enable_dc=2 enable_fbc=1 enable_psr=1 fastboot=1
+    options i915 enable_guc=3 enable_dc=0 enable_fbc=0 enable_psr=0 fastboot=0
   '';
-
-  # Ensure proper resume from suspend
-  systemd.services.intel-graphics-workaround = {
-    description = "Intel graphics workaround before suspend";
-    before = [ "sleep.target" ];
-    wantedBy = [ "sleep.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.kmod}/bin/rmmod i915 2>/dev/null || true; ${pkgs.kmod}/bin/modprobe i915'";
-    };
-  };
 }

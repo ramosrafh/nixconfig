@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
   imports = [
     ./hardware.nix
     ../../modules/nixos
@@ -13,7 +13,7 @@
     # Intel Ultra 7 258V - Lunar Lake with integrated Arc graphics
     kernelParams = [
       "i915.enable_guc=3"
-      "i915.enable_dc=0"
+      "i915.enable_dc=2"
       "i915.enable_fbc=0"
       "i915.enable_psr=0"
       "i915.fastboot=0"
@@ -70,6 +70,15 @@
 
   # Intel graphics power management - PSR/DC disabled to fix suspend freeze
   boot.extraModprobeConfig = ''
-    options i915 enable_guc=3 enable_dc=0 enable_fbc=0 enable_psr=0 fastboot=0
+    options i915 enable_guc=3 enable_dc=2 enable_fbc=0 enable_psr=0 fastboot=0
   '';
+
+  # Backlight control permissions for brightnessctl
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
+    ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
+  '';
+
+  # Add user to video group (handled in users.nix, but ensure video group exists)
+  users.groups.video = {};
 }

@@ -1,5 +1,10 @@
 { config, pkgs, lib, hostConfig ? "desk", ... }:
 
+let
+  wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
+  # Command to re-apply wallpaper on all outputs
+  wallpaperCmd = "swww img ${wallpaper}";
+in
 {
   services.kanshi = {
     enable = true;
@@ -22,6 +27,7 @@
           scale = 1.0;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     } {
       profile.name = "desk-single-acer";
       profile.outputs = [
@@ -32,6 +38,7 @@
           scale = 1.0;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     } {
       profile.name = "desk-single-gigabyte";
       profile.outputs = [
@@ -42,6 +49,7 @@
           scale = 1.0;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     }] else [{
       profile.name = "book-internal";
       profile.outputs = [
@@ -52,6 +60,7 @@
           scale = 1.55;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     } {
       profile.name = "book-home-gigabyte";
       profile.outputs = [
@@ -68,6 +77,7 @@
           scale = 1.55;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     } {
       profile.name = "book-with-work-monitor-desk-1";
       profile.outputs = [
@@ -84,6 +94,7 @@
           scale = 1.55;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     } {
       profile.name = "book-with-work-monitor-desk-2";
       profile.outputs = [
@@ -100,6 +111,7 @@
           scale = 1.55;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     } {
       profile.name = "book-with-tv";
       profile.outputs = [
@@ -116,6 +128,7 @@
           scale = 1.55;
         }
       ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     }];
 
   };

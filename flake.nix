@@ -32,6 +32,10 @@
       # System configuration
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      pkgs-unfree = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
 
       # Extended library with custom functions
       lib = nixpkgs.lib.extend (self: super: {
@@ -116,6 +120,10 @@
           name = "flatspot";
         };
 
+        smh = mkPythonShell {
+          name = "smh";
+        };
+
         areaseniority = mkPythonShell {
           name = "areaseniority";
           jdk = pkgs.jdk17;
@@ -124,6 +132,19 @@
           #   ipykernel
           #   pyzmq
           # ];
+        };
+
+        fatfunc = mkPythonShell {
+          name = "fatfunc";
+          jdk = pkgs.jdk17;
+          python = pkgs.python311;
+        };
+
+        economicgroups= mkPythonShell {
+          name = "economicgroups";
+          jdk = pkgs.jdk17;
+          python = pkgs.python314;
+          extraPackages = [ pkgs-unfree.vscode ];
         };
       };
     };

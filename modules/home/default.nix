@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, lib, inputs, ... }:
 let
   catppuccin-gtk-theme = pkgs.stdenv.mkDerivation {
     pname = "catppuccin-gtk-theme";

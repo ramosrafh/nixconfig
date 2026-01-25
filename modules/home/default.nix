@@ -68,7 +68,17 @@ in {
     eog
     libreoffice-fresh
     piper
+    appflowy
     # beekeeper-studio
+
+    # OBS Studio com plugins para Wayland/PipeWire
+    (wrapOBS {
+      plugins = with obs-studio-plugins; [
+        wlrobs                    # Captura de tela Wayland (wlroots)
+        obs-pipewire-audio-capture # Captura de áudio via PipeWire
+        obs-vkcapture             # Captura de jogos Vulkan/OpenGL
+      ];
+    })
   ];
 
   home.sessionVariables = {

@@ -1,5 +1,6 @@
 { pkgs, ... }: {
   imports = [
+    ./bluetooth.nix
     ./desktop.nix
     # ./niri.nix
     ./wayland.nix

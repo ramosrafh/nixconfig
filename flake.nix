@@ -83,10 +83,15 @@
           shellHook = ''
             export UV_PYTHON="${python}/bin/python"
             VENV_PATH="''${XDG_DATA_HOME:-$HOME/.local/share}/venvs/${name}"
+            PYTHON_MARKER="$VENV_PATH/.nix-python-path"
             mkdir -p "$(dirname "$VENV_PATH")"
 
-            if [ ! -d "$VENV_PATH" ]; then
+            # Recreate venv if it doesn't exist or if Python path has changed
+            if [ ! -d "$VENV_PATH" ] || [ ! -f "$PYTHON_MARKER" ] || [ "$(cat "$PYTHON_MARKER")" != "${python}" ]; then
+              echo "Creating/recreating venv for ${name} with ${python}..."
+              rm -rf "$VENV_PATH"
               uv venv "$VENV_PATH"
+              echo "${python}" > "$PYTHON_MARKER"
             fi
 
             unset UV_PYTHON
@@ -114,6 +119,8 @@
         driva = mkPythonShell {
           name = "driva";
           python = pkgs.python311;
+          jdk = pkgs.jdk17;
+          extraPackages = [ pkgs-unfree.vscode ];
         };
 
         flatspot = mkPythonShell {

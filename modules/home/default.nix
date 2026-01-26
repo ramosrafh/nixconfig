@@ -29,7 +29,7 @@ in {
     ./wireplumber.nix
     ./git.nix
     ./ssh.nix
-    ./fnott
+    ./swaync
     ./hyprlock.nix
     ./hypridle.nix
   ];
@@ -69,6 +69,8 @@ in {
     libreoffice-fresh
     piper
     appflowy
+    inkscape
+    google-fonts
     # beekeeper-studio
 
     # OBS Studio com plugins para Wayland/PipeWire

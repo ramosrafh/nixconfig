@@ -1,22 +1,37 @@
 { pkgs, ... }: {
   home.file.".config/fuzzel/fuzzel.ini".text = ''
     [main]
-    font=monospace:size=25
-    image-size-ratio=0.9
-    lines=5
-    line-height=42
+    font=Inter:size=14:weight=medium
+    icon-theme=Papirus-Dark
+    icons-enabled=yes
+    image-size-ratio=0.5
+    lines=8
+    width=45
+    horizontal-pad=20
+    vertical-pad=12
+    inner-pad=8
+    line-height=28
+    letter-spacing=0.5
+    layer=overlay
+    prompt="  "
+    placeholder=Buscar...
+
+    [border]
+    width=2
+    radius=0
 
     [colors]
-    background=1e1e2edd
+    # Catppuccin Mocha
+    background=1e1e2ef2
     text=cdd6f4ff
-    prompt=bac2deff
-    placeholder=7f849cff
+    prompt=cba6f7ff
+    placeholder=6c7086ff
     input=cdd6f4ff
-    match=74c7ecff
-    selection=585b70ff
+    match=cba6f7ff
+    selection=313244ff
     selection-text=cdd6f4ff
-    selection-match=74c7ecff
-    counter=7f849cff
-    border=919191ff
+    selection-match=f5c2e7ff
+    counter=6c7086ff
+    border=cba6f780
   '';
 }

@@ -92,7 +92,7 @@
   # Add user to video group (handled in users.nix, but ensure video group exists)
   users.groups.video = {};
 
-  # Environment variables for Intel Arc graphics and Steam
+  # Environment variables for Intel Arc graphics
   environment.sessionVariables = {
     # Force Vulkan to use Intel
     VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";

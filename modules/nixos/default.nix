@@ -5,7 +5,6 @@
     # ./niri.nix
     ./wayland.nix
     ./fonts.nix
-    ./steam.nix
     ./networking.nix
     ./docker.nix
     ./users.nix

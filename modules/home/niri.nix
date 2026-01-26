@@ -41,25 +41,36 @@ in {
       # Layout configuration
       layout = {
         gaps = 14;
-        center-focused-column = "never";
+        # Center the focused column when it would overflow the screen
+        # This ensures you can always see a hint of adjacent columns
+        center-focused-column = "on-overflow";
         background-color = "transparent";
 
+        # Preset widths for cycling through
         preset-column-widths = [
-          { proportion = 0.33333; }
           { proportion = 0.5; }
           { proportion = 0.66667; }
+          { proportion = 0.8; }
         ];
 
-        default-column-width = {};
+        # Default new windows to 60% width - larger than before
+        default-column-width = { proportion = 0.6; };
 
         focus-ring = {
-          width = 1.5;
-          active.color = "#919191";
-          inactive.color = "#665c54";
+          width = 2;
+          active.color = "#cba6f780";  # Catppuccin Mauve with 50% opacity
+          inactive.color = "#45475a40";  # Catppuccin Surface1 with 25% opacity
         };
 
         border = {
           enable = false;
+        };
+
+        # Add struts to always show a small portion of adjacent columns
+        # This creates a visual hint that there's more content to the sides
+        struts = {
+          left = 48;
+          right = 48;
         };
       };
 
@@ -67,6 +78,7 @@ in {
       spawn-at-startup = [
         { command = ["sh" "-c" "swww-daemon & sleep 1 && swww img ${wallpaper}"]; }
         { command = ["sh" "-c" "sleep 1.0 && waybar"]; }
+        { command = ["swaync" "--skip-system-css"]; }
       ];
 
       # Layer rules for wallpaper (swww-daemon uses namespace "swww-daemon")
@@ -85,6 +97,58 @@ in {
 
       # Window rules
       window-rules = [
+        # Default rule for all windows - open centered and with good size
+        {
+          # Open all new windows with focus
+          open-focused = true;
+          # Draw nice borders
+          draw-border-with-background = false;
+          clip-to-geometry = true;
+        }
+
+        # Browsers - larger width
+        {
+          matches = [
+            { app-id = "^firefox$"; }
+            { app-id = "^zen.*$"; }
+            { app-id = "^chromium.*$"; }
+            { app-id = "^google-chrome.*$"; }
+          ];
+          default-column-width = { proportion = 0.7; };
+        }
+
+        # IDEs and editors - even larger
+        {
+          matches = [
+            { app-id = "^codium.*$"; }
+            { app-id = "^code.*$"; }
+            { app-id = "^zed.*$"; }
+            { app-id = "^jetbrains.*$"; }
+          ];
+          default-column-width = { proportion = 0.75; };
+        }
+
+        # Terminals - medium width
+        {
+          matches = [
+            { app-id = "^Alacritty$"; }
+            { app-id = "^kitty$"; }
+            { app-id = "^foot$"; }
+          ];
+          default-column-width = { proportion = 0.5; };
+        }
+
+        # File managers
+        {
+          matches = [
+            { app-id = "^org.gnome.Nautilus$"; }
+            { app-id = "^thunar$"; }
+            { app-id = "^pcmanfm.*$"; }
+          ];
+          default-column-width = { proportion = 0.55; };
+        }
+
+        # Google Meet floating window - special handling
         {
           matches = [{ title = "^Meet -.*$"; }];
           open-floating = true;
@@ -97,9 +161,25 @@ in {
           open-focused = false;
         }
 
+        # Picture-in-Picture windows (floating)
         {
-          clip-to-geometry = true;
-          draw-border-with-background = false;
+          matches = [
+            { title = "^Picture-in-Picture$"; }
+            { title = "^Picture in picture$"; }
+          ];
+          open-floating = true;
+        }
+
+        # Dialogs and popups - floating
+        {
+          matches = [
+            { app-id = "^file-roller$"; }
+            { app-id = "^org.gnome.Calculator$"; }
+            { app-id = "^pavucontrol$"; }
+            { app-id = "^nm-connection-editor$"; }
+            { app-id = "^blueman-manager$"; }
+          ];
+          open-floating = true;
         }
       ];
 
@@ -181,6 +261,11 @@ in {
         "Mod+R".action.spawn = ["fuzzel"];
         "Mod+S".action.spawn = ["fuzzel-omnibar" "--command=search"];
         "Alt+L".action.spawn = ["hyprlock"];
+
+        # Notification center toggle
+        "Mod+N".action.spawn = ["swaync-client" "-t" "-sw"];
+        # Dismiss all popup notifications
+        "Mod+Shift+N".action.spawn = ["swaync-client" "-C"];
 
         # Media keys
         "XF86AudioRaiseVolume" = {

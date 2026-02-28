@@ -1,10 +1,7 @@
 { pkgs, ... }: {
   imports = [
-<<<<<<< HEAD
     ./adb.nix
-=======
     ./bluetooth.nix
->>>>>>> 2cfd202c127b7997801fc8aa1793f07b6ca42a98
     ./desktop.nix
     # ./niri.nix
     ./wayland.nix

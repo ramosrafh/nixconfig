@@ -1,5 +1,6 @@
 { pkgs, ... }: {
   imports = [
+    ./adb.nix
     ./desktop.nix
     # ./niri.nix
     ./wayland.nix

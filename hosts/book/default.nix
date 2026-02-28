@@ -38,7 +38,17 @@
     intel-gpu-tools.enable = true;
     graphics = {
       enable = true;
-      extraPackages = with pkgs; [ intel-media-driver ];
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        intel-media-driver
+        intel-compute-runtime
+        vpl-gpu-rt
+        vulkan-loader
+        vulkan-validation-layers
+      ];
+      extraPackages32 = with pkgs.driversi686Linux; [
+        intel-media-driver
+      ];
     };
     # Audio firmware for SOF
     firmware = with pkgs; [
@@ -81,4 +91,19 @@
 
   # Add user to video group (handled in users.nix, but ensure video group exists)
   users.groups.video = {};
+
+  # Environment variables for Intel Arc graphics
+  environment.sessionVariables = {
+    # Force Vulkan to use Intel
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
+    # Force Mesa to use Intel Iris driver
+    MESA_LOADER_DRIVER_OVERRIDE = "iris";
+    # Mesa/Intel optimizations
+    MESA_VK_VERSION_OVERRIDE = "1.3";
+    ANV_VIDEO_DECODE = "1";
+    # Intel debug flags to fix rendering issues
+    INTEL_DEBUG = "norbc";
+    # Native Wayland
+    SDL_VIDEODRIVER = "wayland";
+  };
 }

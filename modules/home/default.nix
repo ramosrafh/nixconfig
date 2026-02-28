@@ -29,7 +29,7 @@ in {
     ./wireplumber.nix
     ./git.nix
     ./ssh.nix
-    ./fnott
+    ./swaync
     ./hyprlock.nix
     ./hypridle.nix
   ];
@@ -68,7 +68,19 @@ in {
     eog
     libreoffice-fresh
     piper
+    appflowy
+    inkscape
+    google-fonts
     # beekeeper-studio
+
+    # OBS Studio com plugins para Wayland/PipeWire
+    (wrapOBS {
+      plugins = with obs-studio-plugins; [
+        wlrobs                    # Captura de tela Wayland (wlroots)
+        obs-pipewire-audio-capture # Captura de áudio via PipeWire
+        obs-vkcapture             # Captura de jogos Vulkan/OpenGL
+      ];
+    })
   ];
 
   home.sessionVariables = {

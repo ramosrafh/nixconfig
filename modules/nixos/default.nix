@@ -6,10 +6,12 @@
     ./wayland.nix
     ./fonts.nix
     ./networking.nix
+    ./wireguard.nix
     ./docker.nix
     ./users.nix
     ./greetd.nix
     ./hyprlock.nix
+    ./nix-ld.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

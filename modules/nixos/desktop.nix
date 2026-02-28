@@ -11,8 +11,12 @@
   security.rtkit.enable = true;
 
   # GNOME services for GTK4/libadwaita apps like Nautilus
+  # Keyring enabled but SSH component disabled - we want terminal prompts for SSH
   services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true;
+
+  # GNOME Online Accounts for Google Drive integration in Nautilus
+  services.gnome.gnome-online-accounts.enable = true;
   services.gnome.at-spi2-core.enable = true;
 
   # System-wide environment variables for GTK4 theme support
@@ -22,9 +26,17 @@
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
-    # Disable graphical SSH password prompts - prevent gnome-keyring from handling SSH
+    # Disable graphical SSH password prompts - force terminal-based password entry
     SSH_ASKPASS = "";
+    SSH_ASKPASS_REQUIRE = "never";
     GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
+    # Prevent gcr/gnome-keyring from providing SSH agent
+    GCR_SSH_ASKPASS = "";
+  };
+
+  # Disable gnome-keyring SSH agent component via systemd
+  systemd.user.services.gnome-keyring-ssh = {
+    enable = false;
   };
 
   services.udisks2.enable = true;
@@ -107,6 +119,8 @@
     gsettings-desktop-schemas
     adwaita-icon-theme
     gnome-keyring
+    gnome-online-accounts
+    gnome-control-center
     nautilus
   ];
 }

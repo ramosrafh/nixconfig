@@ -71,7 +71,7 @@
       };
 
       devShells.${system} = let
-        mkPythonShell = { name, python ? pkgs.python314, extraPackages ? [], jdk ? null }: pkgs.mkShell {
+        mkPythonShell = { name, python ? pkgs.python314, extraPackages ? [], jdk ? null, javaOpts ? null }: pkgs.mkShell {
           packages = [ python pkgs.uv ] ++ extraPackages ++ (if jdk != null then [ jdk ] else []);
 
           buildInputs = with pkgs; [
@@ -106,6 +106,10 @@
             ${if jdk != null then ''
               export JAVA_HOME="${jdk}"
               export PATH="$JAVA_HOME/bin:$PATH"
+            '' else ""}
+
+            ${if javaOpts != null then ''
+              export _JAVA_OPTIONS="${javaOpts}"
             '' else ""}
 
             exec ${pkgs.fish}/bin/fish
@@ -152,6 +156,14 @@
           jdk = pkgs.jdk17;
           python = pkgs.python314;
           extraPackages = [ pkgs-unfree.vscode ];
+        };
+
+        rais = mkPythonShell {
+          name = "rais";
+          python = pkgs.python311;
+          jdk = pkgs.jdk17;
+          extraPackages = [ pkgs-unfree.vscode ];
+          javaOpts = "-Xms512m -Xmx32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200";
         };
 
         cemig= mkPythonShell {

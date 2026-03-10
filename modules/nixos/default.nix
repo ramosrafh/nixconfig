@@ -73,8 +73,8 @@
 
   security.rtkit.enable = true;
 
-  # Configure Java to use less memory system-wide
+  # Default Java settings (JAVA_TOOL_OPTIONS has lower precedence, apps can override)
   environment.variables = {
-    _JAVA_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
+    JAVA_TOOL_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
   };
 }

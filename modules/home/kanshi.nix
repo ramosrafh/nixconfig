@@ -113,6 +113,23 @@ in
       ];
       profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
     } {
+      profile.name = "book-with-work-monitor-desk-3";
+      profile.outputs = [
+        {
+          criteria = "Samsung Electric Company LF24T450F HX5W500497";
+          mode = "1920x1080@60.000Hz";
+          position = "0,-1080";
+          scale = 1.0;
+        }
+        {
+          criteria = "eDP-1";
+          mode = "2880x1800@120.000Hz";
+          position = "0,0";
+          scale = 1.55;
+        }
+      ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
+    } {
       profile.name = "book-with-tv";
       profile.outputs = [
         {

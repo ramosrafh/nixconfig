@@ -7,6 +7,7 @@
       la = "eza -la";
       cat = "bat --paging=never";
       catp = "bat --paging=never --style=plain";
+      zed = "zeditor";
     };
     shellInit = ''
       set -g fish_greeting

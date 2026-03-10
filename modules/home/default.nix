@@ -32,6 +32,7 @@ in {
     ./swaync
     ./hyprlock.nix
     ./hypridle.nix
+    ./mpv.nix
   ];
 
   home.stateVersion = "25.05";
@@ -39,6 +40,7 @@ in {
   home.packages = with pkgs; [
     firefox
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
+    claude-code
     alacritty
     fuzzel
     zellij
@@ -65,6 +67,7 @@ in {
     awscli
     coreutils
     bitwarden-desktop
+    obsidian
     eog
     libreoffice-fresh
     piper
@@ -72,6 +75,10 @@ in {
     inkscape
     google-fonts
     discord
+    unzip
+    tabiew
+    qgis
+    rclone
     # beekeeper-studio
 
     # OBS Studio com plugins para Wayland/PipeWire
@@ -94,6 +101,10 @@ in {
     SSH_ASKPASS = "";
     SSH_ASKPASS_REQUIRE = "never";
     GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
+    # Prevent gcr from providing SSH askpass
+    GCR_SSH_ASKPASS = "";
+    # Ensure no display is passed to SSH for askpass
+    DISPLAY_FOR_SSH = "";
     # Limit Java memory usage for applications like DBeaver
     _JAVA_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
   };

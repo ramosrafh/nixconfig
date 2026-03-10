@@ -147,8 +147,15 @@
           python = pkgs.python311;
         };
 
-        economicgroups= mkPythonShell {
+        economicgroups = mkPythonShell {
           name = "economicgroups";
+          jdk = pkgs.jdk17;
+          python = pkgs.python314;
+          extraPackages = [ pkgs-unfree.vscode ];
+        };
+
+        cemig= mkPythonShell {
+          name = "cemig";
           jdk = pkgs.jdk17;
           python = pkgs.python314;
           extraPackages = [ pkgs-unfree.vscode ];

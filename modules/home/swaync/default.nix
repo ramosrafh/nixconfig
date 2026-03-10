@@ -32,7 +32,7 @@ let
 
   swaync-style = ''
     /* ===== CRITICAL: Window backgrounds must be transparent ===== */
-    
+
     /* GTK4 window widgets - these are the actual windows */
     notificationwindow,
     blankwindow {
@@ -50,7 +50,7 @@ let
     }
 
     /* ===== NOTIFICATION STYLING ===== */
-    
+
     * {
       font-family: "Inter", "Font Awesome 6 Free";
       font-size: 13px;
@@ -253,7 +253,7 @@ let
 
     # Disable the background overlay completely
     control-center-exclusive-zone = true;
-    
+
     # This prevents the gray overlay background
     fit-to-screen = false;
 
@@ -268,13 +268,13 @@ let
     timeout-low = 4;
     timeout-critical = 0;
 
-    # Limit displayed popups to prevent spam after suspend
-    notification-visibility = {
-      example-name = {
-        state = "transient";
-        app-name = ".*";
-      };
-    };
+    # Limit notification popup rate to prevent spam after suspend
+    # Max 5 popups visible at once, notifications still go to history
+    notification-inline-replies = false;
+
+    # Only make specific notifications transient (not stored in history)
+    # DO NOT use app-name = ".*" as it makes ALL notifications transient!
+    notification-visibility = {};
 
     # Control center settings
     control-center-width = 420;
@@ -311,24 +311,34 @@ let
   # Script to manage notifications after suspend
   notification-resume-script = pkgs.writeShellScript "notification-resume" ''
     #!/usr/bin/env bash
-    # Wait a moment for system to stabilize
+    # Wait for system to stabilize after resume
+    sleep 3
+
+    # Enable Do Not Disturb temporarily to prevent popup spam
+    swaync-client --dnd-on 2>/dev/null || true
+
+    # Wait a bit more for any pending notifications to arrive
     sleep 2
 
     # Get notification count
     COUNT=$(swaync-client --count 2>/dev/null || echo "0")
 
-    if [ "$COUNT" -gt 3 ]; then
-      # Dismiss all popup notifications but keep them in history
-      swaync-client --close-all
+    if [ "$COUNT" -gt 5 ]; then
+      # Close all popup notifications (they're still in history)
+      swaync-client --close-all 2>/dev/null || true
 
-      # Show summary notification
-      EXTRA=$((COUNT - 3))
-      notify-send -u low -t 8000 "📬 Notificações pendentes" "Você tem $COUNT notificações.\nClique para ver o histórico." \
-        -h string:x-canonical-private-synchronous:notification-summary
+      # Show a single summary notification
+      notify-send -u low -t 10000 "📬 $COUNT notificações pendentes" \
+        "Abra o centro de notificações para ver todas." \
+        -h string:x-canonical-private-synchronous:resume-summary
 
-      # Open notification center after a brief delay
-      sleep 0.5
-      swaync-client --open-panel
+      # Disable DND and open panel after brief delay
+      sleep 1
+      swaync-client --dnd-off 2>/dev/null || true
+      swaync-client --open-panel 2>/dev/null || true
+    else
+      # Few notifications, just disable DND
+      swaync-client --dnd-off 2>/dev/null || true
     fi
   '';
 in {
@@ -344,17 +354,31 @@ in {
   ];
 
   # Systemd service to handle resume from suspend
+  # Note: User services can't directly use suspend.target, so we use a path-based trigger
   systemd.user.services.notification-resume = {
     Unit = {
       Description = "Handle notifications after resume from suspend";
-      After = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
+      After = [ "graphical-session.target" ];
     };
     Service = {
       Type = "oneshot";
       ExecStart = "${notification-resume-script}";
+      # Ensure swaync is running
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
     };
-    Install = {
-      WantedBy = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
-    };
+  };
+
+  # Use a system-level sleep hook to trigger the user service
+  # This file will be symlinked via home.file
+  home.file.".local/bin/notification-resume-trigger" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      # Triggered by system sleep hook, runs the user service
+      if [ "$1" = "post" ]; then
+        sleep 2
+        systemctl --user start notification-resume.service || true
+      fi
+    '';
   };
 }

@@ -77,6 +77,18 @@
         };
       };
 
+      "hetz" = {
+        hostname = "46.225.24.175";
+        user = "ramos";
+        identityFile = "~/.ssh/ramos";
+        extraOptions = {
+          AddKeysToAgent = "yes";
+          ControlMaster = "auto";
+          ControlPath = "~/.ssh/control-%r@%h:%p";
+          ControlPersist = "10m";
+        };
+      };
+
       # Github configs
       "github.com-ramos" = {
         hostname = "github.com";

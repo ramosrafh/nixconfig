@@ -21,13 +21,16 @@
       "acpi_osi=Linux"
       "acpi_backlight=native"
       "pci=noaer"
-      # CPU governor
+      # CPU governor - HWP for Lunar Lake efficiency cores
       "intel_pstate=active"
-      # NVMe power management
-      "nvme_core.default_ps_max_latency_us=0"
+      # NVMe power management - allow power saving (remove =0 to enable APST)
+      "nvme_core.default_ps_max_latency_us=5500"
       # Suspend/resume fixes
       "button.lid_init_state=open"
       "mem_sleep_default=s2idle"
+      # Enable ASPM for PCIe power savings
+      "pcie_aspm=force"
+      "pcie_aspm.policy=powersupersave"
     ];
     blacklistedKernelModules = [ "intel_ish_ipc" "intel_ishtp" ];
     kernelModules = [ "i915" ];
@@ -68,14 +71,18 @@
           governor = "powersave";
           turbo = "never";
           energy_performance_preference = "power";
+          # Lunar Lake efficiency - limit max frequency on battery
+          scaling_max_freq = 2800000;
         };
         charger = {
-          governor = "powersave";
-          turbo = "never";
-          energy_performance_preference = "balance_power";
+          governor = "performance";
+          turbo = "auto";
+          energy_performance_preference = "balance_performance";
         };
       };
     };
+    # Enable power-profiles-daemon for GUI power profile switching
+    power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq, keep disabled
   };
 
   # Intel graphics power management - PSR/DC disabled to fix suspend freeze
@@ -101,9 +108,62 @@
     # Mesa/Intel optimizations
     MESA_VK_VERSION_OVERRIDE = "1.3";
     ANV_VIDEO_DECODE = "1";
-    # Intel debug flags to fix rendering issues
-    INTEL_DEBUG = "norbc";
     # Native Wayland
     SDL_VIDEODRIVER = "wayland";
+  };
+
+  # Enable TLP for additional battery optimizations (works alongside auto-cpufreq)
+  # CPU scaling is handled by auto-cpufreq, TLP handles other subsystems
+  services.tlp = {
+    enable = true;
+    settings = {
+      # DISABLE CPU management - let auto-cpufreq handle it
+      CPU_DRIVER_OPMODE_ON_AC = "active";
+      CPU_DRIVER_OPMODE_ON_BAT = "active";
+      # Don't let TLP set governor - auto-cpufreq does this
+      CPU_SCALING_GOVERNOR_ON_AC = "";
+      CPU_SCALING_GOVERNOR_ON_BAT = "";
+
+      # Intel GPU power management (Lunar Lake Xe)
+      INTEL_GPU_MIN_FREQ_ON_AC = 100;
+      INTEL_GPU_MIN_FREQ_ON_BAT = 100;
+      INTEL_GPU_MAX_FREQ_ON_AC = 2250;
+      INTEL_GPU_MAX_FREQ_ON_BAT = 1100;
+      INTEL_GPU_BOOST_FREQ_ON_AC = 2250;
+      INTEL_GPU_BOOST_FREQ_ON_BAT = 1100;
+
+      # WiFi power saving (Intel BE200)
+      WIFI_PWR_ON_AC = "off";
+      WIFI_PWR_ON_BAT = "on";
+
+      # Audio power saving (handled by snd_hda_intel in acpi.nix too)
+      SOUND_POWER_SAVE_ON_AC = 0;
+      SOUND_POWER_SAVE_ON_BAT = 1;
+      SOUND_POWER_SAVE_CONTROLLER = "Y";
+
+      # USB autosuspend - save power on idle USB devices
+      USB_AUTOSUSPEND = 1;
+      # Exclude input devices from autosuspend (mouse, keyboard)
+      USB_EXCLUDE_BTUSB = 1;
+
+      # Runtime PM for PCIe/SATA devices
+      RUNTIME_PM_ON_AC = "on";
+      RUNTIME_PM_ON_BAT = "auto";
+
+      # SATA link power management
+      SATA_LINKPWR_ON_AC = "med_power_with_dipm";
+      SATA_LINKPWR_ON_BAT = "min_power";
+
+      # NVMe power management (complements kernel param)
+      NVME_POWER_ON_AC = 5;
+      NVME_POWER_ON_BAT = 5;
+
+      # Platform profile (ASUS)
+      PLATFORM_PROFILE_ON_AC = "balanced";
+      PLATFORM_PROFILE_ON_BAT = "low-power";
+
+      # Disable WoL for power savings
+      WOL_DISABLE = "Y";
+    };
   };
 }

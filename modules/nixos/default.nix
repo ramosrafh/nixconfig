@@ -8,10 +8,12 @@
     ./wayland.nix
     ./fonts.nix
     ./networking.nix
+    ./wireguard.nix
     ./docker.nix
     ./users.nix
     ./greetd.nix
     ./hyprlock.nix
+    ./nix-ld.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -61,6 +63,12 @@
   zramSwap = {
     enable = true;
     algorithm = "zstd";
+  };
+
+  boot.kernel.sysctl = {
+    "vm.dirty_ratio" = 10;
+    "vm.dirty_background_ratio" = 5;
+    "vm.swappiness" = 180;
   };
 
   security.rtkit.enable = true;

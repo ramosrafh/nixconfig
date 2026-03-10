@@ -74,6 +74,7 @@ in {
     appflowy
     inkscape
     google-fonts
+    discord
     unzip
     tabiew
     qgis

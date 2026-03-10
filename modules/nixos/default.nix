@@ -1,5 +1,6 @@
 { pkgs, ... }: {
   imports = [
+    ./adb.nix
     ./bluetooth.nix
     ./desktop.nix
     # ./niri.nix

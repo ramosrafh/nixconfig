@@ -71,6 +71,7 @@ in {
     appflowy
     inkscape
     google-fonts
+    discord
     # beekeeper-studio
 
     # OBS Studio com plugins para Wayland/PipeWire

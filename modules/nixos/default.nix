@@ -3,6 +3,7 @@
     ./adb.nix
     ./bluetooth.nix
     ./desktop.nix
+    ./steam.nix
     # ./niri.nix
     ./wayland.nix
     ./fonts.nix

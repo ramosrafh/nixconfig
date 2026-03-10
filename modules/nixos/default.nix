@@ -63,6 +63,12 @@
     algorithm = "zstd";
   };
 
+  boot.kernel.sysctl = {
+    "vm.dirty_ratio" = 10;
+    "vm.dirty_background_ratio" = 5;
+    "vm.swappiness" = 180;
+  };
+
   security.rtkit.enable = true;
 
   # Configure Java to use less memory system-wide

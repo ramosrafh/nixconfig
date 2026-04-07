@@ -3,7 +3,7 @@
 let
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
   # Command to re-apply wallpaper on all outputs
-  wallpaperCmd = "swww img ${wallpaper}";
+  wallpaperCmd = "awww img ${wallpaper}";
 in
 {
   services.kanshi = {
@@ -137,6 +137,23 @@ in
           mode = "3840x2160@60.000Hz";
           position = "0,-2160";
           scale = 2.0;
+        }
+        {
+          criteria = "eDP-1";
+          mode = "2880x1800@120.000Hz";
+          position = "0,0";
+          scale = 1.55;
+        }
+      ];
+      profile.exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
+    } {
+      # Fallback: unknown external monitor on top, notebook below
+      profile.name = "book-unknown-monitor";
+      profile.outputs = [
+        {
+          criteria = "*";
+          position = "0,-1080";
+          scale = 1.0;
         }
         {
           criteria = "eDP-1";

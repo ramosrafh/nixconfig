@@ -5,7 +5,7 @@
     # inputs.niri.nixosModules.niri
   ];
 
-  system.stateVersion = "25.05";
+  system.stateVersion = "26.05";
   networking.hostName = "nix";
 
   boot.loader.timeout = 3;

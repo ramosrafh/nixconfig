@@ -7,7 +7,7 @@
     allowedUDPPorts = [ 51820 ];
   };
 
-  networking.wireguard.enable = true;
+  networking.wireguard.enable = false;
 
   networking.wireguard.interfaces = {
     wg0 = {

@@ -76,17 +76,17 @@ in {
 
       # Spawn at startup
       spawn-at-startup = [
-        { command = ["sh" "-c" "swww-daemon & sleep 1 && swww img ${wallpaper}"]; }
+        { command = ["sh" "-c" "awww-daemon & sleep 1 && awww img ${wallpaper}"]; }
         { command = ["sh" "-c" "sleep 1.0 && waybar"]; }
         { command = ["swaync" "--skip-system-css"]; }
       ];
 
-      # Layer rules for wallpaper (swww-daemon uses namespace "swww-daemon")
+      # Layer rules for wallpaper (awww-daemon uses namespace "awww-daemon")
       # place-within-backdrop puts wallpaper in the backdrop (visible in overview)
       # Combined with transparent background-color, wallpaper shows through workspaces
       layer-rules = [
         {
-          matches = [{ namespace = "^swww-daemon$"; }];
+          matches = [{ namespace = "^awww-daemon$"; }];
           place-within-backdrop = true;
         }
       ];
@@ -456,7 +456,7 @@ in {
     niri
     xwayland-satellite
     waybar
-    swww
+    awww
     fuzzel
     alacritty
     brightnessctl

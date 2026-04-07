@@ -35,7 +35,7 @@ in {
     ./mpv.nix
   ];
 
-  home.stateVersion = "25.05";
+  home.stateVersion = "26.05";
 
   home.packages = with pkgs; [
     firefox
@@ -66,7 +66,7 @@ in {
     binutils
     awscli
     coreutils
-    bitwarden-desktop
+    # bitwarden-desktop broken
     obsidian
     eog
     libreoffice-fresh
@@ -74,12 +74,15 @@ in {
     appflowy
     inkscape
     google-fonts
+    clickup
     discord
     unzip
     tabiew
     qgis
     rclone
     # beekeeper-studio
+    netbird-ui
+    netbird
 
     # OBS Studio com plugins para Wayland/PipeWire
     (wrapOBS {
@@ -115,6 +118,7 @@ in {
       name = themeName;
       package = catppuccin-gtk-theme;
     };
+    gtk4.theme = null;
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;

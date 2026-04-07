@@ -166,6 +166,14 @@
           javaOpts = "-Xms512m -Xmx32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200";
         };
 
+        spark = mkPythonShell {
+          name = "spark";
+          python = pkgs.python311;
+          jdk = pkgs.jdk17;
+          extraPackages = [ pkgs-unfree.vscode ];
+          javaOpts = "-Xms512m -Xmx32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200";
+        };
+
         cemig= mkPythonShell {
           name = "cemig";
           jdk = pkgs.jdk17;

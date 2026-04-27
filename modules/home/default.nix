@@ -83,6 +83,8 @@ in {
     # beekeeper-studio
     netbird-ui
     netbird
+    audacity
+    upower
 
     # OBS Studio com plugins para Wayland/PipeWire
     (wrapOBS {

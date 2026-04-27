@@ -66,7 +66,7 @@ in
       profile.outputs = [
         {
           criteria = "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 21330B005266";
-          mode = "2560x1440@60Hz";
+          mode = "2560x1440@169.831Hz";
           position = "0,-1440";
           scale = 1.0;
         }

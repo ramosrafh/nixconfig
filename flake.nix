@@ -71,14 +71,15 @@
       };
 
       devShells.${system} = let
-        mkPythonShell = { name, python ? pkgs.python314, extraPackages ? [], jdk ? null, javaOpts ? null }: pkgs.mkShell {
+        # Adicionado o parâmetro 'extraBuildInputs'
+        mkPythonShell = { name, python ? pkgs.python314, extraPackages ? [], extraBuildInputs ? [], jdk ? null, javaOpts ? null }: pkgs.mkShell {
           packages = [ python pkgs.uv ] ++ extraPackages ++ (if jdk != null then [ jdk ] else []);
 
           buildInputs = with pkgs; [
             stdenv.cc.cc.lib
             zlib
             zeromq
-          ];
+          ] ++ extraBuildInputs;
 
           shellHook = ''
             export UV_PYTHON="${python}/bin/python"
@@ -97,11 +98,13 @@
             unset UV_PYTHON
             export VIRTUAL_ENV="$VENV_PATH"
             export PATH="$VENV_PATH/bin:$PATH"
-            export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
+
+            # Adicionando o extraBuildInputs no LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath ([
               pkgs.stdenv.cc.cc.lib
               pkgs.zlib
               pkgs.zeromq
-            ]}:$LD_LIBRARY_PATH"
+            ] ++ extraBuildInputs)}:$LD_LIBRARY_PATH"
 
             ${if jdk != null then ''
               export JAVA_HOME="${jdk}"
@@ -179,6 +182,13 @@
           jdk = pkgs.jdk17;
           python = pkgs.python314;
           extraPackages = [ pkgs-unfree.vscode ];
+        };
+
+        tunning = mkPythonShell {
+          name = "tunning";
+          python = pkgs.python312;
+          extraPackages = [ pkgs-unfree.vscode ];
+          extraBuildInputs = [ pkgs.zstd ];
         };
       };
     };

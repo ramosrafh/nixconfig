@@ -17,7 +17,15 @@
     ./ollama.nix
   ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+      # Limita o número de cores por build.
+      cores = 5;
+
+      # 1 ou 2 é o ideal se você quiser economizar recursos gerais da máquina.
+      max-jobs = 1;
+      experimental-features = [ "nix-command" "flakes" ];
+    };
+
   nixpkgs.config.allowUnfree = true;
 
   # Use latest kernel for all hosts

@@ -8,9 +8,19 @@
       cat = "bat --paging=never";
       catp = "bat --paging=never --style=plain";
       zed = "zeditor";
+
+      # Driva Claude Aliases
+      claude-max = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=claude/opus claude";
+      claude-codex = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=codex/opus claude";
+      claude-glm = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=glm/opus claude";
     };
     shellInit = ''
       set -g fish_greeting
+
+      # Load secrets if they exist
+      if test -f ~/.config/fish/secrets.fish
+          source ~/.config/fish/secrets.fish
+      end
     '';
   };
 

@@ -17,7 +17,7 @@ in
         {
           criteria = "Acer Technologies XB241YU #ASOV6yMzDgvd";
           mode = "2560x1440@165.000Hz";
-          position = "-2560,0";
+          position = "2560,0";
           scale = 1.0;
         }
         {

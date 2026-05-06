@@ -14,6 +14,7 @@
     ./greetd.nix
     ./hyprlock.nix
     ./nix-ld.nix
+    ./ollama.nix
   ];
 
   nix.settings = {

@@ -10,6 +10,7 @@
     ./networking.nix
     ./wireguard.nix
     ./docker.nix
+    ./virtualization/windows-vm.nix
     ./users.nix
     ./greetd.nix
     ./hyprlock.nix
@@ -24,6 +25,8 @@
       # 1 ou 2 é o ideal se você quiser economizar recursos gerais da máquina.
       max-jobs = 1;
       experimental-features = [ "nix-command" "flakes" ];
+      substituters = [ "https://niri.cachix.org" ];
+      trusted-public-keys = [ "niri.cachix.org-1:V0dGmv4GzQE1EwJ3QJ2s4vR2HqX1l5zZtPzU8vH4j7Y=" ];
     };
 
   nixpkgs.config.allowUnfree = true;

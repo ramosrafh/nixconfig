@@ -1,454 +1,349 @@
-{ config, pkgs, lib, hostConfig ? "desk", ... }:
+{ pkgs, hostConfig ? "desk", ... }:
 let
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
-  # Outputs now managed by Kanshi instead of Niri
-  # outputsPath = ./outputs + "/${hostConfig}.nix";
-  # outputs = if builtins.pathExists outputsPath
-  #   then import outputsPath
-  #   else {};
-
-  # Per-host keyboard layout
   keyboardLayout = if hostConfig == "book" then "br" else "us";
   keyboardVariant = if hostConfig == "book" then "" else "intl";
 in {
-  programs.niri = {
-    settings = {
-      # Output configuration - disabled, using Kanshi instead
-      # inherit outputs;
-
-      # Input configuration
-      input = {
-        focus-follows-mouse = {
-          enable = false;
-        };
-        mouse = {
-          accel-speed = 0.15;
-        };
-        touchpad = {
-          tap = true;
-          dwt = true;
-          natural-scroll = false;
-        };
-        keyboard = {
-          xkb = {
-            layout = keyboardLayout;
-            variant = keyboardVariant;
-            options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
-          };
-        };
+  programs.niri.settings = {
+    input = {
+      focus-follows-mouse.enable = false;
+      mouse.accel-speed = 0.15;
+      touchpad = {
+        tap = true;
+        dwt = true;
+        natural-scroll = false;
       };
+      keyboard.xkb = {
+        layout = keyboardLayout;
+        variant = keyboardVariant;
+        options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
+      };
+    };
 
-      # Layout configuration
-      layout = {
-        gaps = 14;
-        # Center the focused column when it would overflow the screen
-        # This ensures you can always see a hint of adjacent columns
-        center-focused-column = "on-overflow";
-        background-color = "transparent";
+    layout = {
+      gaps = 14;
+      center-focused-column = "on-overflow";
+      background-color = "transparent";
+      preset-column-widths = [
+        { proportion = 0.5; }
+        { proportion = 0.66667; }
+        { proportion = 0.8; }
+      ];
+      default-column-width = { proportion = 0.6; };
+      focus-ring = {
+        width = 2;
+        active.color = "#cba6f780";
+        inactive.color = "#45475a40";
+      };
+      border.enable = false;
+      struts = {
+        left = 48;
+        right = 48;
+      };
+    };
 
-        # Preset widths for cycling through
-        preset-column-widths = [
-          { proportion = 0.5; }
-          { proportion = 0.66667; }
-          { proportion = 0.8; }
+    spawn-at-startup = [
+      { command = [ "sh" "-c" "awww-daemon & sleep 1 && awww img ${wallpaper}" ]; }
+      { command = [ "sh" "-c" "sleep 1.0 && waybar" ]; }
+      { command = [ "swaync" "--skip-system-css" ]; }
+    ];
+
+    layer-rules = [
+      {
+        matches = [{ namespace = "^awww-daemon$"; }];
+        place-within-backdrop = true;
+      }
+    ];
+
+    prefer-no-csd = true;
+    screenshot-path = "~/Pictures/screenshots/%Y-%m-%d %H-%M-%S.png";
+
+    window-rules = [
+      {
+        open-focused = true;
+        draw-border-with-background = false;
+        clip-to-geometry = true;
+      }
+      {
+        matches = [
+          { app-id = "^firefox$"; }
+          { app-id = "^zen.*$"; }
+          { app-id = "^chromium.*$"; }
+          { app-id = "^google-chrome.*$"; }
         ];
+        default-column-width = { proportion = 0.7; };
+      }
+      {
+        matches = [
+          { app-id = "^codium.*$"; }
+          { app-id = "^code.*$"; }
+          { app-id = "^zed.*$"; }
+          { app-id = "^jetbrains.*$"; }
+        ];
+        default-column-width = { proportion = 0.75; };
+      }
+      {
+        matches = [
+          { app-id = "^Alacritty$"; }
+          { app-id = "^kitty$"; }
+          { app-id = "^foot$"; }
+        ];
+        default-column-width = { proportion = 0.5; };
+      }
+      {
+        matches = [
+          { app-id = "^org.gnome.Nautilus$"; }
+          { app-id = "^thunar$"; }
+          { app-id = "^pcmanfm.*$"; }
+        ];
+        default-column-width = { proportion = 0.55; };
+      }
+      # Keep Meet sharing indicators out of screencasts.
+      {
+        matches = [{ title = "^Meet -.*$"; }];
+        open-floating = true;
+        open-focused = false;
+        block-out-from = "screencast";
+      }
+      {
+        matches = [{ title = "^meet.google.com is sharing your screen.$"; }];
+        open-floating = true;
+        open-focused = false;
+      }
+      {
+        matches = [
+          { title = "^Picture-in-Picture$"; }
+          { title = "^Picture in picture$"; }
+        ];
+        open-floating = true;
+      }
+      {
+        matches = [
+          { app-id = "^gamescope$"; }
+          { app-id = "^steam_app_.*$"; }
+        ];
+        open-fullscreen = true;
+      }
+      {
+        matches = [
+          { app-id = "^file-roller$"; }
+          { app-id = "^org.gnome.Calculator$"; }
+          { app-id = "^pavucontrol$"; }
+          { app-id = "^nm-connection-editor$"; }
+          { app-id = "^blueman-manager$"; }
+        ];
+        open-floating = true;
+      }
+    ];
 
-        # Default new windows to 60% width - larger than before
-        default-column-width = { proportion = 0.6; };
+    animations = {
+      workspace-switch.kind.spring = {
+        damping-ratio = 1.0;
+        stiffness = 1000;
+        epsilon = 0.0001;
+      };
+      horizontal-view-movement.kind.spring = {
+        damping-ratio = 0.95;
+        stiffness = 1000;
+        epsilon = 0.0001;
+      };
+      window-movement.kind.spring = {
+        damping-ratio = 0.95;
+        stiffness = 1000;
+        epsilon = 0.0001;
+      };
+      window-resize.kind.spring = {
+        damping-ratio = 0.95;
+        stiffness = 1000;
+        epsilon = 0.0001;
+      };
+      config-notification-open-close.kind.spring = {
+        damping-ratio = 0.6;
+        stiffness = 1000;
+        epsilon = 0.001;
+      };
+      exit-confirmation-open-close.kind.spring = {
+        damping-ratio = 0.6;
+        stiffness = 500;
+        epsilon = 0.01;
+      };
+    };
 
-        focus-ring = {
-          width = 2;
-          active.color = "#cba6f780";  # Catppuccin Mauve with 50% opacity
-          inactive.color = "#45475a40";  # Catppuccin Surface1 with 25% opacity
-        };
+    cursor = {
+      size = 24;
+      hide-when-typing = true;
+      hide-after-inactive-ms = 10000;
+    };
 
-        border = {
-          enable = false;
-        };
+    hotkey-overlay.skip-at-startup = true;
+    overview.zoom = 0.65;
 
-        # Add struts to always show a small portion of adjacent columns
-        # This creates a visual hint that there's more content to the sides
-        struts = {
-          left = 48;
-          right = 48;
-        };
+    binds = {
+      "Mod+Shift+Slash".action.show-hotkey-overlay = [];
+
+      "Mod+Return".action.spawn = [ "alacritty" ];
+      "Mod+E".action.spawn = [ "nautilus" ];
+      "Mod+R".action.spawn = [ "fuzzel" ];
+      "Mod+S".action.spawn = [ "fuzzel-omnibar" "--command=search" ];
+      "Alt+L".action.spawn = [ "hyprlock" ];
+
+      "Mod+N".action.spawn = [ "swaync-client" "-t" "-sw" ];
+      "Mod+Shift+N".action.spawn = [ "swaync-client" "-C" ];
+
+      "XF86AudioRaiseVolume" = {
+        action.spawn = [ "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+" ];
+        allow-when-locked = true;
+      };
+      "XF86AudioLowerVolume" = {
+        action.spawn = [ "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-" ];
+        allow-when-locked = true;
+      };
+      "XF86MonBrightnessUp" = {
+        action.spawn = [ "brightnessctl" "s" "10%+" ];
+        allow-when-locked = true;
+      };
+      "XF86MonBrightnessDown" = {
+        action.spawn = [ "brightnessctl" "s" "10%-" ];
+        allow-when-locked = true;
+      };
+      "XF86AudioMute" = {
+        action.spawn = [ "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle" ];
+        allow-when-locked = true;
+      };
+      "XF86AudioMicMute" = {
+        action.spawn = [ "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle" ];
+        allow-when-locked = true;
       };
 
-      # Spawn at startup
-      spawn-at-startup = [
-        { command = ["sh" "-c" "awww-daemon & sleep 1 && awww img ${wallpaper}"]; }
-        { command = ["sh" "-c" "sleep 1.0 && waybar"]; }
-        { command = ["swaync" "--skip-system-css"]; }
-      ];
+      "Mod+Q".action.close-window = [];
 
-      # Layer rules for wallpaper (awww-daemon uses namespace "awww-daemon")
-      # place-within-backdrop puts wallpaper in the backdrop (visible in overview)
-      # Combined with transparent background-color, wallpaper shows through workspaces
-      layer-rules = [
-        {
-          matches = [{ namespace = "^awww-daemon$"; }];
-          place-within-backdrop = true;
-        }
-      ];
+      "Mod+Left".action.focus-column-left = [];
+      "Mod+Down".action.focus-window-down = [];
+      "Mod+Up".action.focus-window-up = [];
+      "Mod+Right".action.focus-column-right = [];
+      "Mod+H".action.focus-column-left = [];
+      "Mod+J".action.focus-window-down = [];
+      "Mod+K".action.focus-window-up = [];
+      "Mod+L".action.focus-column-right = [];
 
-      prefer-no-csd = true;
+      "Mod+Ctrl+Left".action.move-column-left = [];
+      "Mod+Ctrl+Down".action.move-window-down = [];
+      "Mod+Ctrl+Up".action.move-window-up = [];
+      "Mod+Ctrl+Right".action.move-column-right = [];
+      "Mod+Ctrl+H".action.move-column-left = [];
+      "Mod+Ctrl+J".action.move-window-down = [];
+      "Mod+Ctrl+K".action.move-window-up = [];
+      "Mod+Ctrl+L".action.move-column-right = [];
 
-      screenshot-path = "~/Pictures/screenshots/%Y-%m-%d %H-%M-%S.png";
+      "Mod+Home".action.focus-column-first = [];
+      "Mod+End".action.focus-column-last = [];
+      "Mod+Ctrl+Home".action.move-column-to-first = [];
+      "Mod+Ctrl+End".action.move-column-to-last = [];
 
-      # Window rules
-      window-rules = [
-        # Default rule for all windows - open centered and with good size
-        {
-          # Open all new windows with focus
-          open-focused = true;
-          # Draw nice borders
-          draw-border-with-background = false;
-          clip-to-geometry = true;
-        }
+      "Mod+Shift+Left".action.focus-monitor-left = [];
+      "Mod+Shift+Down".action.focus-monitor-down = [];
+      "Mod+Shift+Up".action.focus-monitor-up = [];
+      "Mod+Shift+Right".action.focus-monitor-right = [];
+      "Mod+Shift+H".action.focus-monitor-left = [];
+      "Mod+Shift+J".action.focus-monitor-down = [];
+      "Mod+Shift+K".action.focus-monitor-up = [];
+      "Mod+Shift+L".action.focus-monitor-right = [];
 
-        # Browsers - larger width
-        {
-          matches = [
-            { app-id = "^firefox$"; }
-            { app-id = "^zen.*$"; }
-            { app-id = "^chromium.*$"; }
-            { app-id = "^google-chrome.*$"; }
-          ];
-          default-column-width = { proportion = 0.7; };
-        }
+      "Mod+Shift+Ctrl+Left".action.move-column-to-monitor-left = [];
+      "Mod+Shift+Ctrl+Down".action.move-column-to-monitor-down = [];
+      "Mod+Shift+Ctrl+Up".action.move-column-to-monitor-up = [];
+      "Mod+Shift+Ctrl+Right".action.move-column-to-monitor-right = [];
+      "Mod+Shift+Ctrl+H".action.move-column-to-monitor-left = [];
+      "Mod+Shift+Ctrl+J".action.move-column-to-monitor-down = [];
+      "Mod+Shift+Ctrl+K".action.move-column-to-monitor-up = [];
+      "Mod+Shift+Ctrl+L".action.move-column-to-monitor-right = [];
 
-        # IDEs and editors - even larger
-        {
-          matches = [
-            { app-id = "^codium.*$"; }
-            { app-id = "^code.*$"; }
-            { app-id = "^zed.*$"; }
-            { app-id = "^jetbrains.*$"; }
-          ];
-          default-column-width = { proportion = 0.75; };
-        }
+      "Mod+Page_Down".action.focus-workspace-down = [];
+      "Mod+Page_Up".action.focus-workspace-up = [];
+      "Mod+I".action.focus-workspace-down = [];
+      "Mod+U".action.focus-workspace-up = [];
 
-        # Terminals - medium width
-        {
-          matches = [
-            { app-id = "^Alacritty$"; }
-            { app-id = "^kitty$"; }
-            { app-id = "^foot$"; }
-          ];
-          default-column-width = { proportion = 0.5; };
-        }
+      "Mod+Shift+Page_Down".action.move-column-to-workspace-down = [];
+      "Mod+Shift+Page_Up".action.move-column-to-workspace-up = [];
+      "Mod+Shift+I".action.move-column-to-workspace-down = [];
+      "Mod+Shift+U".action.move-column-to-workspace-up = [];
 
-        # File managers
-        {
-          matches = [
-            { app-id = "^org.gnome.Nautilus$"; }
-            { app-id = "^thunar$"; }
-            { app-id = "^pcmanfm.*$"; }
-          ];
-          default-column-width = { proportion = 0.55; };
-        }
+      "Mod+Ctrl+Page_Down".action.move-workspace-down = [];
+      "Mod+Ctrl+Page_Up".action.move-workspace-up = [];
+      "Mod+Ctrl+I".action.move-workspace-down = [];
+      "Mod+Ctrl+U".action.move-workspace-up = [];
 
-        # Google Meet floating window - special handling
-        {
-          matches = [{ title = "^Meet -.*$"; }];
-          open-floating = true;
-          open-focused = false;
-          block-out-from = "screencast";
-        }
-        {
-          matches = [{ title = "^meet.google.com is sharing your screen.$"; }];
-          open-floating = true;
-          open-focused = false;
-        }
-
-        # Picture-in-Picture windows (floating)
-        {
-          matches = [
-            { title = "^Picture-in-Picture$"; }
-            { title = "^Picture in picture$"; }
-          ];
-          open-floating = true;
-        }
-
-        # Games (gamescope/steam) - fullscreen on current monitor
-        {
-          matches = [
-            { app-id = "^gamescope$"; }
-            { app-id = "^steam_app_.*$"; }
-          ];
-          open-fullscreen = true;
-        }
-
-        # Dialogs and popups - floating
-        {
-          matches = [
-            { app-id = "^file-roller$"; }
-            { app-id = "^org.gnome.Calculator$"; }
-            { app-id = "^pavucontrol$"; }
-            { app-id = "^nm-connection-editor$"; }
-            { app-id = "^blueman-manager$"; }
-          ];
-          open-floating = true;
-        }
-      ];
-
-      # Animations
-      animations = {
-        workspace-switch.kind = {
-          spring = {
-            damping-ratio = 1.0;
-            stiffness = 1000;
-            epsilon = 0.0001;
-          };
-        };
-
-        horizontal-view-movement.kind = {
-          spring = {
-            damping-ratio = 0.95;
-            stiffness = 1000;
-            epsilon = 0.0001;
-          };
-        };
-
-        window-movement.kind = {
-          spring = {
-            damping-ratio = 0.95;
-            stiffness = 1000;
-            epsilon = 0.0001;
-          };
-        };
-
-        window-resize.kind = {
-          spring = {
-            damping-ratio = 0.95;
-            stiffness = 1000;
-            epsilon = 0.0001;
-          };
-        };
-
-        config-notification-open-close.kind = {
-          spring = {
-            damping-ratio = 0.6;
-            stiffness = 1000;
-            epsilon = 0.001;
-          };
-        };
-
-        exit-confirmation-open-close.kind = {
-          spring = {
-            damping-ratio = 0.6;
-            stiffness = 500;
-            epsilon = 0.01;
-          };
-        };
+      "Mod+WheelScrollDown" = {
+        action.focus-workspace-down = [];
+        cooldown-ms = 150;
+      };
+      "Mod+WheelScrollUp" = {
+        action.focus-workspace-up = [];
+        cooldown-ms = 150;
+      };
+      "Mod+Ctrl+WheelScrollDown" = {
+        action.move-column-to-workspace-down = [];
+        cooldown-ms = 150;
+      };
+      "Mod+Ctrl+WheelScrollUp" = {
+        action.move-column-to-workspace-up = [];
+        cooldown-ms = 150;
       };
 
-      # Cursor configuration
-      cursor = {
-        size = 24;
-        hide-when-typing = true;
-        hide-after-inactive-ms = 10000;
-      };
+      "Mod+WheelScrollRight".action.focus-column-right = [];
+      "Mod+WheelScrollLeft".action.focus-column-left = [];
+      "Mod+Ctrl+WheelScrollRight".action.move-column-right = [];
+      "Mod+Ctrl+WheelScrollLeft".action.move-column-left = [];
+      "Mod+Shift+WheelScrollDown".action.focus-column-right = [];
+      "Mod+Shift+WheelScrollUp".action.focus-column-left = [];
+      "Mod+Ctrl+Shift+WheelScrollDown".action.move-column-right = [];
+      "Mod+Ctrl+Shift+WheelScrollUp".action.move-column-left = [];
 
-      # Hotkey overlay configuration
-      hotkey-overlay = {
-        skip-at-startup = true;
-      };
+      "Mod+1".action.focus-workspace = 1;
+      "Mod+2".action.focus-workspace = 2;
+      "Mod+3".action.focus-workspace = 3;
+      "Mod+4".action.focus-workspace = 4;
+      "Mod+5".action.focus-workspace = 5;
+      "Mod+6".action.focus-workspace = 6;
+      "Mod+7".action.focus-workspace = 7;
+      "Mod+8".action.focus-workspace = 8;
+      "Mod+9".action.focus-workspace = 9;
 
-      # Overview configuration
-      overview = {
-        zoom = 0.65;
-      };
+      "Mod+Shift+1".action.move-column-to-workspace = 1;
+      "Mod+Shift+2".action.move-column-to-workspace = 2;
+      "Mod+Shift+3".action.move-column-to-workspace = 3;
+      "Mod+Shift+4".action.move-column-to-workspace = 4;
+      "Mod+Shift+5".action.move-column-to-workspace = 5;
+      "Mod+Shift+6".action.move-column-to-workspace = 6;
+      "Mod+Shift+7".action.move-column-to-workspace = 7;
+      "Mod+Shift+8".action.move-column-to-workspace = 8;
+      "Mod+Shift+9".action.move-column-to-workspace = 9;
 
-      # Keybindings - using raw action syntax throughout
-      binds = {
-        "Mod+Shift+Slash".action.show-hotkey-overlay = [];
+      "Mod+Comma".action.consume-window-into-column = [];
+      "Mod+Period".action.expel-window-from-column = [];
+      "Mod+BracketLeft".action.consume-or-expel-window-left = [];
+      "Mod+BracketRight".action.consume-or-expel-window-right = [];
 
-        # Application launchers
-        "Mod+Return".action.spawn = ["alacritty"];
-        "Mod+E".action.spawn = ["nautilus"];
-        "Mod+R".action.spawn = ["fuzzel"];
-        "Mod+S".action.spawn = ["fuzzel-omnibar" "--command=search"];
-        "Alt+L".action.spawn = ["hyprlock"];
+      "Mod+D".action.switch-preset-column-width = [];
+      "Mod+Shift+D".action.reset-window-height = [];
+      "Mod+F".action.maximize-column = [];
+      "Mod+Shift+F".action.fullscreen-window = [];
+      "Mod+C".action.center-column = [];
 
-        # Notification center toggle
-        "Mod+N".action.spawn = ["swaync-client" "-t" "-sw"];
-        # Dismiss all popup notifications
-        "Mod+Shift+N".action.spawn = ["swaync-client" "-C"];
+      "Mod+Minus".action.set-column-width = "-10%";
+      "Mod+Equal".action.set-column-width = "+10%";
+      "Mod+Shift+Minus".action.set-window-height = "-10%";
+      "Mod+Shift+Equal".action.set-window-height = "+10%";
 
-        # Media keys
-        "XF86AudioRaiseVolume" = {
-          action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"];
-          allow-when-locked = true;
-        };
-        "XF86AudioLowerVolume" = {
-          action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"];
-          allow-when-locked = true;
-        };
-        "XF86MonBrightnessUp" = {
-          action.spawn = ["brightnessctl" "s" "10%+"];
-          allow-when-locked = true;
-        };
-        "XF86MonBrightnessDown" = {
-          action.spawn = ["brightnessctl" "s" "10%-"];
-          allow-when-locked = true;
-        };
-        "XF86AudioMute" = {
-          action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
-          allow-when-locked = true;
-        };
-        "XF86AudioMicMute" = {
-          action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
-          allow-when-locked = true;
-        };
+      "Print".action.screenshot = [];
+      "Ctrl+Print".action.screenshot-screen = [];
+      "Alt+Print".action.screenshot-window = [];
 
-        # Window management
-        "Mod+Q".action.close-window = [];
+      "Mod+Shift+E".action.quit = [];
+      "Mod+Shift+P".action.power-off-monitors = [];
 
-        # Focus navigation (arrows)
-        "Mod+Left".action.focus-column-left = [];
-        "Mod+Down".action.focus-window-down = [];
-        "Mod+Up".action.focus-window-up = [];
-        "Mod+Right".action.focus-column-right = [];
-
-        # Focus navigation (vim keys)
-        "Mod+H".action.focus-column-left = [];
-        "Mod+J".action.focus-window-down = [];
-        "Mod+K".action.focus-window-up = [];
-        "Mod+L".action.focus-column-right = [];
-
-        # Move windows (arrows)
-        "Mod+Ctrl+Left".action.move-column-left = [];
-        "Mod+Ctrl+Down".action.move-window-down = [];
-        "Mod+Ctrl+Up".action.move-window-up = [];
-        "Mod+Ctrl+Right".action.move-column-right = [];
-
-        # Move windows (vim keys)
-        "Mod+Ctrl+H".action.move-column-left = [];
-        "Mod+Ctrl+J".action.move-window-down = [];
-        "Mod+Ctrl+K".action.move-window-up = [];
-        "Mod+Ctrl+L".action.move-column-right = [];
-
-        # Focus first/last column
-        "Mod+Home".action.focus-column-first = [];
-        "Mod+End".action.focus-column-last = [];
-        "Mod+Ctrl+Home".action.move-column-to-first = [];
-        "Mod+Ctrl+End".action.move-column-to-last = [];
-
-        # Focus monitor
-        "Mod+Shift+Left".action.focus-monitor-left = [];
-        "Mod+Shift+Down".action.focus-monitor-down = [];
-        "Mod+Shift+Up".action.focus-monitor-up = [];
-        "Mod+Shift+Right".action.focus-monitor-right = [];
-        "Mod+Shift+H".action.focus-monitor-left = [];
-        "Mod+Shift+J".action.focus-monitor-down = [];
-        "Mod+Shift+K".action.focus-monitor-up = [];
-        "Mod+Shift+L".action.focus-monitor-right = [];
-
-        # Move to monitor
-        "Mod+Shift+Ctrl+Left".action.move-column-to-monitor-left = [];
-        "Mod+Shift+Ctrl+Down".action.move-column-to-monitor-down = [];
-        "Mod+Shift+Ctrl+Up".action.move-column-to-monitor-up = [];
-        "Mod+Shift+Ctrl+Right".action.move-column-to-monitor-right = [];
-        "Mod+Shift+Ctrl+H".action.move-column-to-monitor-left = [];
-        "Mod+Shift+Ctrl+J".action.move-column-to-monitor-down = [];
-        "Mod+Shift+Ctrl+K".action.move-column-to-monitor-up = [];
-        "Mod+Shift+Ctrl+L".action.move-column-to-monitor-right = [];
-
-        # Workspace navigation
-        "Mod+Page_Down".action.focus-workspace-down = [];
-        "Mod+Page_Up".action.focus-workspace-up = [];
-        "Mod+I".action.focus-workspace-down = [];
-        "Mod+U".action.focus-workspace-up = [];
-
-        "Mod+Shift+Page_Down".action.move-column-to-workspace-down = [];
-        "Mod+Shift+Page_Up".action.move-column-to-workspace-up = [];
-        "Mod+Shift+I".action.move-column-to-workspace-down = [];
-        "Mod+Shift+U".action.move-column-to-workspace-up = [];
-
-        "Mod+Ctrl+Page_Down".action.move-workspace-down = [];
-        "Mod+Ctrl+Page_Up".action.move-workspace-up = [];
-        "Mod+Ctrl+I".action.move-workspace-down = [];
-        "Mod+Ctrl+U".action.move-workspace-up = [];
-
-        # Mouse wheel
-        "Mod+WheelScrollDown" = {
-          action.focus-workspace-down = [];
-          cooldown-ms = 150;
-        };
-        "Mod+WheelScrollUp" = {
-          action.focus-workspace-up = [];
-          cooldown-ms = 150;
-        };
-        "Mod+Ctrl+WheelScrollDown" = {
-          action.move-column-to-workspace-down = [];
-          cooldown-ms = 150;
-        };
-        "Mod+Ctrl+WheelScrollUp" = {
-          action.move-column-to-workspace-up = [];
-          cooldown-ms = 150;
-        };
-
-        "Mod+WheelScrollRight".action.focus-column-right = [];
-        "Mod+WheelScrollLeft".action.focus-column-left = [];
-        "Mod+Ctrl+WheelScrollRight".action.move-column-right = [];
-        "Mod+Ctrl+WheelScrollLeft".action.move-column-left = [];
-        "Mod+Shift+WheelScrollDown".action.focus-column-right = [];
-        "Mod+Shift+WheelScrollUp".action.focus-column-left = [];
-        "Mod+Ctrl+Shift+WheelScrollDown".action.move-column-right = [];
-        "Mod+Ctrl+Shift+WheelScrollUp".action.move-column-left = [];
-
-        # Workspace numbers
-        "Mod+1".action.focus-workspace = 1;
-        "Mod+2".action.focus-workspace = 2;
-        "Mod+3".action.focus-workspace = 3;
-        "Mod+4".action.focus-workspace = 4;
-        "Mod+5".action.focus-workspace = 5;
-        "Mod+6".action.focus-workspace = 6;
-        "Mod+7".action.focus-workspace = 7;
-        "Mod+8".action.focus-workspace = 8;
-        "Mod+9".action.focus-workspace = 9;
-
-        "Mod+Shift+1".action.move-column-to-workspace = 1;
-        "Mod+Shift+2".action.move-column-to-workspace = 2;
-        "Mod+Shift+3".action.move-column-to-workspace = 3;
-        "Mod+Shift+4".action.move-column-to-workspace = 4;
-        "Mod+Shift+5".action.move-column-to-workspace = 5;
-        "Mod+Shift+6".action.move-column-to-workspace = 6;
-        "Mod+Shift+7".action.move-column-to-workspace = 7;
-        "Mod+Shift+8".action.move-column-to-workspace = 8;
-        "Mod+Shift+9".action.move-column-to-workspace = 9;
-
-        # Column management
-        "Mod+Comma".action.consume-window-into-column = [];
-        "Mod+Period".action.expel-window-from-column = [];
-        "Mod+BracketLeft".action.consume-or-expel-window-left = [];
-        "Mod+BracketRight".action.consume-or-expel-window-right = [];
-
-        # Window sizing
-        "Mod+D".action.switch-preset-column-width = [];
-        "Mod+Shift+D".action.reset-window-height = [];
-        "Mod+F".action.maximize-column = [];
-        "Mod+Shift+F".action.fullscreen-window = [];
-        "Mod+C".action.center-column = [];
-
-        "Mod+Minus".action.set-column-width = "-10%";
-        "Mod+Equal".action.set-column-width = "+10%";
-        "Mod+Shift+Minus".action.set-window-height = "-10%";
-        "Mod+Shift+Equal".action.set-window-height = "+10%";
-
-        # Screenshots
-        "Print".action.screenshot = [];
-        "Ctrl+Print".action.screenshot-screen = [];
-        "Alt+Print".action.screenshot-window = [];
-
-        # System
-        "Mod+Shift+E".action.quit = [];
-        "Mod+Shift+P".action.power-off-monitors = [];
-
-        # Toggle secondary monitor (useful for gaming to prevent mouse escape)
-        "Mod+Shift+M".action.spawn = ["sh" "-c" "if [ -f /tmp/dp2-off ]; then niri msg output DP-2 on && rm /tmp/dp2-off; else niri msg output DP-2 off && touch /tmp/dp2-off; fi"];
-      };
+      # Toggle secondary monitor while gaming to prevent mouse escape.
+      "Mod+Shift+M".action.spawn = [ "sh" "-c" "if [ -f /tmp/dp2-off ]; then niri msg output DP-2 on && rm /tmp/dp2-off; else niri msg output DP-2 off && touch /tmp/dp2-off; fi" ];
     };
   };
 

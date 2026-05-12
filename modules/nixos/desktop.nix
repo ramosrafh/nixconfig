@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-  # Minimal audio setup with PipeWire
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -10,44 +9,30 @@
 
   security.rtkit.enable = true;
 
-  # GNOME services for GTK4/libadwaita apps like Nautilus
-  # Keyring enabled but SSH component disabled - we want terminal prompts for SSH
   services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true;
-
-  # GNOME Online Accounts for Google Drive integration in Nautilus
   services.gnome.gnome-online-accounts.enable = true;
   services.gnome.at-spi2-core.enable = true;
 
-  # System-wide environment variables for GTK4 theme support
   environment.sessionVariables = {
     GTK_USE_PORTAL = "1";
     GSETTINGS_BACKEND = "dconf";
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
-    # Disable graphical SSH password prompts - force terminal-based password entry
+    # Force terminal-based SSH password prompts instead of gcr/askpass.
     SSH_ASKPASS = "";
     SSH_ASKPASS_REQUIRE = "never";
     GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
-    # Prevent gcr/gnome-keyring from providing SSH agent
     GCR_SSH_ASKPASS = "";
   };
 
-  # Disable gnome-keyring SSH agent component via systemd
-  systemd.user.services.gnome-keyring-ssh = {
-    enable = false;
-  };
+  systemd.user.services.gnome-keyring-ssh.enable = false;
 
   services.udisks2.enable = true;
-
-  # Enable ratbagd for Piper (gaming mouse configuration)
   services.ratbagd.enable = true;
 
-  # Enable polkit for disk operations
   security.polkit.enable = true;
-
-  # Allow wheel group users to perform udisks2 operations without password
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
       var YES = polkit.Result.YES;
@@ -85,13 +70,9 @@
       xdg-desktop-portal-gnome
     ];
     config = {
-      common = {
-        default = [ "gtk" ];
-      };
+      common.default = [ "gtk" ];
       niri = {
-        default = [
-          "gtk"
-        ];
+        default = [ "gtk" ];
         "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
         "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
@@ -109,11 +90,10 @@
     fd
     eza
     pavucontrol
-    pciutils  # for lspci
-    usbutils  # for lsusb
+    pciutils
+    usbutils
     ntfs3g
     gnome-disk-utility
-    # GTK4 and libadwaita support
     gtk4
     libadwaita
     gsettings-desktop-schemas

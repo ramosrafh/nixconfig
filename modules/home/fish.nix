@@ -9,15 +9,79 @@
       catp = "bat --paging=never --style=plain";
       zed = "zeditor";
 
-      # Driva Claude Aliases
       claude-max = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=claude/opus claude";
       claude-codex = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=codex/opus claude";
       claude-glm = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=glm/opus claude";
     };
+    functions = {
+      dev = {
+        description = "Open a nixconfig devShell";
+        body = ''
+          set -l flake "path:$HOME/nixconfig"
+
+          if test (count $argv) -eq 0
+              nix develop "$flake"
+          else
+              nix develop "$flake#$argv[1]"
+          end
+        '';
+      };
+
+      claude-mcp-clickhouse = {
+        description = "Register global ClickHouse MCP for Claude Code";
+        body = ''
+          claude mcp add-json clickhouse '{
+            "type": "stdio",
+            "command": "fish",
+            "args": [
+              "-lc",
+              "if test -f ~/.config/fish/secrets.fish; source ~/.config/fish/secrets.fish; end; set -q CLICKHOUSE_MCP_IMAGE; or set -gx CLICKHOUSE_MCP_IMAGE mcp/clickhouse:latest; set -q CLICKHOUSE_SECURE; or set -gx CLICKHOUSE_SECURE false; set -q CLICKHOUSE_VERIFY; or set -gx CLICKHOUSE_VERIFY true; set -q CLICKHOUSE_CONNECT_TIMEOUT; or set -gx CLICKHOUSE_CONNECT_TIMEOUT 10; set -q CLICKHOUSE_SEND_RECEIVE_TIMEOUT; or set -gx CLICKHOUSE_SEND_RECEIVE_TIMEOUT 30; exec docker run --rm -i -e CLICKHOUSE_HOST -e CLICKHOUSE_PORT -e CLICKHOUSE_USER -e CLICKHOUSE_PASSWORD -e CLICKHOUSE_DATABASE -e CLICKHOUSE_SECURE -e CLICKHOUSE_VERIFY -e CLICKHOUSE_CONNECT_TIMEOUT -e CLICKHOUSE_SEND_RECEIVE_TIMEOUT \"$CLICKHOUSE_MCP_IMAGE\""
+            ]
+          }' --scope user
+        '';
+      };
+
+      __nixconfig_host = {
+        body = ''
+          switch "$argv[1]"
+              case book desk
+                  return 0
+              case '*'
+                  echo "host inválido: $argv[1]"
+                  echo "use: book ou desk"
+                  return 1
+          end
+        '';
+      };
+
+      nfu = {
+        description = "Update nixconfig flake inputs";
+        body = ''
+          set -l nixconfig "$HOME/nixconfig"
+          nix flake update --flake "$nixconfig"
+        '';
+      };
+
+      nrs = {
+        description = "Switch nixconfig host";
+        body = ''
+          __nixconfig_host "$argv[1]"; or return 1
+          sudo nixos-rebuild switch --flake "path:$HOME/nixconfig#$argv[1]"
+        '';
+      };
+
+      nrb = {
+        description = "Build nixconfig host for next boot";
+        body = ''
+          __nixconfig_host "$argv[1]"; or return 1
+          sudo nixos-rebuild boot --flake "path:$HOME/nixconfig#$argv[1]"
+        '';
+      };
+    };
     shellInit = ''
       set -g fish_greeting
 
-      # Load secrets if they exist
+      # Load secrets outside the Nix store.
       if test -f ~/.config/fish/secrets.fish
           source ~/.config/fish/secrets.fish
       end
@@ -28,19 +92,14 @@
     enable = true;
     enableFishIntegration = true;
     settings = {
-      # Minimal prompt format
       format = "$directory$git_branch$git_status$character";
-
-      # Add a line break between prompts for breathing room
       add_newline = true;
 
-      # Character that changes based on success/failure
       character = {
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
       };
 
-      # Directory configuration
       directory = {
         truncation_length = 3;
         truncate_to_repo = true;
@@ -48,14 +107,12 @@
         style = "bold cyan";
       };
 
-      # Git branch
       git_branch = {
         format = "[$symbol$branch]($style) ";
         symbol = " ";
         style = "bold purple";
       };
 
-      # Git status with minimal symbols
       git_status = {
         format = "[$all_status$ahead_behind]($style) ";
         style = "bold yellow";
@@ -71,7 +128,6 @@
         deleted = "✘";
       };
 
-      # Show command duration for long commands
       cmd_duration = {
         disabled = false;
         format = "[$duration]($style) ";
@@ -79,7 +135,6 @@
         style = "bold yellow";
       };
 
-      # Show language/environment only when in project
       nodejs = {
         format = "[$symbol($version )]($style)";
         symbol = " ";
@@ -101,7 +156,6 @@
         disabled = false;
       };
 
-      # Disable everything else for true minimalism
       aws.disabled = true;
       gcloud.disabled = true;
       kubernetes.disabled = true;
@@ -112,12 +166,11 @@
 
   programs.bat = {
     enable = true;
-    config = {
-      theme = "catppuccin-mocha";
-    };
+    config.theme = "catppuccin-mocha";
   };
 
   programs.eza.enable = true;
+
   programs.zoxide = {
     enable = true;
     enableFishIntegration = true;
@@ -130,29 +183,16 @@
     settings = {
       sync_address = "";
       sync.records = false;
-      # Use compact mode for minimal UI
       style = "compact";
-
-      # Catppuccin Mocha theme colors
       inline_height = 14;
-
-      # Search settings
       filter_mode_shell_up_key_binding = "directory";
       search_mode = "fuzzy";
       invert = true;
       enter_accept = true;
-
-      # Disable up arrow key binding
       keymap_mode = "vim-insert";
-
-      # UI preferences
       show_preview = true;
       show_help = false;
       exit_mode = "return-original";
-
-
-
-      # History settings
       history_filter = [
         "^ls"
         "^cd"

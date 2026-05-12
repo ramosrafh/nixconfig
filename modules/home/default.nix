@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, ... }:
+{ pkgs, inputs, ... }:
 let
   catppuccin-gtk-theme = pkgs.stdenv.mkDerivation {
     pname = "catppuccin-gtk-theme";
@@ -66,7 +66,6 @@ in {
     binutils
     awscli
     coreutils
-    # bitwarden-desktop broken
     obsidian
     eog
     libreoffice-fresh
@@ -80,18 +79,16 @@ in {
     tabiew
     qgis
     rclone
-    # beekeeper-studio
     netbird-ui
     netbird
     audacity
     upower
 
-    # OBS Studio com plugins para Wayland/PipeWire
     (wrapOBS {
       plugins = with obs-studio-plugins; [
-        wlrobs                    # Captura de tela Wayland (wlroots)
-        obs-pipewire-audio-capture # Captura de áudio via PipeWire
-        obs-vkcapture             # Captura de jogos Vulkan/OpenGL
+        wlrobs
+        obs-pipewire-audio-capture
+        obs-vkcapture
       ];
     })
   ];
@@ -102,15 +99,12 @@ in {
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
-    # Disable graphical SSH password prompts, use terminal only
+    # Force terminal-based SSH password prompts instead of gcr/askpass.
     SSH_ASKPASS = "";
     SSH_ASKPASS_REQUIRE = "never";
     GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
-    # Prevent gcr from providing SSH askpass
     GCR_SSH_ASKPASS = "";
-    # Ensure no display is passed to SSH for askpass
     DISPLAY_FOR_SSH = "";
-    # Limit Java memory usage for applications like DBeaver
     _JAVA_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
   };
 
@@ -125,15 +119,10 @@ in {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
-  # Symlink theme to ~/.themes for GTK3 discovery
   home.file.".themes/${themeName}".source = themeDir;
 
   dconf.settings = {
@@ -142,12 +131,8 @@ in {
       gtk-theme = themeName;
       icon-theme = "Papirus-Dark";
     };
-    "org/gtk/gtk4/settings/file-chooser" = {
-      sort-directories-first = true;
-    };
-    "org/gtk/settings/file-chooser" = {
-      sort-directories-first = true;
-    };
+    "org/gtk/gtk4/settings/file-chooser".sort-directories-first = true;
+    "org/gtk/settings/file-chooser".sort-directories-first = true;
     "org/gnome/nautilus/preferences" = {
       default-folder-viewer = "list-view";
       search-filter-time-type = "last_modified";
@@ -157,14 +142,11 @@ in {
       use-tree-view = true;
       default-zoom-level = "standard";
     };
-    "org/gnome/nautilus/icon-view" = {
-      default-zoom-level = "standard";
-    };
+    "org/gnome/nautilus/icon-view".default-zoom-level = "standard";
   };
 
   home.pointerCursor = {
     gtk.enable = true;
-    # x11.enable = true;
     size = 24;
     name = "Adwaita";
     package = pkgs.adwaita-icon-theme;

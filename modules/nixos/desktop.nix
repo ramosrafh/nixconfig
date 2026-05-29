@@ -102,5 +102,6 @@
     gnome-online-accounts
     gnome-control-center
     nautilus
+    irpf
   ];
 }

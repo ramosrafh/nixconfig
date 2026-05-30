@@ -4,7 +4,7 @@
     ./bluetooth.nix
     ./desktop.nix
     ./steam.nix
-    # ./niri.nix
+    ./niri.nix
     ./wayland.nix
     ./fonts.nix
     ./networking.nix
@@ -15,7 +15,6 @@
     ./greetd.nix
     ./hyprlock.nix
     ./nix-ld.nix
-    ./ollama.nix
   ];
 
   nix.settings = {
@@ -25,8 +24,14 @@
       # 1 ou 2 é o ideal se você quiser economizar recursos gerais da máquina.
       max-jobs = 1;
       experimental-features = [ "nix-command" "flakes" ];
-      substituters = [ "https://niri.cachix.org" ];
-      trusted-public-keys = [ "niri.cachix.org-1:V0dGmv4GzQE1EwJ3QJ2s4vR2HqX1l5zZtPzU8vH4j7Y=" ];
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
 
   nixpkgs.config.allowUnfree = true;

@@ -3,6 +3,7 @@
 let
   commonPythonDeps = [
     "ipython"
+    "ipykernel"
   ];
 
   mkPythonShell =

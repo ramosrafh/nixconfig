@@ -2,6 +2,7 @@
   imports = [
     ./hardware.nix
     ../../modules/nixos
+    ../../modules/nixos/ollama.nix
     # inputs.niri.nixosModules.niri
   ];
 

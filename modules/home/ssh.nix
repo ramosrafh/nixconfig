@@ -13,24 +13,23 @@ let
   };
 
   drivaHost = hostname: user: {
-    inherit hostname user;
-    identityFile = "~/.ssh/driva";
-    extraOptions = controlOptions;
-  };
+    HostName = hostname;
+    User = user;
+    IdentityFile = "~/.ssh/driva";
+  } // controlOptions;
 
   githubHost = identityFile: {
-    hostname = "github.com";
-    user = "git";
-    inherit identityFile;
-    extraOptions = agentOptions;
-  };
+    HostName = "github.com";
+    User = "git";
+    IdentityFile = identityFile;
+  } // agentOptions;
 in
 {
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       "d0" = drivaHost "ns5032804.ip-148-113-208.net" "debian";
       "d1" = drivaHost "ns5032832.ip-148-113-208.net" "debian";
       "d2" = drivaHost "ns5029795.ip-148-113-189.net" "debian";
@@ -39,11 +38,10 @@ in
       "ddb" = drivaHost "driva-db.driva.io" "debian";
 
       "hetz" = {
-        hostname = "46.225.24.175";
-        user = "ramos";
-        identityFile = "~/.ssh/ramos";
-        extraOptions = controlOptions;
-      };
+        HostName = "46.225.24.175";
+        User = "ramos";
+        IdentityFile = "~/.ssh/ramos";
+      } // controlOptions;
 
       "github.com-ramos" = githubHost "~/.ssh/ramos";
       "github.com-driva" = githubHost "~/.ssh/driva";

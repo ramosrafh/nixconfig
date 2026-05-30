@@ -85,6 +85,7 @@ in {
     upower
     btrfs-assistant
     anydesk
+    codex
 
     (wrapOBS {
       plugins = with obs-studio-plugins; [

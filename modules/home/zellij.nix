@@ -8,8 +8,24 @@
     mouse_mode true
     pane_frames false
     scrollback_editor "helix"
-    theme "catppuccin-mocha"
+    theme "broken-pine"
     show_startup_tips false
+
+    themes {
+      broken-pine {
+        fg 215 215 255
+        bg 17 18 21
+        black 17 18 21
+        red 234 110 146
+        green 92 193 163
+        yellow 245 193 119
+        blue 155 206 214
+        magenta 157 117 145
+        cyan 49 115 143
+        white 224 222 244
+        orange 255 175 135
+      }
+    }
 
     ui {
       pane_frames {

@@ -1,5 +1,6 @@
 { pkgs, ... }:
 let
+  brokenPine = import ./broken-pine.nix;
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
 in {
   programs.hyprlock = {
@@ -34,13 +35,13 @@ in {
         dots_spacing = 0.35;
         dots_center = true;
         outer_color = "rgba(0, 0, 0, 0)";
-        inner_color = "rgba(30, 30, 46, 0.4)";
-        font_color = "rgb(205, 214, 244)";
+        inner_color = "rgba(17, 18, 21, 0.4)";
+        font_color = "rgb(215, 215, 255)";
         fade_on_empty = false;
         rounding = -1;
-        check_color = "rgb(166, 227, 161)";
-        fail_color = "rgb(243, 139, 168)";
-        placeholder_text = ''<i><span foreground="##cdd6f4">Password...</span></i>'';
+        check_color = "rgb(92, 193, 163)";
+        fail_color = "rgb(234, 110, 146)";
+        placeholder_text = ''<i><span foreground="#${brokenPine.noHash brokenPine.text}">Password...</span></i>'';
         hide_input = false;
         position = "0, -200";
         halign = "center";
@@ -52,7 +53,7 @@ in {
         {
           monitor = "";
           text = ''cmd[update:1000] echo "$(date +"%A, %B %d")"'';
-          color = "rgba(205, 214, 244, 0.75)";
+          color = "rgba(215, 215, 255, 0.75)";
           font_size = 22;
           font_family = "JetBrains Mono";
           position = "0, 300";
@@ -63,7 +64,7 @@ in {
         {
           monitor = "";
           text = ''cmd[update:1000] echo "$(date +"%-I:%M")"'';
-          color = "rgba(205, 214, 244, 0.75)";
+          color = "rgba(215, 215, 255, 0.75)";
           font_size = 140;
           font_family = "JetBrains Mono Extrabold";
           position = "0, 200";

@@ -1,0 +1,150 @@
+"attribute" = "attribute"
+
+"type" = "property"
+"type.enum.variant" = "orange"
+
+"constructor" = "orange"
+
+"constant" = "orange"
+"constant.character" = "keyword"
+"constant.character.escape" = "keyword"
+
+"string" = "orange"
+"string.regexp" = "red"
+"string.special" = "orange"
+"string.special.symbol" = "text"
+
+"comment" = { fg = "disabled", modifiers = ["italic"] }
+
+"variable" = "text"
+"variable.parameter" = { fg = "magenta", modifiers = ["italic"] }
+"variable.builtin" = "red"
+"variable.other.member" = { fg = "property", modifiers = ["italic"] }
+
+"label" = "red"
+
+"punctuation" = "muted"
+"punctuation.special" = "text"
+
+"keyword" = "keyword"
+"keyword.control.conditional" = { fg = "keyword", modifiers = ["italic"] }
+
+"operator" = "muted"
+
+"function" = "function"
+"function.macro" = "attribute"
+
+"tag" = "property"
+
+"namespace" = { fg = "property", modifiers = ["italic"] }
+
+"special" = "blue"
+
+"markup.heading.1" = "red"
+"markup.heading.2" = "orange"
+"markup.heading.3" = "yellow"
+"markup.heading.4" = "green"
+"markup.heading.5" = "blue"
+"markup.heading.6" = "purple"
+"markup.list" = "keyword"
+"markup.list.unchecked" = "muted_alt"
+"markup.list.checked" = "green"
+"markup.bold" = { fg = "red", modifiers = ["bold"] }
+"markup.italic" = { fg = "red", modifiers = ["italic"] }
+"markup.link.url" = { fg = "blue", modifiers = ["italic", "underlined"] }
+"markup.link.text" = "purple"
+"markup.link.label" = "blue"
+"markup.raw" = "orange"
+"markup.quote" = "magenta"
+
+"diff.plus" = "green"
+"diff.minus" = "red"
+"diff.delta" = "blue"
+
+"ui.background" = { fg = "text", bg = "background" }
+
+"ui.linenr" = { fg = "muted" }
+"ui.linenr.selected" = { fg = "text_alt" }
+
+"ui.statusline" = { fg = "text_alt", bg = "surface" }
+"ui.statusline.inactive" = { fg = "muted_alt", bg = "surface" }
+"ui.statusline.normal" = { fg = "background", bg = "blue", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "background", bg = "green", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "background", bg = "purple", modifiers = ["bold"] }
+
+"ui.popup" = { fg = "text", bg = "surface_variant" }
+"ui.window" = { fg = "border" }
+"ui.help" = { fg = "text_alt", bg = "surface_variant" }
+
+"ui.bufferline" = { fg = "text_alt", bg = "surface" }
+"ui.bufferline.active" = { fg = "blue", bg = "background", underline = { color = "blue", style = "line" } }
+"ui.bufferline.background" = { bg = "background" }
+
+"ui.text" = "text"
+"ui.text.focus" = { fg = "text", bg = "surface_variant", modifiers = ["bold"] }
+"ui.text.inactive" = { fg = "muted" }
+"ui.text.directory" = { fg = "blue" }
+
+"ui.virtual" = "muted_alt"
+"ui.virtual.ruler" = { bg = "surface_variant" }
+"ui.virtual.indent-guide" = "surface_variant"
+"ui.virtual.inlay-hint" = { fg = "muted_alt", bg = "surface" }
+"ui.virtual.jump-label" = { fg = "blue", modifiers = ["bold"] }
+
+"ui.selection" = { bg = "surface_active" }
+
+"ui.cursor" = { fg = "background", bg = "blue" }
+"ui.cursor.primary" = { fg = "background", bg = "blue" }
+"ui.cursor.match" = { fg = "orange", modifiers = ["bold"] }
+
+"ui.cursor.primary.normal" = { fg = "background", bg = "blue" }
+"ui.cursor.primary.insert" = { fg = "background", bg = "green" }
+"ui.cursor.primary.select" = { fg = "background", bg = "purple" }
+
+"ui.cursor.normal" = { fg = "background", bg = "blue" }
+"ui.cursor.insert" = { fg = "background", bg = "green" }
+"ui.cursor.select" = { fg = "background", bg = "purple" }
+
+"ui.cursorline.primary" = { bg = "surface" }
+
+"ui.highlight" = { bg = "surface_active", modifiers = ["bold"] }
+
+"ui.menu" = { fg = "text_alt", bg = "surface_variant" }
+"ui.menu.selected" = { fg = "text", bg = "surface_active", modifiers = ["bold"] }
+
+"diagnostic.error" = { underline = { color = "red", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "yellow", style = "curl" } }
+"diagnostic.info" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.hint" = { underline = { color = "cyan", style = "curl" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+
+error = "red"
+warning = "yellow"
+info = "blue"
+hint = "cyan"
+
+rainbow = ["red", "orange", "yellow", "green", "blue", "purple"]
+
+[palette]
+text = "#D7D7FF"
+text_alt = "#e0def4"
+muted = "#8787AF"
+muted_alt = "#74708d"
+disabled = "#6e6a86"
+background = "#111215"
+surface = "#17181a"
+surface_variant = "#232132"
+surface_active = "#403e53"
+border = "#423f55"
+red = "#ea6e92"
+green = "#5cc1a3"
+yellow = "#f5c177"
+blue = "#9bced6"
+cyan = "#31738f"
+magenta = "#9d7591"
+purple = "#c4a7e6"
+orange = "#FFAF87"
+keyword = "#5F8787"
+property = "#AFD7D7"
+attribute = "#D7AFD7"
+function = "#FFAFAF"

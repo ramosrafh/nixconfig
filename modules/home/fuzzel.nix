@@ -1,4 +1,7 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  brokenPine = import ./broken-pine.nix;
+in {
   home.file.".config/fuzzel/fuzzel.ini".text = ''
     [main]
     font=Inter:size=14:weight=medium
@@ -21,17 +24,17 @@
     radius=0
 
     [colors]
-    # Catppuccin Mocha
-    background=1e1e2ef2
-    text=cdd6f4ff
-    prompt=cba6f7ff
-    placeholder=6c7086ff
-    input=cdd6f4ff
-    match=cba6f7ff
-    selection=313244ff
-    selection-text=cdd6f4ff
-    selection-match=f5c2e7ff
-    counter=6c7086ff
-    border=cba6f780
+    # Broken Pine
+    background=${brokenPine.withAlpha brokenPine.background "f2"}
+    text=${brokenPine.withAlpha brokenPine.text "ff"}
+    prompt=${brokenPine.withAlpha brokenPine.blue "ff"}
+    placeholder=${brokenPine.withAlpha brokenPine.placeholder "ff"}
+    input=${brokenPine.withAlpha brokenPine.text "ff"}
+    match=${brokenPine.withAlpha brokenPine.blue "ff"}
+    selection=${brokenPine.withAlpha brokenPine.surfaceActive "ff"}
+    selection-text=${brokenPine.withAlpha brokenPine.textAlt "ff"}
+    selection-match=${brokenPine.withAlpha brokenPine.orange "ff"}
+    counter=${brokenPine.withAlpha brokenPine.mutedAlt "ff"}
+    border=${brokenPine.withAlpha brokenPine.borderFocused "80"}
   '';
 }

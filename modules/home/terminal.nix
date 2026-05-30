@@ -1,4 +1,7 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  brokenPine = import ./broken-pine.nix;
+in {
   programs.alacritty = {
     enable = true;
     settings = {
@@ -7,32 +10,36 @@
       };
       colors = {
         primary = {
-          background = "#1e1e2e";
-          foreground = "#cdd6f4";
+          background = brokenPine.background;
+          foreground = brokenPine.textAlt;
         };
         cursor = {
-          text = "#1e1e2e";
-          cursor = "#f5e0dc";
+          text = brokenPine.background;
+          cursor = brokenPine.blue;
+        };
+        selection = {
+          text = brokenPine.text;
+          background = brokenPine.surfaceActive;
         };
         normal = {
-          black = "#45475a";
-          red = "#f38ba8";
-          green = "#a6e3a1";
-          yellow = "#f9e2af";
-          blue = "#89b4fa";
-          magenta = "#f5c2e7";
-          cyan = "#94e2d5";
-          white = "#bac2de";
+          black = brokenPine.background;
+          red = brokenPine.red;
+          green = brokenPine.green;
+          yellow = brokenPine.yellow;
+          blue = brokenPine.blue;
+          magenta = brokenPine.magenta;
+          cyan = brokenPine.cyan;
+          white = brokenPine.textAlt;
         };
         bright = {
-          black = "#585b70";
-          red = "#f38ba8";
-          green = "#a6e3a1";
-          yellow = "#f9e2af";
-          blue = "#89b4fa";
-          magenta = "#f5c2e7";
-          cyan = "#94e2d5";
-          white = "#a6adc8";
+          black = brokenPine.surfaceActive;
+          red = "#7e3647";
+          green = "#31614f";
+          yellow = "#8a643a";
+          blue = "#566b70";
+          magenta = "#4c3b47";
+          cyan = "#203a46";
+          white = brokenPine.textAlt;
         };
       };
     };

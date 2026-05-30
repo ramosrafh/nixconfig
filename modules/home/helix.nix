@@ -3,7 +3,7 @@
     enable = true;
     extraPackages = [ pkgs.wl-clipboard ];
     settings = {
-      theme = "mocha";
+      theme = "broken-pine";
 
       editor = {
         line-number = "relative";
@@ -109,7 +109,7 @@
     };
 
     themes = {
-      mocha = builtins.fromTOML (builtins.readFile ./helix-mocha-theme.toml);
+      broken-pine = builtins.fromTOML (builtins.readFile ./helix-broken-pine-theme.toml);
     };
   };
 }

@@ -1,4 +1,7 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  brokenPine = import ./broken-pine.nix;
+in {
   programs.waybar = {
     enable = true;
     settings = {
@@ -112,7 +115,7 @@
 
       window#waybar {
         background-color: transparent;
-        color: #bac2df;
+        color: ${brokenPine.text};
       }
 
       .modules-left {
@@ -130,40 +133,40 @@
       #tray,
       #workspaces,
       #clock {
-        color: #74c7ec;
-        background-color: #181825;
+        color: ${brokenPine.blue};
+        background-color: ${brokenPine.surface};
         margin: 3px 0px;
         padding: 2px 10px;
       }
 
       #clock {
-        color: #bac2df;
-        background-color: #181825;
+        color: ${brokenPine.text};
+        background-color: ${brokenPine.surface};
         border-radius: 4px;
         margin-left: 0px;
       }
 
       #network {
-        color: #cba6f7;
+        color: ${brokenPine.purple};
         border-radius: 4px 0px 0px 4px;
       }
 
       #battery {
-        color: #74c7ec;
+        color: ${brokenPine.blue};
         border-radius: 0px 4px 4px 0px;
       }
 
       #pulseaudio {
-        color: #f9e2af;
+        color: ${brokenPine.yellow};
       }
 
       #backlight {
-        color: #f38ba8;
+        color: ${brokenPine.red};
       }
 
       #workspaces {
-        background-color: #181825;
-        color: #bac2df;
+        background-color: ${brokenPine.surface};
+        color: ${brokenPine.text};
         margin-left: 10px;
         margin-right: 0px;
         padding: 0 3px 0 3px;
@@ -176,8 +179,8 @@
       }
 
       #workspaces button.active {
-        background-color: rgba(157, 170, 204, 1);
-        color: rgba(0, 0, 0, 1);
+        background-color: ${brokenPine.blue};
+        color: ${brokenPine.background};
         padding: 0px;
         margin: 0px;
         border-radius: 4px;
@@ -187,7 +190,7 @@
 
       #workspaces button {
         all: unset;
-        color: #bac2df;
+        color: ${brokenPine.text};
         padding: 0px;
         margin: 0px;
         border-radius: 4px;
@@ -196,18 +199,18 @@
       }
 
       #custom-mem {
-        color: #bac2df;
+        color: ${brokenPine.text};
         margin: 3px 0px;
         margin-right: 10px;
         padding: 0px 10px;
-        background-color: #181825;
+        background-color: ${brokenPine.surface};
         border-radius: 4px;
       }
 
       #workspaces button:hover {
-        background-color: #bac2df;
-        color: #181825;
-        background: #bac2df;
+        background-color: ${brokenPine.text};
+        color: ${brokenPine.surface};
+        background: ${brokenPine.text};
         box-shadow: none;
       }
 
@@ -215,7 +218,7 @@
         margin: 3px 0px;
         margin-right: 10px;
         padding: 0px 10px;
-        background-color: #181825;
+        background-color: ${brokenPine.surface};
         border-radius: 4px;
       }
     '';

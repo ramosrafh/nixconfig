@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  brokenPine = import ./broken-pine.nix;
+in
 {
   programs.yazi = {
     enable = true;
@@ -54,95 +57,95 @@
 
     theme = {
       manager = {
-        cwd = { fg = "cyan"; };
-        hovered = { fg = "black"; bg = "lightblue"; };
+        cwd = { fg = brokenPine.blue; };
+        hovered = { fg = brokenPine.background; bg = brokenPine.blue; };
         preview_hovered = { underline = true; };
-        find_keyword = { fg = "yellow"; italic = true; };
-        find_position = { fg = "magenta"; bg = "reset"; italic = true; };
-        marker_selected = { fg = "lightgreen"; bg = "lightgreen"; };
-        marker_copied = { fg = "lightyellow"; bg = "lightyellow"; };
-        marker_cut = { fg = "lightred"; bg = "lightred"; };
-        tab_active = { fg = "black"; bg = "lightblue"; };
-        tab_inactive = { fg = "white"; bg = "darkgray"; };
+        find_keyword = { fg = brokenPine.yellow; italic = true; };
+        find_position = { fg = brokenPine.magenta; bg = "reset"; italic = true; };
+        marker_selected = { fg = brokenPine.green; bg = brokenPine.green; };
+        marker_copied = { fg = brokenPine.yellow; bg = brokenPine.yellow; };
+        marker_cut = { fg = brokenPine.red; bg = brokenPine.red; };
+        tab_active = { fg = brokenPine.background; bg = brokenPine.blue; };
+        tab_inactive = { fg = brokenPine.text; bg = brokenPine.surfaceActive; };
         tab_width = 1;
         border_symbol = "│";
-        border_style = { fg = "gray"; };
+        border_style = { fg = brokenPine.border; };
       };
 
       status = {
         separator_open = "";
         separator_close = "";
-        separator_style = { fg = "gray"; bg = "gray"; };
-        mode_normal = { fg = "black"; bg = "lightblue"; bold = true; };
-        mode_select = { fg = "black"; bg = "lightgreen"; bold = true; };
-        mode_unset = { fg = "black"; bg = "lightmagenta"; bold = true; };
-        progress_label = { fg = "white"; bold = true; };
-        progress_normal = { fg = "blue"; bg = "black"; };
-        progress_error = { fg = "red"; bg = "black"; };
-        permissions_t = { fg = "lightgreen"; };
-        permissions_r = { fg = "lightyellow"; };
-        permissions_w = { fg = "lightred"; };
-        permissions_x = { fg = "lightcyan"; };
-        permissions_s = { fg = "darkgray"; };
+        separator_style = { fg = brokenPine.border; bg = brokenPine.border; };
+        mode_normal = { fg = brokenPine.background; bg = brokenPine.blue; bold = true; };
+        mode_select = { fg = brokenPine.background; bg = brokenPine.green; bold = true; };
+        mode_unset = { fg = brokenPine.background; bg = brokenPine.magenta; bold = true; };
+        progress_label = { fg = brokenPine.text; bold = true; };
+        progress_normal = { fg = brokenPine.blue; bg = brokenPine.background; };
+        progress_error = { fg = brokenPine.red; bg = brokenPine.background; };
+        permissions_t = { fg = brokenPine.green; };
+        permissions_r = { fg = brokenPine.yellow; };
+        permissions_w = { fg = brokenPine.red; };
+        permissions_x = { fg = brokenPine.blue; };
+        permissions_s = { fg = brokenPine.mutedAlt; };
       };
 
       select = {
-        border = { fg = "blue"; };
-        active = { fg = "magenta"; };
-        inactive = { fg = "darkgray"; };
+        border = { fg = brokenPine.blue; };
+        active = { fg = brokenPine.magenta; };
+        inactive = { fg = brokenPine.mutedAlt; };
       };
 
       input = {
-        border = { fg = "blue"; };
-        title = { fg = "white"; };
-        value = { fg = "magenta"; };
+        border = { fg = brokenPine.blue; };
+        title = { fg = brokenPine.text; };
+        value = { fg = brokenPine.magenta; };
         selected = { reversed = true; };
       };
 
       completion = {
-        border = { fg = "blue"; };
-        active = { bg = "darkgray"; };
-        inactive = { fg = "white"; };
+        border = { fg = brokenPine.blue; };
+        active = { bg = brokenPine.surfaceActive; };
+        inactive = { fg = brokenPine.text; };
       };
 
       tasks = {
-        border = { fg = "blue"; };
-        title = { fg = "white"; };
+        border = { fg = brokenPine.blue; };
+        title = { fg = brokenPine.text; };
         hovered = { underline = true; };
       };
 
       which = {
         cols = 3;
-        mask = { bg = "black"; };
-        cand = { fg = "lightcyan"; };
-        rest = { fg = "darkgray"; };
-        desc = { fg = "magenta"; };
+        mask = { bg = brokenPine.background; };
+        cand = { fg = brokenPine.blue; };
+        rest = { fg = brokenPine.mutedAlt; };
+        desc = { fg = brokenPine.magenta; };
         separator = "  ";
-        separator_style = { fg = "darkgray"; };
+        separator_style = { fg = brokenPine.mutedAlt; };
       };
 
       help = {
-        on = { fg = "magenta"; };
-        exec = { fg = "cyan"; };
-        desc = { fg = "gray"; };
-        hovered = { bg = "darkgray"; bold = true; };
-        footer = { fg = "black"; bg = "white"; };
+        on = { fg = brokenPine.magenta; };
+        exec = { fg = brokenPine.blue; };
+        desc = { fg = brokenPine.muted; };
+        hovered = { bg = brokenPine.surfaceActive; bold = true; };
+        footer = { fg = brokenPine.background; bg = brokenPine.text; };
       };
 
       filetype = {
         rules = [
-          { mime = "image/*"; fg = "cyan"; }
-          { mime = "video/*"; fg = "yellow"; }
-          { mime = "audio/*"; fg = "magenta"; }
-          { mime = "application/zip"; fg = "red"; }
-          { mime = "application/gzip"; fg = "red"; }
-          { mime = "application/x-tar"; fg = "red"; }
-          { mime = "application/x-bzip"; fg = "red"; }
-          { mime = "application/x-bzip2"; fg = "red"; }
-          { mime = "application/x-7z-compressed"; fg = "red"; }
-          { mime = "application/x-rar"; fg = "red"; }
-          { name = "*"; fg = "white"; }
-          { name = "*/"; fg = "blue"; }
+          { mime = "image/*"; fg = brokenPine.blue; }
+          { mime = "video/*"; fg = brokenPine.yellow; }
+          { mime = "audio/*"; fg = brokenPine.magenta; }
+          { mime = "application/zip"; fg = brokenPine.red; }
+          { mime = "application/gzip"; fg = brokenPine.red; }
+          { mime = "application/x-tar"; fg = brokenPine.red; }
+          { mime = "application/x-bzip"; fg = brokenPine.red; }
+          { mime = "application/x-bzip2"; fg = brokenPine.red; }
+          { mime = "application/x-7z-compressed"; fg = brokenPine.red; }
+          { mime = "application/x-rar"; fg = brokenPine.red; }
+          { name = "*"; fg = brokenPine.text; }
+          { name = "*/"; fg = brokenPine.blue; }
         ];
       };
     };

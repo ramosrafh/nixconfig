@@ -1,34 +1,6 @@
 { pkgs, lib, ... }:
 let
-  # Catppuccin Mocha colors
-  catppuccin = {
-    base = "#1e1e2e";
-    mantle = "#181825";
-    crust = "#11111b";
-    surface0 = "#313244";
-    surface1 = "#45475a";
-    surface2 = "#585b70";
-    overlay0 = "#6c7086";
-    overlay1 = "#7f849c";
-    overlay2 = "#9399b2";
-    text = "#cdd6f4";
-    subtext0 = "#a6adc8";
-    subtext1 = "#bac2de";
-    lavender = "#b4befe";
-    blue = "#89b4fa";
-    sapphire = "#74c7ec";
-    sky = "#89dceb";
-    teal = "#94e2d5";
-    green = "#a6e3a1";
-    yellow = "#f9e2af";
-    peach = "#fab387";
-    maroon = "#eba0ac";
-    red = "#f38ba8";
-    mauve = "#cba6f7";
-    pink = "#f5c2e7";
-    flamingo = "#f2cdcd";
-    rosewater = "#f5e0dc";
-  };
+  brokenPine = import ../broken-pine.nix;
 
   swaync-style = ''
     /* ===== CRITICAL: Window backgrounds must be transparent ===== */
@@ -73,9 +45,9 @@ let
     /* The actual notification box */
     .notification {
       border-radius: 4px;
-      border: 2px solid alpha(${catppuccin.mauve}, 0.5);
-      background: ${catppuccin.base};
-      background-color: ${catppuccin.base};
+      border: 2px solid alpha(${brokenPine.blue}, 0.5);
+      background: ${brokenPine.background};
+      background-color: ${brokenPine.background};
       padding: 0;
       margin: 0;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -83,32 +55,32 @@ let
 
     .notification-content {
       padding: 14px 16px;
-      background: ${catppuccin.base};
+      background: ${brokenPine.background};
     }
 
     .notification.critical {
-      border-color: ${catppuccin.red};
+      border-color: ${brokenPine.red};
     }
 
     .notification.low {
-      border-color: ${catppuccin.overlay0};
+      border-color: ${brokenPine.mutedAlt};
     }
 
     .summary {
-      color: ${catppuccin.text};
+      color: ${brokenPine.text};
       font-size: 14px;
       font-weight: 700;
       margin-bottom: 4px;
     }
 
     .time {
-      color: ${catppuccin.overlay1};
+      color: ${brokenPine.muted};
       font-size: 11px;
       margin-left: 12px;
     }
 
     .body {
-      color: ${catppuccin.subtext1};
+      color: ${brokenPine.textAlt};
       font-size: 12px;
     }
 
@@ -118,34 +90,34 @@ let
     }
 
     .notification-default-action:hover {
-      background: ${catppuccin.surface0};
+      background: ${brokenPine.surfaceVariant};
     }
 
     .close-button {
-      background: ${catppuccin.surface1};
-      color: ${catppuccin.text};
+      background: ${brokenPine.surfaceActive};
+      color: ${brokenPine.text};
       border-radius: 6px;
       padding: 2px 8px;
       margin: 8px;
     }
 
     .close-button:hover {
-      background: ${catppuccin.red};
-      color: ${catppuccin.base};
+      background: ${brokenPine.red};
+      color: ${brokenPine.background};
     }
 
     .notification-action {
-      background: ${catppuccin.surface0};
-      color: ${catppuccin.text};
+      background: ${brokenPine.surfaceVariant};
+      color: ${brokenPine.text};
       border-radius: 8px;
       padding: 6px 12px;
       margin: 6px 4px;
-      border: 1px solid ${catppuccin.surface1};
+      border: 1px solid ${brokenPine.border};
     }
 
     .notification-action:hover {
-      background: ${catppuccin.mauve};
-      color: ${catppuccin.base};
+      background: ${brokenPine.blue};
+      color: ${brokenPine.background};
     }
 
     .notification-group {
@@ -153,35 +125,35 @@ let
     }
 
     .notification-group-headers {
-      color: ${catppuccin.text};
+      color: ${brokenPine.text};
       font-weight: 700;
       font-size: 13px;
       padding: 6px 12px;
     }
 
     .notification-group-icon {
-      color: ${catppuccin.mauve};
+      color: ${brokenPine.blue};
     }
 
     .notification-group-collapse-button {
-      background: ${catppuccin.surface0};
-      color: ${catppuccin.text};
+      background: ${brokenPine.surfaceVariant};
+      color: ${brokenPine.text};
       border-radius: 6px;
       padding: 4px 8px;
       margin: 4px;
     }
 
     .notification-group-collapse-button:hover {
-      background: ${catppuccin.mauve};
-      color: ${catppuccin.base};
+      background: ${brokenPine.blue};
+      color: ${brokenPine.background};
     }
 
     /* Control Center - sidebar only */
     .control-center {
-      background: ${catppuccin.base};
-      background-color: ${catppuccin.base};
+      background: ${brokenPine.background};
+      background-color: ${brokenPine.background};
       border-radius: 4px;
-      border: 2px solid alpha(${catppuccin.mauve}, 0.5);
+      border: 2px solid alpha(${brokenPine.blue}, 0.5);
       margin: 8px;
       padding: 12px 0;
     }
@@ -191,13 +163,13 @@ let
     }
 
     .control-center-list-placeholder {
-      color: ${catppuccin.overlay0};
+      color: ${brokenPine.mutedAlt};
       padding: 24px;
       background: transparent;
     }
 
     .widget-title {
-      color: ${catppuccin.text};
+      color: ${brokenPine.text};
       font-size: 16px;
       font-weight: 700;
       padding: 8px 16px;
@@ -205,16 +177,16 @@ let
     }
 
     .widget-title button {
-      background: ${catppuccin.surface0};
-      color: ${catppuccin.text};
+      background: ${brokenPine.surfaceVariant};
+      color: ${brokenPine.text};
       border-radius: 4px;
       padding: 6px 12px;
       border: none;
     }
 
     .widget-title button:hover {
-      background: ${catppuccin.red};
-      color: ${catppuccin.base};
+      background: ${brokenPine.red};
+      color: ${brokenPine.background};
     }
 
     .widget-dnd {
@@ -224,17 +196,17 @@ let
     }
 
     .widget-dnd > switch {
-      background: ${catppuccin.surface1};
+      background: ${brokenPine.surfaceActive};
       border-radius: 4px;
       padding: 2px;
     }
 
     .widget-dnd > switch:checked {
-      background: ${catppuccin.mauve};
+      background: ${brokenPine.blue};
     }
 
     .widget-dnd > switch slider {
-      background: ${catppuccin.text};
+      background: ${brokenPine.text};
       border-radius: 4px;
       min-width: 18px;
       min-height: 18px;

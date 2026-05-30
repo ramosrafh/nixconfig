@@ -1,4 +1,7 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  brokenPine = import ./broken-pine.nix;
+in {
   programs.fish = {
     enable = true;
     shellAliases = {
@@ -96,26 +99,26 @@
       add_newline = true;
 
       character = {
-        success_symbol = "[❯](bold green)";
-        error_symbol = "[❯](bold red)";
+        success_symbol = "[❯](bold success)";
+        error_symbol = "[❯](bold error)";
       };
 
       directory = {
         truncation_length = 3;
         truncate_to_repo = true;
         format = "[$path]($style) ";
-        style = "bold cyan";
+        style = "bold accent";
       };
 
       git_branch = {
         format = "[$symbol$branch]($style) ";
         symbol = " ";
-        style = "bold purple";
+        style = "bold magenta";
       };
 
       git_status = {
         format = "[$all_status$ahead_behind]($style) ";
-        style = "bold yellow";
+        style = "bold warning";
         conflicted = "=";
         ahead = "⇡\${count}";
         behind = "⇣\${count}";
@@ -132,27 +135,27 @@
         disabled = false;
         format = "[$duration]($style) ";
         min_time = 2000;
-        style = "bold yellow";
+        style = "bold warning";
       };
 
       nodejs = {
         format = "[$symbol($version )]($style)";
         symbol = " ";
-        style = "bold green";
+        style = "bold success";
         disabled = false;
       };
 
       python = {
         format = "[$symbol($version )]($style)";
         symbol = " ";
-        style = "bold yellow";
+        style = "bold warning";
         disabled = false;
       };
 
       rust = {
         format = "[$symbol($version )]($style)";
         symbol = " ";
-        style = "bold red";
+        style = "bold error";
         disabled = false;
       };
 
@@ -161,12 +164,24 @@
       kubernetes.disabled = true;
       docker_context.disabled = true;
       package.disabled = true;
+      palette = "broken_pine";
+      palettes.broken_pine = {
+        accent = brokenPine.blue;
+        error = brokenPine.red;
+        success = brokenPine.green;
+        warning = brokenPine.yellow;
+        magenta = brokenPine.magenta;
+      };
     };
   };
 
   programs.bat = {
     enable = true;
-    config.theme = "catppuccin-mocha";
+    config.theme = "Broken Pine";
+    themes."Broken Pine" = {
+      src = ./bat-broken-pine.tmTheme;
+      file = null;
+    };
   };
 
   programs.eza.enable = true;

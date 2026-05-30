@@ -1,5 +1,6 @@
 { pkgs, hostConfig ? "desk", ... }:
 let
+  brokenPine = import ./broken-pine.nix;
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
   keyboardLayout = if hostConfig == "book" then "br" else "us";
   keyboardVariant = if hostConfig == "book" then "" else "intl";
@@ -32,8 +33,8 @@ in {
       default-column-width = { proportion = 0.6; };
       focus-ring = {
         width = 2;
-        active.color = "#cba6f780";
-        inactive.color = "#45475a40";
+        active.color = "#${brokenPine.withAlpha brokenPine.blue "80"}";
+        inactive.color = "#${brokenPine.withAlpha brokenPine.surfaceActive "40"}";
       };
       border.enable = false;
       struts = {

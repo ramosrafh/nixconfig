@@ -1,4 +1,7 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  brokenPine = import ./broken-pine.nix;
+in {
   programs.mpv = {
     enable = true;
 
@@ -19,11 +22,11 @@
       sub-font-size = 36;
       sub-border-size = 2;
 
-      # OSD - Catppuccin Mocha colors
+      # OSD - Broken Pine colors
       osd-font = "JetBrainsMono Nerd Font";
       osd-font-size = 24;
-      osd-color = "#cdd6f4";           # Text (Mocha)
-      osd-border-color = "#1e1e2e";    # Base (Mocha)
+      osd-color = brokenPine.text;
+      osd-border-color = brokenPine.background;
       osd-border-size = 2;
       osd-bar-align-y = 0.9;
 
@@ -68,10 +71,9 @@
     ];
 
     scriptOpts = {
-      # UOSC Catppuccin Mocha theme
+      # UOSC Broken Pine theme
       uosc = {
-        # Colors - Catppuccin Mocha palette
-        color = "foreground=cdd6f4,foreground_text=1e1e2e,background=1e1e2e,background_text=cdd6f4,curtain=181825,success=a6e3a1,error=f38ba8";
+        color = "foreground=${brokenPine.noHash brokenPine.text},foreground_text=${brokenPine.noHash brokenPine.background},background=${brokenPine.noHash brokenPine.background},background_text=${brokenPine.noHash brokenPine.text},curtain=${brokenPine.noHash brokenPine.surface},success=${brokenPine.noHash brokenPine.green},error=${brokenPine.noHash brokenPine.red}";
 
         # UI settings
         timeline_style = "bar";

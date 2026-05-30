@@ -30,6 +30,7 @@ in {
     ./git.nix
     ./ssh.nix
     ./swaync
+    ./zed.nix
     ./hyprlock.nix
     ./hypridle.nix
     ./mpv.nix

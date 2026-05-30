@@ -16,6 +16,7 @@ let
       extraBuildInputs ? [],
       jdk ? null,
       javaOpts ? null,
+      extraShellHook ? "",
     }:
     let
       generatedRequirements = pkgs.writeText "${name}-requirements.txt" (lib.concatStringsSep "\n" pythonDeps + "\n");
@@ -92,6 +93,8 @@ let
           export _JAVA_OPTIONS="${javaOpts}"
         '' else ""}
 
+        ${extraShellHook}
+
         exec ${pkgs.fish}/bin/fish
       '';
     };
@@ -106,6 +109,12 @@ in
     python = pkgs.python311;
     jdk = pkgs.jdk17;
     extraPackages = [ pkgs-unfree.vscode ];
+    extraShellHook = ''
+      kaleido_wrapper="$VENV_PATH/lib/python3.11/site-packages/kaleido/executable/kaleido"
+      if [ -f "$kaleido_wrapper" ] && head -n1 "$kaleido_wrapper" | grep -q '^#!/bin/bash$'; then
+        sed -i "1s|^#!/bin/bash$|#!${pkgs.bash}/bin/bash|" "$kaleido_wrapper"
+      fi
+    '';
   };
 
   flatspot = mkPythonShell {

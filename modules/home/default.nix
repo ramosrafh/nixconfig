@@ -69,6 +69,7 @@ in {
     coreutils
     obsidian
     eog
+    papers
     libreoffice-fresh
     piper
     appflowy

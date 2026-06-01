@@ -23,7 +23,7 @@ in {
 
     layout = {
       gaps = 14;
-      center-focused-column = "on-overflow";
+      center-focused-column = "never";
       background-color = "transparent";
       preset-column-widths = [
         { proportion = 0.5; }
@@ -63,6 +63,12 @@ in {
       {
         open-focused = true;
         draw-border-with-background = false;
+        geometry-corner-radius = {
+          top-left = 12.0;
+          top-right = 12.0;
+          bottom-right = 12.0;
+          bottom-left = 12.0;
+        };
         clip-to-geometry = true;
       }
       {

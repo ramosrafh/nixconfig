@@ -1,7 +1,80 @@
 { pkgs, ... }:
 let
   brokenPine = import ./broken-pine.nix;
+  fuzzel-omnibar = pkgs.writeShellApplication {
+    name = "fuzzel-omnibar";
+    runtimeInputs = with pkgs; [
+      coreutils
+      fuzzel
+      gnugrep
+      gnused
+      python3
+      xdg-utils
+    ];
+    text = ''
+      urlencode() {
+        python3 -c 'import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))' "$1"
+      }
+
+      command="search"
+
+      while [ "$#" -gt 0 ]; do
+        case "$1" in
+          --command=*)
+            command="''${1#--command=}"
+            ;;
+          --command)
+            shift
+            command="''${1:-search}"
+            ;;
+        esac
+        shift || true
+      done
+
+      case "$command" in
+        search) ;;
+        *)
+          echo "Unsupported command: $command" >&2
+          exit 2
+          ;;
+      esac
+
+      query="$(
+        printf '\n' | fuzzel --dmenu --prompt-only "" --placeholder "URL ou busca..." --lines 0
+      )"
+
+      query="$(printf '%s' "$query" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+      [ -n "$query" ] || exit 0
+
+      cnpj_digits="$(printf '%s' "$query" | tr -cd '0-9')"
+
+      if printf '%s' "$query" | grep -Eiq '^(nix|pkg|package) +'; then
+        package_query="$(printf '%s' "$query" | sed -E 's/^(nix|pkg|package)[[:space:]]+//I')"
+        encoded="$(urlencode "package $package_query")"
+        target="https://mynixos.com/search?q=$encoded"
+      elif printf '%s' "$query" | grep -Eiq '^cnpj +' && [ "''${#cnpj_digits}" -eq 14 ]; then
+        target="https://datahub.kipflow.io/cnpj/$cnpj_digits"
+      elif [ "''${#cnpj_digits}" -eq 14 ] && printf '%s' "$query" | grep -Eq '^[0-9./ -]+$'; then
+        target="https://datahub.kipflow.io/cnpj/$cnpj_digits"
+      elif printf '%s' "$query" | grep -Eq '^[A-Za-z][A-Za-z0-9+.-]*://'; then
+        target="$query"
+      elif printf '%s' "$query" | grep -Eq '^localhost(:[0-9]+)?(/.*)?$'; then
+        target="http://$query"
+      elif printf '%s' "$query" | grep -Eq '^([[:alnum:]-]+\.)+[[:alpha:]]{2,}(:[0-9]+)?(/.*)?$'; then
+        target="https://$query"
+      else
+        encoded="$(urlencode "$query")"
+        target="https://www.google.com/search?q=$encoded"
+      fi
+
+      xdg-open "$target" >/dev/null 2>&1 &
+    '';
+  };
 in {
+  home.packages = [
+    fuzzel-omnibar
+  ];
+
   home.file.".config/fuzzel/fuzzel.ini".text = ''
     [main]
     font=Inter:size=14:weight=medium

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 let
   brokenPine = import ./broken-pine.nix;
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
@@ -74,8 +74,4 @@ in {
       ];
     };
   };
-
-  home.packages = with pkgs; [
-    hyprlock
-  ];
 }

@@ -22,7 +22,7 @@ in {
     };
 
     layout = {
-      gaps = 14;
+      gaps = 9;
       center-focused-column = "never";
       background-color = "transparent";
       preset-column-widths = [
@@ -38,8 +38,8 @@ in {
       };
       border.enable = false;
       struts = {
-        left = 48;
-        right = 48;
+        left = 18;
+        right = 18;
       };
     };
 
@@ -355,12 +355,6 @@ in {
   };
 
   home.packages = with pkgs; [
-    niri
-    xwayland-satellite
-    waybar
     awww
-    fuzzel
-    alacritty
-    brightnessctl
   ];
 }

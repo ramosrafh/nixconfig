@@ -1,226 +1,65 @@
-# NixOS Installation Guide
+# NixOS Installation
 
-## Pre-Installation Checklist
-
-Before running the installation commands, you need to update the following files with your specific values:
-
-### 1. Hardware Configuration Files
-
-Both `hosts/book/hardware.nix` and `hosts/desk/hardware.nix` need UUID replacements:
-
-- **LUKS UUID**: After creating the encrypted partition, run `blkid` to get the UUID of your LUKS partition
-  - Replace `REPLACE_WITH_YOUR_LUKS_UUID` in the `boot.initrd.luks.devices."cryptroot".device` line
-  
-- **Boot UUID**: After formatting the boot partition, run `blkid` to get the UUID of your boot partition
-  - Replace `REPLACE_WITH_YOUR_BOOT_UUID` in the `fileSystems."/boot".device` line
-
-### 2. Niri Configuration
-
-Edit `dotfiles/.config/niri/config.kdl` (if you want to use it as a base):
-- Update monitor configurations based on your actual displays
-- Adjust keybindings to match your keyboard layout
-- Set your wallpaper path
-
-### 3. User Configuration
-
-In `modules/nixos/users.nix`, the username is set to `ramos`. Change it if needed.
-
----
-
-## Installation Steps
-
-### 1. Boot NixOS Live ISO
-
-Download and boot from the latest NixOS ISO.
-
-### 2. Setup Disk Partitioning
+The commands below erase the selected disk. Set `DISK` correctly and replace
+the UUIDs in the selected host's `hardware.nix` before installing.
 
 ```bash
-DISK=/dev/nvme0n1  # Change to your disk (e.g., /dev/sda)
+sudo -i
+DISK=/dev/nvme0n1
 
-gdisk $DISK
-o       # Create new GPT partition table
-n       # New partition: +4G, ef00 (EFI System)
-n       # New partition: remaining space, 8e00 (Linux LVM)
-w       # Write changes and exit
-```
+sgdisk --zap-all "$DISK"
+sgdisk -n 1:0:+4G -t 1:ef00 -c 1:EFI "$DISK"
+sgdisk -n 2:0:0 -t 2:8309 -c 2:cryptroot "$DISK"
 
-### 3. Setup LUKS2 Encryption
+cryptsetup luksFormat --type luks2 "${DISK}p2"
+cryptsetup open "${DISK}p2" cryptroot
 
-```bash
-cryptsetup luksFormat --type luks2 ${DISK}p2
-cryptsetup open ${DISK}p2 cryptroot
-```
-
-### 4. Setup LVM
-
-```bash
 pvcreate /dev/mapper/cryptroot
 vgcreate vg0 /dev/mapper/cryptroot
 lvcreate -l 100%FREE -n root vg0
-```
 
-### 5. Format Boot Partition
-
-```bash
-mkfs.vfat -F32 -n BOOT ${DISK}p1
-```
-
-### 6. Create BTRFS with Subvolumes
-
-```bash
+mkfs.vfat -F 32 -n EFI "${DISK}p1"
 mkfs.btrfs -L nixos /dev/vg0/root
 
 mount /dev/vg0/root /mnt
-
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
 btrfs subvolume create /mnt/@nix
 btrfs subvolume create /mnt/@log
 btrfs subvolume create /mnt/@docker
-
 umount /mnt
-```
 
-### 7. Set no-COW for Docker Subvolume
-
-```bash
 mount -o subvol=@docker /dev/vg0/root /mnt
 chattr +C /mnt
 umount /mnt
-```
 
-### 8. Mount All Filesystems
-
-```bash
 mount -o subvol=@,compress=zstd,noatime /dev/vg0/root /mnt
-
-mkdir -p /mnt/{boot,home,nix,var/log,var/lib/docker}
-
+mkdir -p /mnt/{boot,home,nix,var/log,docker}
 mount -o subvol=@home,compress=zstd,noatime /dev/vg0/root /mnt/home
 mount -o subvol=@nix,compress=zstd,noatime /dev/vg0/root /mnt/nix
 mount -o subvol=@log,compress=zstd,noatime /dev/vg0/root /mnt/var/log
-mount -o subvol=@docker,noatime,nodatacow /dev/vg0/root /mnt/var/lib/docker
+mount -o subvol=@docker,noatime /dev/vg0/root /mnt/docker
+mount "${DISK}p1" /mnt/boot
 
-mount ${DISK}p1 /mnt/boot
-```
-
-### 9. Enable zram
-
-This is configured in the flake automatically.
-
-### 10. Clone Your Flake Configuration
-
-```bash
 mkdir -p /mnt/home/ramos
-cd /mnt/home/ramos
-git clone https://github.com/ramosrafh/nixconfig.git nixconfig
+git clone https://github.com/ramosrafh/nixconfig.git /mnt/home/ramos/nixconfig
+
+blkid "${DISK}p1"
+blkid "${DISK}p2"
 ```
 
-### 11. Update Hardware Configuration with UUIDs
+Update the boot and LUKS UUIDs in `hosts/book/hardware.nix` or
+`hosts/desk/hardware.nix`, then install:
 
-```bash
-blkid ${DISK}p1  # Note the UUID for boot
-blkid ${DISK}p2  # Note the UUID for LUKS
-
-# Edit the hardware.nix files with the correct UUIDs
-nano /mnt/home/ramos/nixconfig/hosts/book/hardware.nix  # or hosts/desk/hardware.nix
-```
-
-### 12. Generate Hardware Configuration (Optional)
-
-```bash
-nixos-generate-config --root /mnt --show-hardware-config
-```
-
-Compare the output with your hardware.nix and adjust if needed.
-
-### 13. Install NixOS with Flakes
-
-For laptop (book):
 ```bash
 nixos-install --flake /mnt/home/ramos/nixconfig#book
-```
-
-For desktop (desk):
-```bash
+# or
 nixos-install --flake /mnt/home/ramos/nixconfig#desk
-```
 
-### 14. Set Root Password
-
-```bash
-nixos-enter --root /mnt
-passwd root
-passwd ramos  # Set password for your user
-exit
-```
-
-### 15. Install Limine Bootloader
-
-```bash
-nixos-enter --root /mnt
-limine bios-install ${DISK}
-exit
-```
-
-### 16. Reboot
-
-```bash
+nixos-enter --root /mnt -c 'passwd ramos'
 umount -R /mnt
 reboot
 ```
 
----
-
-## Post-Installation
-
-### 1. Setup Wallpapers
-
-```bash
-mkdir -p ~/.wallpapers
-cp your-wallpaper.jpg ~/.wallpapers/current_wallpaper.jpg
-```
-
-### 2. Start Niri
-
-If not started automatically:
-```bash
-niri
-```
-
-### 3. Configure Additional Services
-
-All services are configured via the flake. To rebuild after changes:
-
-```bash
-sudo nixos-rebuild switch --flake ~/nixconfig#book  # or #desk
-```
-
-### 4. Update Flake
-
-```bash
-cd ~/nixconfig
-nix flake update
-sudo nixos-rebuild switch --flake .#book  # or #desk
-```
-
----
-
-## Troubleshooting
-
-### Issue: Bootloader not found
-- Ensure Limine was installed correctly: `limine bios-install ${DISK}`
-- Check UEFI boot order in BIOS
-
-### Issue: Cannot decrypt LUKS
-- Verify the correct UUID in hardware.nix
-- Check if `boot.initrd.luks.devices` is configured properly
-
-### Issue: Niri won't start
-- Check logs: `journalctl -u display-manager`
-- Ensure all Wayland dependencies are installed
-
-### Issue: Missing UUIDs
-- Run `blkid` to get all partition UUIDs
-- Update both hardware.nix files accordingly
+The NixOS Limine module installs and updates the UEFI bootloader. Do not run
+`limine bios-install` on this layout.

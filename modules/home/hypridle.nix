@@ -14,8 +14,4 @@
       listener = [];
     };
   };
-
-  home.packages = with pkgs; [
-    hypridle
-  ];
 }

@@ -12,11 +12,6 @@
 
   environment.systemPackages = with pkgs; [
     xwayland-satellite
-    waybar
-    awww
-    fuzzel
-    alacritty
-    brightnessctl
   ];
 
   environment.sessionVariables = {

@@ -72,6 +72,7 @@ let
   };
 in {
   home.packages = [
+    pkgs.fuzzel
     fuzzel-omnibar
   ];
 

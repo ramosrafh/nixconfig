@@ -1,4 +1,4 @@
-{ pkgs, hostConfig ? "desk", ... }:
+{ hostConfig ? "desk", ... }:
 
 let
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
@@ -91,8 +91,4 @@ in
     systemdTarget = "graphical-session.target";
     settings = if hostConfig == "desk" then deskProfiles else bookProfiles;
   };
-
-  home.packages = with pkgs; [
-    kanshi
-  ];
 }

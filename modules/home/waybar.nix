@@ -8,7 +8,7 @@ in {
       mainBar = {
         layer = "top";
         position = "top";
-        margin-top = 8;
+        margin-top = 6;
         modules-left = [ "clock" "niri/workspaces" ];
         modules-center = [ "niri/window" ];
         modules-right = [ "tray" "custom/mem" "network" "backlight" "pulseaudio" "pulseaudio#source" "battery" ];
@@ -109,13 +109,13 @@ in {
       * {
         font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font Mono", "Material Design Icons", monospace;
         font-weight: bold;
-        font-size: 14.5px;
+        font-size: 16px;
         border-radius: 0px;
       }
 
       window#waybar {
         background-color: transparent;
-        color: ${brokenPine.text};
+        color: #ffffff;
       }
 
       .modules-left {
@@ -133,40 +133,40 @@ in {
       #tray,
       #workspaces,
       #clock {
-        color: ${brokenPine.blue};
-        background-color: ${brokenPine.surface};
-        margin: 3px 0px;
+        color: #ffffff;
+        background-color: transparent;
+        margin: 0px;
         padding: 2px 10px;
       }
 
       #clock {
-        color: ${brokenPine.text};
-        background-color: ${brokenPine.surface};
+        color: #ffffff;
+        background-color: transparent;
         border-radius: 4px;
         margin-left: 0px;
       }
 
       #network {
-        color: ${brokenPine.purple};
+        color: #ffffff;
         border-radius: 4px 0px 0px 4px;
       }
 
       #battery {
-        color: ${brokenPine.blue};
+        color: #ffffff;
         border-radius: 0px 4px 4px 0px;
       }
 
       #pulseaudio {
-        color: ${brokenPine.yellow};
+        color: #ffffff;
       }
 
       #backlight {
-        color: ${brokenPine.red};
+        color: #ffffff;
       }
 
       #workspaces {
-        background-color: ${brokenPine.surface};
-        color: ${brokenPine.text};
+        background-color: transparent;
+        color: #7f7f7f;
         margin-left: 10px;
         margin-right: 0px;
         padding: 0 3px 0 3px;
@@ -179,8 +179,8 @@ in {
       }
 
       #workspaces button.active {
-        background-color: ${brokenPine.blue};
-        color: ${brokenPine.background};
+        background-color: transparent;
+        color: #ffffff;
         padding: 0px;
         margin: 0px;
         border-radius: 4px;
@@ -190,7 +190,7 @@ in {
 
       #workspaces button {
         all: unset;
-        color: ${brokenPine.text};
+        color: #7f7f7f;
         padding: 0px;
         margin: 0px;
         border-radius: 4px;
@@ -199,26 +199,26 @@ in {
       }
 
       #custom-mem {
-        color: ${brokenPine.text};
-        margin: 3px 0px;
+        color: #ffffff;
+        margin: 0px;
         margin-right: 10px;
         padding: 0px 10px;
-        background-color: ${brokenPine.surface};
+        background-color: transparent;
         border-radius: 4px;
       }
 
       #workspaces button:hover {
-        background-color: ${brokenPine.text};
-        color: ${brokenPine.surface};
-        background: ${brokenPine.text};
+        background-color: transparent;
+        color: #cfcfcf;
+        background: transparent;
         box-shadow: none;
       }
 
       #tray {
-        margin: 3px 0px;
+        margin: 0px;
         margin-right: 10px;
         padding: 0px 10px;
-        background-color: ${brokenPine.surface};
+        background-color: transparent;
         border-radius: 4px;
       }
     '';

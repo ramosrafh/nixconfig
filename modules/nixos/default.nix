@@ -1,16 +1,11 @@
-{ pkgs, ... }: {
+{ ... }: {
   imports = [
     ./adb.nix
     ./bluetooth.nix
     ./desktop.nix
-    ./steam.nix
     ./niri.nix
-    ./wayland.nix
     ./fonts.nix
     ./networking.nix
-    ./wireguard.nix
-    ./docker.nix
-    ./virtualization/windows-vm.nix
     ./users.nix
     ./greetd.nix
     ./hyprlock.nix
@@ -18,26 +13,20 @@
   ];
 
   nix.settings = {
-      # Limita o número de cores por build.
-      cores = 5;
-
-      # 1 ou 2 é o ideal se você quiser economizar recursos gerais da máquina.
-      max-jobs = 1;
-      experimental-features = [ "nix-command" "flakes" ];
-      substituters = [
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
-    };
+    cores = 0;
+    max-jobs = "auto";
+    experimental-features = [ "nix-command" "flakes" ];
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
 
   nixpkgs.config.allowUnfree = true;
-
-  # Use latest kernel for all hosts
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.limine = {
@@ -54,19 +43,19 @@
   };
 
   boot.kernelParams = [
-        "quiet"
-        "splash"
-        "loglevel=0"
-        "rd.systemd.show_status=false"
-        "rd.udev.log_level=0"
-        "udev.log_priority=0"
-        "mem_sleep_default=s2idle"
-      ];
+    "quiet"
+    "splash"
+    "loglevel=0"
+    "rd.systemd.show_status=false"
+    "rd.udev.log_level=0"
+    "udev.log_priority=0"
+    "mem_sleep_default=s2idle"
+  ];
 
   nix.gc = {
     automatic = true;
     dates = "weekly";
-    options = "--delete-older-than 7d";
+    options = "--delete-older-than 30d";
   };
 
   time.timeZone = "America/Sao_Paulo";
@@ -89,9 +78,4 @@
   };
 
   security.rtkit.enable = true;
-
-  # Default Java settings (JAVA_TOOL_OPTIONS has lower precedence, apps can override)
-  environment.variables = {
-    JAVA_TOOL_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
-  };
 }

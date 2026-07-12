@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ ... }:
 let
   brokenPine = import ../broken-pine.nix;
 
@@ -280,77 +280,10 @@ let
     };
   };
 
-  # Script to manage notifications after suspend
-  notification-resume-script = pkgs.writeShellScript "notification-resume" ''
-    #!/usr/bin/env bash
-    # Wait for system to stabilize after resume
-    sleep 3
-
-    # Enable Do Not Disturb temporarily to prevent popup spam
-    swaync-client --dnd-on 2>/dev/null || true
-
-    # Wait a bit more for any pending notifications to arrive
-    sleep 2
-
-    # Get notification count
-    COUNT=$(swaync-client --count 2>/dev/null || echo "0")
-
-    if [ "$COUNT" -gt 5 ]; then
-      # Close all popup notifications (they're still in history)
-      swaync-client --close-all 2>/dev/null || true
-
-      # Show a single summary notification
-      notify-send -u low -t 10000 "📬 $COUNT notificações pendentes" \
-        "Abra o centro de notificações para ver todas." \
-        -h string:x-canonical-private-synchronous:resume-summary
-
-      # Disable DND and open panel after brief delay
-      sleep 1
-      swaync-client --dnd-off 2>/dev/null || true
-      swaync-client --open-panel 2>/dev/null || true
-    else
-      # Few notifications, just disable DND
-      swaync-client --dnd-off 2>/dev/null || true
-    fi
-  '';
 in {
   services.swaync = {
     enable = true;
     settings = swaync-config;
     style = swaync-style;
-  };
-
-  home.packages = with pkgs; [
-    swaynotificationcenter
-    libnotify
-  ];
-
-  # Systemd service to handle resume from suspend
-  # Note: User services can't directly use suspend.target, so we use a path-based trigger
-  systemd.user.services.notification-resume = {
-    Unit = {
-      Description = "Handle notifications after resume from suspend";
-      After = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${notification-resume-script}";
-      # Ensure swaync is running
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
-    };
-  };
-
-  # Use a system-level sleep hook to trigger the user service
-  # This file will be symlinked via home.file
-  home.file.".local/bin/notification-resume-trigger" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      # Triggered by system sleep hook, runs the user service
-      if [ "$1" = "post" ]; then
-        sleep 2
-        systemctl --user start notification-resume.service || true
-      fi
-    '';
   };
 }

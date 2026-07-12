@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -21,22 +20,17 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, niri-flake, ... }@inputs:
+  outputs = { nixpkgs, home-manager, niri-flake, ... }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      pkgs-unfree = import nixpkgs {
+      overlays = import ./overlays { inherit inputs; };
+      pkgs = import nixpkgs {
         inherit system;
+        inherit overlays;
         config.allowUnfree = true;
       };
 
-      lib = nixpkgs.lib.extend (self: super: {
-        my = import ./lib { inherit inputs; lib = self; };
-      });
-
-      overlays = import ./overlays { inherit inputs; };
-
-      mkHost = hostName: hostPath: lib.nixosSystem {
+      mkHost = hostName: hostPath: nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs; };
         modules = [
@@ -60,7 +54,7 @@
       };
 
       devShells.${system} = import ./devshells {
-        inherit pkgs pkgs-unfree lib;
+        inherit pkgs;
       };
     };
 }

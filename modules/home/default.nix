@@ -26,41 +26,27 @@
     firefox
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
     claude-code
-    alacritty
-    fuzzel
-    zellij
-    yazi
-    waybar
     zed-editor
-    vscodium
     dbeaver-bin
     bottom
-    nautilus
-    nerd-fonts.symbols-only
     font-awesome
     onlyoffice-desktopeditors
     localsend
-    gnumake
-    gcc
-    binutils
     awscli
-    coreutils
     obsidian
     eog
     papers
     libreoffice-fresh
     piper
-    appflowy
     inkscape
+    gimp
     google-fonts
     clickup
     discord
     unzip
     tabiew
-    qgis
     rclone
     netbird-ui
-    netbird
     # audacity
     upower
     btrfs-assistant
@@ -88,7 +74,6 @@
     GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
     GCR_SSH_ASKPASS = "";
     DISPLAY_FOR_SSH = "";
-    _JAVA_OPTIONS = "-Xms128m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication";
   };
 
   dconf.settings = {
@@ -107,6 +92,7 @@
   };
 
   home.pointerCursor = {
+    enable = true;
     gtk.enable = true;
     size = 24;
     name = "Adwaita";

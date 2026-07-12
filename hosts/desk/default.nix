@@ -1,13 +1,15 @@
-{ config, pkgs, inputs, ... }: {
+{ ... }: {
   imports = [
     ./hardware.nix
     ../../modules/nixos
+    ../../modules/nixos/docker.nix
+    ../../modules/nixos/steam.nix
     ../../modules/nixos/ollama.nix
-    # inputs.niri.nixosModules.niri
+    ../../modules/nixos/virtualization/windows-vm.nix
   ];
 
   system.stateVersion = "26.05";
-  networking.hostName = "nix";
+  networking.hostName = "desk";
 
   boot.loader.timeout = 3;
 
@@ -19,21 +21,8 @@
     enable32Bit = true;
   };
 
-  # Environment variables for gaming and refresh rate support
   environment.sessionVariables = {
-    # Force games to use Wayland when possible
     SDL_VIDEODRIVER = "wayland";
-    # AMD GPU optimizations
     AMD_VULKAN_ICD = "RADV";
-    # Enable high refresh rate support
-    WLR_DRM_NO_ATOMIC = "0";
-    # Force VRR (Variable Refresh Rate) support
-    __GL_GSYNC_ALLOWED = "1";
-    __GL_VRR_ALLOWED = "1";
   };
-
-  boot.kernelParams = [
-    "amdgpu.dc=1"
-    "amdgpu.dpm=1"
-  ];
 }

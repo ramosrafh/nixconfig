@@ -7,8 +7,6 @@
     wireplumber.enable = true;
   };
 
-  security.rtkit.enable = true;
-
   services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true;
   services.gnome.gnome-online-accounts.enable = true;
@@ -83,12 +81,8 @@
   environment.systemPackages = with pkgs; [
     brightnessctl
     wl-clipboard
-    git
-    helix
     btop
-    ripgrep
     fd
-    eza
     pavucontrol
     pciutils
     usbutils

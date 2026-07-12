@@ -3,10 +3,13 @@
     ./hardware.nix
     ../../modules/nixos
     ../../modules/nixos/acpi.nix
+    ../../modules/nixos/docker.nix
   ];
 
   system.stateVersion = "26.05";
-  networking.hostName = "nix";
+  networking.hostName = "book";
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot = {
     loader.timeout = 3;
@@ -95,47 +98,5 @@
     MESA_VK_VERSION_OVERRIDE = "1.3";
     ANV_VIDEO_DECODE = "1";
     SDL_VIDEODRIVER = "wayland";
-  };
-
-  services.tlp = {
-    enable = true;
-    settings = {
-      # CPU scaling is handled by auto-cpufreq.
-      CPU_DRIVER_OPMODE_ON_AC = "active";
-      CPU_DRIVER_OPMODE_ON_BAT = "active";
-      CPU_SCALING_GOVERNOR_ON_AC = "";
-      CPU_SCALING_GOVERNOR_ON_BAT = "";
-
-      INTEL_GPU_MIN_FREQ_ON_AC = 100;
-      INTEL_GPU_MIN_FREQ_ON_BAT = 100;
-      INTEL_GPU_MAX_FREQ_ON_AC = 2250;
-      INTEL_GPU_MAX_FREQ_ON_BAT = 1100;
-      INTEL_GPU_BOOST_FREQ_ON_AC = 2250;
-      INTEL_GPU_BOOST_FREQ_ON_BAT = 1100;
-
-      WIFI_PWR_ON_AC = "off";
-      WIFI_PWR_ON_BAT = "on";
-
-      SOUND_POWER_SAVE_ON_AC = 0;
-      SOUND_POWER_SAVE_ON_BAT = 1;
-      SOUND_POWER_SAVE_CONTROLLER = "Y";
-
-      USB_AUTOSUSPEND = 1;
-      USB_EXCLUDE_BTUSB = 1;
-
-      RUNTIME_PM_ON_AC = "on";
-      RUNTIME_PM_ON_BAT = "auto";
-
-      SATA_LINKPWR_ON_AC = "med_power_with_dipm";
-      SATA_LINKPWR_ON_BAT = "min_power";
-
-      NVME_POWER_ON_AC = 5;
-      NVME_POWER_ON_BAT = 5;
-
-      PLATFORM_PROFILE_ON_AC = "balanced";
-      PLATFORM_PROFILE_ON_BAT = "low-power";
-
-      WOL_DISABLE = "Y";
-    };
   };
 }

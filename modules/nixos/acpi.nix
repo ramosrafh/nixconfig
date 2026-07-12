@@ -1,21 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ ... }:
 
 {
-  # System sleep hook to trigger user notification resume service after suspend
-  # This runs as root and signals the user session
-  powerManagement.powerDownCommands = "";
-  powerManagement.resumeCommands = ''
-    # Give the system time to stabilize after resume
-    sleep 2
-    # Trigger notification-resume for all logged-in graphical sessions
-    for user in $(loginctl list-users --no-legend | awk '{print $2}'); do
-      uid=$(id -u "$user" 2>/dev/null || echo "")
-      if [ -n "$uid" ] && [ -d "/run/user/$uid" ]; then
-        su - "$user" -c "XDG_RUNTIME_DIR=/run/user/$uid systemctl --user start notification-resume.service" 2>/dev/null || true
-      fi
-    done
-  '';
-
   boot.kernelParams = [
     "quiet"
     "loglevel=0"

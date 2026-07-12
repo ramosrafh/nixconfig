@@ -38,7 +38,7 @@ in {
             "command": "fish",
             "args": [
               "-lc",
-              "if test -f ~/.config/fish/secrets.fish; source ~/.config/fish/secrets.fish; end; set -q CLICKHOUSE_MCP_IMAGE; or set -gx CLICKHOUSE_MCP_IMAGE mcp/clickhouse:latest; set -q CLICKHOUSE_SECURE; or set -gx CLICKHOUSE_SECURE false; set -q CLICKHOUSE_VERIFY; or set -gx CLICKHOUSE_VERIFY true; set -q CLICKHOUSE_CONNECT_TIMEOUT; or set -gx CLICKHOUSE_CONNECT_TIMEOUT 10; set -q CLICKHOUSE_SEND_RECEIVE_TIMEOUT; or set -gx CLICKHOUSE_SEND_RECEIVE_TIMEOUT 30; exec docker run --rm -i -e CLICKHOUSE_HOST -e CLICKHOUSE_PORT -e CLICKHOUSE_USER -e CLICKHOUSE_PASSWORD -e CLICKHOUSE_DATABASE -e CLICKHOUSE_SECURE -e CLICKHOUSE_VERIFY -e CLICKHOUSE_CONNECT_TIMEOUT -e CLICKHOUSE_SEND_RECEIVE_TIMEOUT \"$CLICKHOUSE_MCP_IMAGE\""
+              "if test -f ~/.config/fish/secrets.fish; source ~/.config/fish/secrets.fish; end; set -q CLICKHOUSE_MCP_IMAGE; or set -gx CLICKHOUSE_MCP_IMAGE mcp/clickhouse:latest; set -q CLICKHOUSE_SECURE; or set -gx CLICKHOUSE_SECURE false; set -q CLICKHOUSE_VERIFY; or set -gx CLICKHOUSE_VERIFY true; set -q CLICKHOUSE_CONNECT_TIMEOUT; or set -gx CLICKHOUSE_CONNECT_TIMEOUT 10; set -q CLICKHOUSE_SEND_RECEIVE_TIMEOUT; or set -gx CLICKHOUSE_SEND_RECEIVE_TIMEOUT 30; exec docker run --rm -i --network host -e CLICKHOUSE_HOST -e CLICKHOUSE_PORT -e CLICKHOUSE_USER -e CLICKHOUSE_PASSWORD -e CLICKHOUSE_DATABASE -e CLICKHOUSE_SECURE -e CLICKHOUSE_VERIFY -e CLICKHOUSE_CONNECT_TIMEOUT -e CLICKHOUSE_SEND_RECEIVE_TIMEOUT \"$CLICKHOUSE_MCP_IMAGE\""
             ]
           }' --scope user
         '';

@@ -61,11 +61,12 @@
     rclone
     netbird-ui
     netbird
-    audacity
+    # audacity
     upower
     btrfs-assistant
     anydesk
     codex
+    bruno
 
     (wrapOBS {
       plugins = with obs-studio-plugins; [

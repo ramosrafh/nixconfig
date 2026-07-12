@@ -104,6 +104,30 @@ in
     name = "default";
   };
 
+  node =
+    let
+      prismaEngines = pkgs.prisma-engines_6;
+    in pkgs.mkShell {
+      packages = with pkgs; [
+        nodejs_22
+        openssl
+        pkg-config
+        prismaEngines
+      ];
+
+      shellHook = ''
+        export OPENSSL_DIR="${pkgs.openssl.dev}"
+        export OPENSSL_LIB_DIR="${pkgs.openssl.out}/lib"
+        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.openssl pkgs.stdenv.cc.cc.lib ]}:$LD_LIBRARY_PATH"
+        export PRISMA_SCHEMA_ENGINE_BINARY="${prismaEngines}/bin/schema-engine"
+        export PRISMA_QUERY_ENGINE_BINARY="${prismaEngines}/bin/query-engine"
+        export PRISMA_QUERY_ENGINE_LIBRARY="${prismaEngines}/lib/libquery_engine.node"
+        export PRISMA_FMT_BINARY="${prismaEngines}/bin/prisma-fmt"
+        export PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+        exec ${pkgs.fish}/bin/fish
+      '';
+    };
+
   driva = mkPythonShell {
     name = "driva";
     python = pkgs.python311;

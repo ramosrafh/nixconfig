@@ -23,9 +23,9 @@ in {
           set -l flake "path:$HOME/nixconfig"
 
           if test (count $argv) -eq 0
-              nix develop "$flake"
+              nix develop "$flake" --command fish
           else
-              nix develop "$flake#$argv[1]"
+              nix develop "$flake#$argv[1]" --command fish
           end
         '';
       };

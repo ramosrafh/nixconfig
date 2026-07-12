@@ -11,7 +11,7 @@ in {
         margin-top = 6;
         modules-left = [ "clock" "niri/workspaces" ];
         modules-center = [ "niri/window" ];
-        modules-right = [ "tray" "custom/mem" "network" "backlight" "pulseaudio" "pulseaudio#source" "battery" ];
+        modules-right = [ "custom/mem" "tray" "network" "backlight" "pulseaudio" "pulseaudio#source" "battery" ];
 
         "niri/window" = {
           format = "{}";
@@ -31,7 +31,7 @@ in {
         };
 
         tray = {
-          icon-size = 13;
+          icon-size = 16;
           spacing = 10;
         };
 
@@ -178,6 +178,10 @@ in {
         font-size: 14px;
       }
 
+      #window {
+        font-size: 14px;
+      }
+
       #workspaces button.active {
         background-color: transparent;
         color: #ffffff;
@@ -220,6 +224,10 @@ in {
         padding: 0px 10px;
         background-color: transparent;
         border-radius: 4px;
+      }
+
+      #tray > .passive {
+        -gtk-icon-effect: none;
       }
     '';
   };

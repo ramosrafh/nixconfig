@@ -77,6 +77,7 @@
   };
 
   dconf.settings = {
+    "org/blueman/general".symbolic-status-icons = true;
     "org/gtk/gtk4/settings/file-chooser".sort-directories-first = true;
     "org/gtk/settings/file-chooser".sort-directories-first = true;
     "org/gnome/nautilus/preferences" = {

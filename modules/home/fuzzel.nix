@@ -70,10 +70,102 @@ let
       xdg-open "$target" >/dev/null 2>&1 &
     '';
   };
+
+  fuzzel-window-switcher = pkgs.writeShellApplication {
+    name = "fuzzel-window-switcher";
+    runtimeInputs = with pkgs; [
+      fuzzel
+      jq
+      niri-unstable
+    ];
+    text = ''
+      resolve_icon() {
+        local app_id="$1"
+        local data_dir desktop_file line icon
+        local -a data_dirs
+
+        IFS=: read -r -a data_dirs <<< "''${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+
+        if [[ "$app_id" != */* ]]; then
+          for data_dir in "''${data_dirs[@]}"; do
+            desktop_file="$data_dir/applications/$app_id.desktop"
+            [ -r "$desktop_file" ] || continue
+
+            while IFS= read -r line; do
+              case "$line" in
+                Icon=*)
+                  icon="''${line#Icon=}"
+                  [ -n "$icon" ] && printf '%s\n' "$icon" && return
+                  ;;
+              esac
+            done < "$desktop_file"
+          done
+        fi
+
+        printf '%s\n' "$app_id"
+      }
+
+      windows="$(niri msg --json windows)"
+      workspaces="$(niri msg --json workspaces)"
+      icons='{}'
+
+      while IFS= read -r app_id; do
+        icon="$(resolve_icon "$app_id")"
+        icons="$(
+          jq --compact-output \
+            --arg app_id "$app_id" \
+            --arg icon "$icon" \
+            '. + {($app_id): $icon}' \
+            <<< "$icons"
+        )"
+      done < <(jq --raw-output 'map(.app_id // empty) | unique[]' <<< "$windows")
+
+      window_id="$(
+        jq --raw-output \
+          --argjson workspaces "$workspaces" \
+          --argjson icons "$icons" \
+          '
+          sort_by(.focus_timestamp // { secs: 0, nanos: 0 })
+          | reverse
+          | .[] as $window
+          | ($workspaces | map(select(.id == $window.workspace_id)) | .[0]) as $workspace
+          | (if $workspace == null then "?" else ($workspace.name // ($workspace.idx | tostring)) end) as $workspace_label
+          | (($window.app_id // "Aplicativo") | gsub("[\\t\\r\\n]+"; " ")) as $app_id
+          | (($window.title // "Sem título") | gsub("[\\t\\r\\n]+"; " ")) as $title
+          | (($icons[$app_id] // $app_id) | gsub(","; "")) as $icon
+          | ($window.id | tostring)
+            + "\t"
+            + $workspace_label
+            + "  ·  "
+            + $app_id
+            + "  —  "
+            + $title
+            + "\u0000icon\u001f"
+            + $icon
+            + ",application-x-executable"
+          ' <<< "$windows" \
+          | fuzzel \
+              --dmenu \
+              --only-match \
+              --with-nth=2 \
+              --match-nth=2 \
+              --accept-nth=1 \
+              --match-mode=fuzzy \
+              --no-run-if-empty \
+              --prompt="Janelas  " \
+              --placeholder="Buscar janela..."
+      )" || exit 0
+
+      [ -n "$window_id" ] || exit 0
+
+      niri msg action focus-window --id "$window_id"
+    '';
+  };
 in {
   home.packages = [
     pkgs.fuzzel
     fuzzel-omnibar
+    fuzzel-window-switcher
   ];
 
   home.file.".config/fuzzel/fuzzel.ini".text = ''

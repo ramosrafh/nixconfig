@@ -145,6 +145,17 @@ in
       '';
     };
 
+  queryon = pkgs.mkShell {
+    name = "queryon";
+    packages = with pkgs; [
+      cargo
+      clippy
+      rust-analyzer
+      rustc
+      rustfmt
+    ];
+  };
+
   driva = mkPythonShell {
     name = "driva";
     pythonVersion = "3.11";

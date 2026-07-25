@@ -18,6 +18,7 @@
     ./hyprlock.nix
     ./hypridle.nix
     ./mpv.nix
+    ./opencode.nix
   ];
 
   home.stateVersion = "26.05";
@@ -25,8 +26,10 @@
   home.packages = with pkgs; [
     firefox
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
+    inputs.query-on.packages."${pkgs.stdenv.hostPlatform.system}".default
     claude-code
     zed-editor
+    vscodium
     dbeaver-bin
     bottom
     font-awesome
@@ -53,6 +56,8 @@
     anydesk
     codex
     bruno
+    smartmontools
+    nvme-cli
 
     (wrapOBS {
       plugins = with obs-studio-plugins; [

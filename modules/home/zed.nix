@@ -13,6 +13,10 @@ in {
       icon_theme = "Zed (Default)";
       buffer_font_family = "JetBrainsMono Nerd Font";
       ui_font_family = "Inter";
+      feature_flags = {
+        notebooks = "on";
+        "tabular-data-preview" = "on";
+      };
     };
   };
 

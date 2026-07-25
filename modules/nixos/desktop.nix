@@ -11,6 +11,7 @@
   services.gvfs.enable = true;
   services.gnome.gnome-online-accounts.enable = true;
   services.gnome.at-spi2-core.enable = true;
+  services.flatpak.enable = true;
 
   environment.sessionVariables = {
     GTK_USE_PORTAL = "1";

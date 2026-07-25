@@ -192,6 +192,7 @@ in {
       "Mod+E".action.spawn = [ "nautilus" ];
       "Mod+R".action.spawn = [ "fuzzel" ];
       "Mod+S".action.spawn = [ "fuzzel-omnibar" "--command=search" ];
+      "Mod+Space".action.spawn = [ "fuzzel-window-switcher" ];
       "Alt+L".action.spawn = [ "hyprlock" ];
 
       "Mod+N".action.spawn = [ "swaync-client" "-t" "-sw" ];

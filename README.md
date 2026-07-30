@@ -1,6 +1,8 @@
 # nixconfig
 
-NixOS configuration for `desk` and `book`.
+NixOS configuration for `desk` and `book` (ASUS Zenbook S 16 UM5606GA).
+
+The complete encrypted-disk installation procedure is in [install.md](install.md).
 
 ## Rebuild
 

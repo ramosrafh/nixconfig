@@ -1,18 +1,13 @@
-{ config, lib, pkgs, modulesPath, ... }: {
+{ config, lib, modulesPath, ... }: {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "i915" ];
-  boot.kernelModules = [
-    "kvm-intel"
-    "snd_hda_intel"
-    "snd_sof_pci_intel_lnl"
-    "snd_sof_intel_hda_common"
-    "snd_soc_hdac_hda"
-  ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" "sd_mod" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" "amdgpu" ];
+  boot.kernelModules = [ "kvm-amd" "amdxdna" ];
 
   boot.initrd.luks.devices."cryptroot" = {
-    device = "/dev/disk/by-uuid/10e6b301-944e-44e2-b575-ea7175b1bf18";
+    # GPT label created by install.md; no machine-specific UUID edit is needed.
+    device = "/dev/disk/by-partlabel/cryptroot";
     allowDiscards = true;
   };
 
@@ -48,12 +43,13 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/742A-04C2";
+    device = "/dev/disk/by-partlabel/EFI";
     fsType = "vfat";
+    options = [ "umask=0077" ];
   };
 
   swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

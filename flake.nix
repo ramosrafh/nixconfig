@@ -18,11 +18,6 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    query-on = {
-      url = "path:/home/ramos/git/query-on";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = { nixpkgs, home-manager, niri-flake, ... }@inputs:

@@ -26,7 +26,6 @@
   home.packages = with pkgs; [
     firefox
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
-    inputs.query-on.packages."${pkgs.stdenv.hostPlatform.system}".default
     claude-code
     zed-editor
     vscodium

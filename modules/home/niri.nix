@@ -2,7 +2,7 @@
 let
   brokenPine = import ./broken-pine.nix;
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
-  keyboardLayout = if hostConfig == "book" then "br" else "us";
+  keyboardLayout = "us";
   keyboardVariant = if hostConfig == "book" then "" else "intl";
 in {
   programs.niri.settings = {

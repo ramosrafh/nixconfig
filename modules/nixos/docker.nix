@@ -1,7 +1,8 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
   virtualisation.docker = {
     enable = true;
-    storageDriver = "btrfs";
+    # Hosts can select a different driver without changing existing machines.
+    storageDriver = lib.mkDefault "btrfs";
     daemon.settings = {
       "data-root" = "/docker";
     };

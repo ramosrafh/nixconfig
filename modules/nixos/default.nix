@@ -29,18 +29,6 @@
   nixpkgs.config.allowUnfree = true;
 
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.limine = {
-    enable = true;
-    efiSupport = true;
-
-    maxGenerations = 3;
-
-    style = {
-      wallpapers = [];
-      interface.helpHidden = true;
-      interface.branding = "NixOS";
-    };
-  };
 
   boot.kernelParams = [
     "quiet"

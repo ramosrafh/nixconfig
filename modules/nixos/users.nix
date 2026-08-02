@@ -1,5 +1,5 @@
-{ pkgs, ... }: {
-  users.users.ramos = {
+{ pkgs, primaryUser, ... }: {
+  users.users.${primaryUser} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "docker" "libvirtd" "kvm" "video" "audio" "storage" "adbusers" ];
     shell = pkgs.fish;

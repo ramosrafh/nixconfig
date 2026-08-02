@@ -1,14 +1,20 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
   imports = [
     ./hardware.nix
+    ./disko.nix
+    ./secure-boot.nix
+    ./snapshots.nix
     ../../modules/nixos
     ../../modules/nixos/docker.nix
   ];
 
   system.stateVersion = "26.05";
   networking.hostName = "book";
+  console.keyMap = lib.mkForce "us";
 
   boot.kernelPackages = pkgs.linuxPackages_6_18;
+
+  virtualisation.docker.storageDriver = "overlay2";
 
   boot = {
     loader.timeout = 3;

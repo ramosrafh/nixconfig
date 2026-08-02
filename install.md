@@ -1,185 +1,155 @@
-# Instalação do NixOS no Zenbook S 16
+# Instalação do `book`
 
-Procedimento para o ASUS Zenbook S 16 UM5606GA. Ele recria o mesmo layout do
-notebook anterior:
+Instalação do ASUS Zenbook S 16 com Disko, LUKS2, Btrfs, Lanzaboote e TPM2.
+O script apaga o disco selecionado por completo.
 
-| Camada | Layout |
-| --- | --- |
-| GPT | `EFI` de 4 GiB + `cryptroot` usando o restante do NVMe |
-| Criptografia | LUKS2 em `cryptroot` |
-| LVM | PV LUKS → VG `vg0` → LV `root` com 100% do espaço |
-| Btrfs | `@`, `@home`, `@nix`, `@log` e `@docker` |
-| Swap | somente zram; não há partição ou LV de swap |
+Layout criado:
 
-Os arquivos NixOS usam os GPT labels `EFI` e `cryptroot`, portanto não é
-necessário copiar UUIDs manualmente.
+- EFI de 4 GiB e LUKS2 no restante do NVMe;
+- Btrfs sem LVM, com `@`, `@home`, `@nix`, `@cache`, `@docker` e
+  `@home-snapshots`;
+- snapshots do `/home`: 24 horários, 7 diários e 4 semanais;
+- somente zram, sem swap em disco e sem hibernação;
+- Docker com `overlay2` em `/docker`.
 
-## Antes de iniciar
+## 1. Publicar a configuração
 
-1. Use uma ISO NixOS unstable recente; esta plataforma AMD nova precisa de um
-   kernel e firmware atuais.
-2. No firmware do notebook, inicialize em modo UEFI, desative Secure Boot e
-   Fast Boot, e selecione o pendrive no menu de boot.
-3. Publique esta branch antes de trocar de máquina:
+Na máquina atual:
 
-   ```bash
-   git push -u origin switch/s16
-   ```
+```bash
+cd ~/nixconfig
+git add .
+git commit -m "storage: add Disko Secure Boot and TPM2 setup"
+git push -u origin switch/s16
+```
 
-4. Desconecte outros discos externos. O procedimento abaixo apaga totalmente o
-   disco escolhido.
+## 2. Instalar pelo live USB
 
-## Live USB e rede
+No firmware, habilite UEFI e TPM/fTPM. Deixe Secure Boot e Fast Boot
+desabilitados por enquanto.
 
-No terminal do instalador:
+No live USB:
 
 ```bash
 sudo -i
-loadkeys br-abnt2
-
-lsblk -d -e 7 -o NAME,PATH,SIZE,MODEL,TRAN
-```
-
-Se precisar conectar ao Wi-Fi, use `nmtui`. Depois confirme a rede:
-
-```bash
+timedatectl set-ntp true
+loadkeys us
 nmtui
 ping -c 3 cache.nixos.org
+
+git clone --branch switch/s16 --single-branch \
+  https://github.com/ramosrafh/nixconfig.git /tmp/nixconfig
+cd /tmp/nixconfig
+
+lsblk -d -e 7 -o NAME,PATH,SIZE,MODEL,SERIAL,TRAN
 ```
 
-## Identificar e apagar o NVMe
-
-Defina `DISK` com o caminho mostrado pelo `lsblk`. No Zenbook com apenas o NVMe
-interno, normalmente será `/dev/nvme0n1`.
+Confirme pelo modelo e capacidade qual é o NVMe inteiro. Troque o caminho se
+necessário e execute:
 
 ```bash
 DISK=/dev/nvme0n1
-
-lsblk -o NAME,PATH,SIZE,MODEL,TYPE,FSTYPE,MOUNTPOINTS "$DISK"
-test -b "$DISK" || { echo "Disco inexistente: $DISK"; exit 1; }
-
-read -r -p "Digite exatamente $DISK para APAGAR esse disco: " CONFIRM
-test "$CONFIRM" = "$DISK" || { echo "Cancelado"; exit 1; }
+bash scripts/install-book "$DISK"
 ```
 
-Somente depois de conferir modelo e capacidade, execute:
+O script valida que o caminho representa um disco inteiro e exige que ele seja
+digitado novamente antes de apagá-lo. `/dev/disk/by-id/...` também pode ser
+usado, especialmente quando há vários discos conectados.
+
+Durante a execução:
+
+1. Escolha a senha LUKS.
+2. Guarde a recovery key/QR code fora do notebook.
+3. Defina a senha do usuário indicado por `primaryUser` no flake.
+
+Ao terminar, execute `reboot` e retire o live USB. O primeiro boot ainda pede a
+senha LUKS.
+
+## 3. Ativar Secure Boot
+
+No NixOS instalado, confira as assinaturas e faça backup de `/var/lib/sbctl`
+em uma mídia externa criptografada:
 
 ```bash
-wipefs --all --force "$DISK"
-sgdisk --zap-all "$DISK"
-sgdisk -n 1:0:+4G -t 1:ef00 -c 1:EFI "$DISK"
-sgdisk -n 2:0:0 -t 2:8309 -c 2:cryptroot "$DISK"
-partprobe "$DISK"
-udevadm settle
-
-sgdisk -p "$DISK"
-ls -l /dev/disk/by-partlabel/EFI /dev/disk/by-partlabel/cryptroot
+sudo sbctl status
+sudo sbctl verify
+systemctl reboot --firmware-setup
 ```
 
-## LUKS, LVM e Btrfs
+No firmware ASUS:
 
-O `luksFormat` pedirá confirmação e a nova senha de criptografia. Guarde essa
-senha: ela será solicitada em cada boot.
+1. Entre em Setup Mode ou remova somente a Platform Key (`PK`).
+2. Não use “Clear All Secure Boot Keys”, pois isso pode apagar o `dbx`.
+3. Se necessário, selecione “Windows UEFI Mode”.
+4. Salve e inicialize o NixOS.
 
-```bash
-cryptsetup luksFormat --type luks2 --label cryptroot "${DISK}p2"
-cryptsetup open --allow-discards "${DISK}p2" cryptroot
-
-pvcreate /dev/mapper/cryptroot
-vgcreate vg0 /dev/mapper/cryptroot
-lvcreate -l 100%FREE -n root vg0
-
-mkfs.vfat -F 32 -n EFI "${DISK}p1"
-mkfs.btrfs -f -L nixos /dev/vg0/root
-```
-
-Crie os subvolumes:
+Inscreva as chaves e reinicie:
 
 ```bash
-mount /dev/vg0/root /mnt
-btrfs subvolume create /mnt/@
-btrfs subvolume create /mnt/@home
-btrfs subvolume create /mnt/@nix
-btrfs subvolume create /mnt/@log
-btrfs subvolume create /mnt/@docker
-umount /mnt
-
-mount -o subvol=@docker /dev/vg0/root /mnt
-chattr +C /mnt
-umount /mnt
-```
-
-Monte o layout final:
-
-```bash
-mount -o subvol=@,compress=zstd,noatime /dev/vg0/root /mnt
-mkdir -p /mnt/boot /mnt/home /mnt/nix /mnt/var/log /mnt/docker
-mount -o subvol=@home,compress=zstd,noatime /dev/vg0/root /mnt/home
-mount -o subvol=@nix,compress=zstd,noatime /dev/vg0/root /mnt/nix
-mount -o subvol=@log,compress=zstd,noatime /dev/vg0/root /mnt/var/log
-mount -o subvol=@docker,noatime /dev/vg0/root /mnt/docker
-mount /dev/disk/by-partlabel/EFI /mnt/boot
-```
-
-Confira tudo antes da instalação:
-
-```bash
-lsblk -f "$DISK"
-pvs
-vgs
-lvs
-findmnt -R /mnt
-btrfs subvolume list /mnt
-```
-
-O resultado esperado contém `vg0-root` montado cinco vezes com os subvolumes
-correspondentes e a partição FAT32 montada em `/mnt/boot`.
-
-## Instalar a configuração
-
-Use a branch que contém estas mudanças. Se elas já tiverem sido integradas à
-`main`, troque o valor de `CONFIG_BRANCH` para `main`.
-
-```bash
-CONFIG_BRANCH=switch/s16
-
-mkdir -p /mnt/home/ramos
-git clone --branch "$CONFIG_BRANCH" --single-branch \
-  https://github.com/ramosrafh/nixconfig.git \
-  /mnt/home/ramos/nixconfig
-
-nix flake check --no-build /mnt/home/ramos/nixconfig
-nixos-install --flake /mnt/home/ramos/nixconfig#book --no-root-passwd
-```
-
-Defina a senha do usuário e ajuste a propriedade do repositório:
-
-```bash
-nixos-enter --root /mnt -c 'passwd ramos'
-nixos-enter --root /mnt -c 'chown -R ramos:users /home/ramos'
-sync
-```
-
-Finalize e remova o pendrive quando o firmware reiniciar:
-
-```bash
-umount -R /mnt
-vgchange -an vg0
-cryptsetup close cryptroot
+sudo sbctl enroll-keys --microsoft
 reboot
 ```
 
-## Conferência após o primeiro boot
+Confirme:
 
 ```bash
-lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS
-findmnt -t btrfs,vfat
-lscpu | sed -n '1,20p'
-lspci -nnk | rg -A3 'VGA|Display|Audio|Network'
-lsmod | rg 'amdgpu|amdxdna|kvm_amd'
+bootctl status
+sudo sbctl status
+sudo sbctl verify
+```
+
+O resultado esperado é `Secure Boot: enabled (user)`.
+
+## 4. Ativar TPM2 autounlock
+
+Somente depois de iniciar com Secure Boot ativo:
+
+```bash
+PCRLOCK=/run/current-system/systemd/lib/systemd/systemd-pcrlock
+"$PCRLOCK" is-supported
+sudo test -s /var/lib/systemd/pcrlock.json
+
+# Teste a senha LUKS e confira se a recovery key está registrada.
+sudo cryptsetup open --test-passphrase /dev/disk/by-partlabel/cryptroot
+sudo cryptsetup luksDump /dev/disk/by-partlabel/cryptroot
+
+sudo systemd-cryptenroll \
+  --tpm2-device=auto \
+  --tpm2-with-pin=false \
+  --tpm2-pcrlock=/var/lib/systemd/pcrlock.json \
+  /dev/disk/by-partlabel/cryptroot
+```
+
+`is-supported` precisa responder `yes`. A inscrição adiciona o TPM sem remover
+a senha nem a recovery key.
+
+Faça o backup do cabeçalho LUKS em uma mídia externa já montada:
+
+```bash
+HEADER_BACKUP="/run/media/$USER/RECOVERY/book-cryptroot-header.img"
+sudo cryptsetup luksHeaderBackup /dev/disk/by-partlabel/cryptroot \
+  --header-backup-file "$HEADER_BACKUP"
+reboot
+```
+
+Troque `RECOVERY` pelo label real da mídia externa. Não deixe esse arquivo no
+notebook. O próximo boot deve chegar à tela de login sem pedir a senha LUKS. Se
+o TPM falhar, a senha continua disponível como fallback.
+
+## 5. Conferência final
+
+```bash
+findmnt / /boot /home "$HOME/.cache" /home/.snapshots /nix /docker
+sudo snapper -c home list
+systemctl list-timers 'snapper-*'
+docker info --format 'driver={{.Driver}} root={{.DockerRootDir}}'
 systemctl --failed
 ```
 
-Se o NVMe não aparecer no live USB, pare a instalação e use uma ISO mais nova.
-Não escolha outro dispositivo por tentativa. O módulo Limine da configuração
-instala o bootloader UEFI; não execute `limine bios-install` neste layout.
+Esperado:
+
+- snapshots do `/home`: 24 horários, 7 diários e 4 semanais;
+- `~/.cache` fora dos snapshots;
+- Docker: `driver=overlay2 root=/docker`;
+- teclado US no console e no Niri;
+- fallback para a senha LUKS se o TPM não desbloquear o disco.

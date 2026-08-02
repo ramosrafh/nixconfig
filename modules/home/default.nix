@@ -28,33 +28,21 @@
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
     claude-code
     zed-editor
-    vscodium
-    dbeaver-bin
     bottom
     font-awesome
-    onlyoffice-desktopeditors
     localsend
     awscli
     obsidian
     eog
     papers
-    libreoffice-fresh
     piper
-    inkscape
-    gimp
     google-fonts
-    clickup
-    discord
     unzip
-    tabiew
-    rclone
     netbird-ui
     # audacity
     upower
-    btrfs-assistant
     anydesk
     codex
-    bruno
     smartmontools
     nvme-cli
 

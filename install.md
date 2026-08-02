@@ -7,7 +7,7 @@ Layout criado:
 
 - EFI de 4 GiB e LUKS2 no restante do NVMe;
 - Btrfs sem LVM, com `@`, `@home`, `@nix`, `@cache`, `@docker` e
-  `@home-snapshots`;
+  `@snapshots`;
 - snapshots do `/home`: 24 horários, 7 diários e 4 semanais;
 - somente zram, sem swap em disco e sem hibernação;
 - Docker com `overlay2` em `/docker`.

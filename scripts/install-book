@@ -51,12 +51,24 @@ fi
 [[ -f /var/lib/sbctl/keys/db/db.pem ]] || die "certificado do Secure Boot não foi criado"
 
 echo "Iniciando a instalação destrutiva com Disko..."
-nix run "$REPO#disko-install" -- \
-  --write-efi-boot-entries \
-  --flake "$REPO#book" \
-  --disk main "$DISK" \
-  --extra-files /var/lib/sbctl /var/lib/sbctl \
-  --extra-files "$REPO" "/home/$INSTALL_USER/nixconfig"
+nix run github:nix-community/disko -- --mode disko --flake "$REPO#book"
+
+mkdir -p /mnt/var/tmp
+export TMPDIR=/mnt/var/tmp
+
+mkdir -p /mnt/var/lib/sbctl
+cp -a /var/lib/sbctl/* /mnt/var/lib/sbctl/
+mkdir -p "/mnt/home/$INSTALL_USER"
+cp -a "$REPO" "/mnt/home/$INSTALL_USER/nixconfig"
+
+nixos-install --flake "$REPO#book" --no-root-passwd
+
+# nix run "$REPO#disko-install" -- \
+#   --write-efi-boot-entries \
+#   --flake "$REPO#book" \
+#   --disk main "$DISK" \
+#   --extra-files /var/lib/sbctl /var/lib/sbctl \
+#   --extra-files "$REPO" "/home/$INSTALL_USER/nixconfig"
 
 if ! cryptsetup status cryptroot >/dev/null 2>&1; then
   cryptsetup open /dev/disk/by-partlabel/cryptroot cryptroot

@@ -4,7 +4,7 @@
 
     # disko-install overrides this with `--disk main <device>`.
     # Keeping a non-existent default makes an accidental destructive run fail.
-    device = lib.mkDefault "/dev/disk/by-id/SET-WITH-DISKO-INSTALL";
+    device = lib.mkDefault "/dev/nvme0n1";
 
     content = {
       type = "gpt";

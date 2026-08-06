@@ -3,10 +3,11 @@ let
   brokenPine = import ./broken-pine.nix;
   wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
   keyboardLayout = "us";
-  keyboardVariant = if hostConfig == "book" then "" else "intl";
+  keyboardVariant = if hostConfig == "book" then "intl" else "intl";
 in {
   programs.niri.settings = {
     input = {
+      power-key-handling.enable = hostConfig != "book";
       focus-follows-mouse.enable = false;
       mouse.accel-speed = 0.15;
       touchpad = {

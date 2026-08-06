@@ -1,4 +1,11 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+let
+  goose-cli = builtins.fetchClosure {
+    fromStore = "https://cache.numtide.com";
+    fromPath = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".goose-cli;
+    inputAddressed = true;
+  };
+in {
   imports = [
     ./themes/broken-pine-gtk.nix
     ./helix.nix
@@ -26,6 +33,8 @@
   home.packages = with pkgs; [
     firefox
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
+    inputs.query-on.packages."${pkgs.stdenv.hostPlatform.system}".default
+    goose-cli
     claude-code
     zed-editor
     bottom
@@ -45,6 +54,9 @@
     codex
     smartmontools
     nvme-cli
+    bruno
+    onlyoffice-desktopeditors
+    syswatch
 
     (wrapOBS {
       plugins = with obs-studio-plugins; [

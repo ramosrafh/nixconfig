@@ -28,9 +28,19 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    query-on = {
+      url = "path:/home/ramos/git/query-on";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    llm-agents-nix = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, disko, lanzaboote, niri-flake, ... }@inputs:
+  outputs = { nixpkgs, home-manager, disko, lanzaboote, niri-flake, llm-agents-nix, ... }@inputs:
     let
       system = "x86_64-linux";
       primaryUser = "ramos";

@@ -1,7 +1,7 @@
 { hostConfig ? "desk", ... }:
 
 let
-  wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
+  wallpaper = "${../../../assets/wallpapers/current_wallpaper.jpg}";
   wallpaperCmd = "awww img ${wallpaper}";
 
   mkProfile = name: outputs: {

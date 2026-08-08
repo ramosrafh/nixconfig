@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -40,7 +41,7 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, disko, lanzaboote, niri-flake, llm-agents-nix, ... }@inputs:
+  outputs = { nixpkgs, nixpkgs-stable, home-manager, disko, lanzaboote, niri-flake, llm-agents-nix, ... }@inputs:
     let
       system = "x86_64-linux";
       primaryUser = "ramos";
@@ -51,34 +52,39 @@
         config.allowUnfree = true;
       };
 
-      mkHost = hostName: hostPath: nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs primaryUser; };
-        modules = [
-          hostPath
-          disko.nixosModules.disko
-          lanzaboote.nixosModules.lanzaboote
-          niri-flake.nixosModules.niri
-          { nixpkgs.overlays = overlays; }
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${primaryUser} = import ./modules/home;
-            home-manager.extraSpecialArgs = {
-              inherit inputs primaryUser;
-              hostConfig = hostName;
-            };
-          }
-        ];
+      mkHost = import ./lib/mk-host.nix {
+        inherit nixpkgs home-manager inputs overlays primaryUser system;
       };
     in
     {
-      inherit primaryUser;
+      lib.primaryUser = primaryUser;
 
       nixosConfigurations = {
-        desk = mkHost "desk" ./hosts/desk;
-        book = mkHost "book" ./hosts/book;
+        desk = mkHost {
+          hostName = "desk";
+          hostPath = ./hosts/desk;
+          homePath = ./hosts/desk/home.nix;
+          extraModules = [ niri-flake.nixosModules.niri ];
+        };
+        book = mkHost {
+          hostName = "book";
+          hostPath = ./hosts/book;
+          homePath = ./hosts/book/home.nix;
+          extraModules = [
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
+            niri-flake.nixosModules.niri
+          ];
+        };
+        server = mkHost {
+          hostName = "server";
+          hostPath = ./hosts/server;
+          nixpkgsInput = nixpkgs-stable;
+          extraModules = [
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
+          ];
+        };
       };
 
       devShells.${system} = import ./devshells {

@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ./broken-pine.nix;
+  brokenPine = import ../themes/broken-pine.nix;
 in {
   programs.alacritty = {
     enable = true;

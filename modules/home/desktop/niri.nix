@@ -1,7 +1,7 @@
 { pkgs, hostConfig ? "desk", ... }:
 let
-  brokenPine = import ./broken-pine.nix;
-  wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
+  brokenPine = import ../themes/broken-pine.nix;
+  wallpaper = "${../../../assets/wallpapers/current_wallpaper.jpg}";
   keyboardLayout = "us";
   keyboardVariant = if hostConfig == "book" then "intl" else "intl";
 in {

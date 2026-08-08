@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, primaryUser, ... }: {
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
@@ -15,4 +15,6 @@
     virtio-win
     win-spice
   ];
+
+  users.users.${primaryUser}.extraGroups = [ "libvirtd" "kvm" ];
 }

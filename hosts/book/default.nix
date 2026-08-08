@@ -15,8 +15,13 @@ in {
     ./disko.nix
     ./secure-boot.nix
     ./snapshots.nix
-    ../../modules/nixos
-    ../../modules/nixos/docker.nix
+    ../../modules/nixos/base
+    ../../modules/nixos/profiles/workstation
+    ../../modules/nixos/profiles/laptop
+    ../../modules/nixos/programs/adb.nix
+    ../../modules/nixos/programs/nix-ld.nix
+    ../../modules/nixos/services/docker.nix
+    ../../modules/nixos/services/netbird.nix
   ];
 
   system.stateVersion = "26.05";
@@ -50,12 +55,8 @@ in {
   };
 
   services = {
-    fwupd.enable = true;
-    fstrim.enable = true;
     logind.settings.Login = {
       HandlePowerKey = "ignore";
-      HandleLidSwitch = "suspend";
-      HandleLidSwitchExternalPower = "suspend";
       HoldoffTimeoutSec = "2s";
     };
     triggerhappy = {
@@ -68,23 +69,6 @@ in {
       }];
     };
     xserver.videoDrivers = [ "amdgpu" ];
-    auto-cpufreq = {
-      enable = true;
-      settings = {
-        battery = {
-          governor = "powersave";
-          turbo = "never";
-          energy_performance_preference = "power";
-        };
-        charger = {
-          governor = "powersave";
-          turbo = "auto";
-          energy_performance_preference = "balance_performance";
-        };
-      };
-    };
-    # auto-cpufreq owns power profiles on this host.
-    power-profiles-daemon.enable = false;
   };
 
   powerManagement = {

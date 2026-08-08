@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ./broken-pine.nix;
+  brokenPine = import ../themes/broken-pine.nix;
 in {
   programs.fish = {
     enable = true;
@@ -179,7 +179,7 @@ in {
     enable = true;
     config.theme = "Broken Pine";
     themes."Broken Pine" = {
-      src = ./bat-broken-pine.tmTheme;
+      src = ../themes/broken-pine-bat.tmTheme;
       file = null;
     };
   };

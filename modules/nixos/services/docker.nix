@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, primaryUser, ... }: {
   virtualisation.docker = {
     enable = true;
     # Hosts can select a different driver without changing existing machines.
@@ -12,4 +12,6 @@
     docker-compose
     docker-buildx
   ];
+
+  users.users.${primaryUser}.extraGroups = [ "docker" ];
 }

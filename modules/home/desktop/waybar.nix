@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ./broken-pine.nix;
+  brokenPine = import ../themes/broken-pine.nix;
 in {
   programs.waybar = {
     enable = true;

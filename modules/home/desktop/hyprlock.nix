@@ -1,7 +1,7 @@
 { ... }:
 let
-  brokenPine = import ./broken-pine.nix;
-  wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
+  brokenPine = import ../themes/broken-pine.nix;
+  wallpaper = "${../../../assets/wallpapers/current_wallpaper.jpg}";
 in {
   programs.hyprlock = {
     enable = true;

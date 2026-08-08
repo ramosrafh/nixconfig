@@ -8,16 +8,20 @@ die() {
 }
 
 [[ ${EUID} -eq 0 ]] || die "execute como root"
-[[ $# -eq 1 ]] || die "uso: bash scripts/install-book <disco>"
+[[ $# -eq 2 ]] || die "uso: bash scripts/install-server <disco> <chave-publica-ssh>"
 [[ -d /sys/firmware/efi/efivars ]] || die "o live USB não iniciou em modo UEFI"
 
 DISK=$1
+SSH_KEY=$(realpath "$2")
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(realpath "$SCRIPT_DIR/..")
-TARGET=/mnt/book-install
+TARGET=/mnt/server-install
 INSTALL_USER=$(nix eval --raw "path:$REPO#lib.primaryUser")
 
 [[ -b "$DISK" ]] || die "disco inexistente: $DISK"
+[[ -f "$SSH_KEY" ]] || die "chave pública inexistente: $SSH_KEY"
+ssh-keygen -l -f "$SSH_KEY" >/dev/null || die "arquivo de chave pública inválido"
+
 REAL_DISK=$(readlink -f "$DISK")
 [[ $(lsblk -dn -o TYPE "$REAL_DISK") == "disk" ]] || die "$DISK não representa um disco inteiro"
 mountpoint -q "$TARGET" && die "$TARGET já está montado"
@@ -44,18 +48,22 @@ fi
 
 nix run "path:$REPO#disko-install" -- \
   --write-efi-boot-entries \
-  --flake "path:$REPO#book" \
+  --flake "path:$REPO#server" \
   --disk main "$REAL_DISK" \
   --mount-point "$TARGET" \
   --extra-files /var/lib/sbctl /var/lib/sbctl \
   --extra-files "$REPO" "/home/$INSTALL_USER/nixconfig"
 
-nixos-enter --root "$TARGET" -c "passwd '$INSTALL_USER'"
+install -d -m 0700 "$TARGET/home/$INSTALL_USER/.ssh"
+install -m 0600 "$SSH_KEY" "$TARGET/home/$INSTALL_USER/.ssh/authorized_keys"
 nixos-enter --root "$TARGET" -c "chown -R '$INSTALL_USER':users '/home/$INSTALL_USER'"
+
+echo "Defina a senha local/sudo de $INSTALL_USER."
+nixos-enter --root "$TARGET" -c "passwd '$INSTALL_USER'"
 
 sync
 cleanup
 trap - EXIT
 
 echo "Instalação concluída. Reinicie e retire o live USB."
-echo "O primeiro boot ainda solicitará a senha LUKS."
+echo "No primeiro boot, entre pelo console, execute 'sudo netbird up' e depois ative Secure Boot/TPM2."

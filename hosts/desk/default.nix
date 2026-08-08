@@ -1,10 +1,14 @@
 { ... }: {
   imports = [
     ./hardware.nix
-    ../../modules/nixos
-    ../../modules/nixos/docker.nix
-    ../../modules/nixos/steam.nix
-    ../../modules/nixos/ollama.nix
+    ../../modules/nixos/base
+    ../../modules/nixos/profiles/workstation
+    ../../modules/nixos/programs/adb.nix
+    ../../modules/nixos/programs/nix-ld.nix
+    ../../modules/nixos/programs/steam.nix
+    ../../modules/nixos/services/docker.nix
+    ../../modules/nixos/services/netbird.nix
+    ../../modules/nixos/services/ollama.nix
     ../../modules/nixos/virtualization/windows-vm.nix
   ];
 

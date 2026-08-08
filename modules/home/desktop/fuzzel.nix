@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ./broken-pine.nix;
+  brokenPine = import ../themes/broken-pine.nix;
   fuzzel-omnibar = pkgs.writeShellApplication {
     name = "fuzzel-omnibar";
     runtimeInputs = with pkgs; [

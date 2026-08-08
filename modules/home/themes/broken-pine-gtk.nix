@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ../broken-pine.nix;
+  brokenPine = import ./broken-pine.nix;
   colorReplacements = [
     { from = "#eff1f5"; to = brokenPine.text; }
     { from = "#cdd6f4"; to = brokenPine.textAlt; }

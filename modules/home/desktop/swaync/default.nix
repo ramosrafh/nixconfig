@@ -1,6 +1,6 @@
 { ... }:
 let
-  brokenPine = import ../broken-pine.nix;
+  brokenPine = import ../../themes/broken-pine.nix;
 
   swaync-style = ''
     /* ===== CRITICAL: Window backgrounds must be transparent ===== */

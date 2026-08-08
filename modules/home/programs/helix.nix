@@ -109,7 +109,7 @@
     };
 
     themes = {
-      broken-pine = builtins.fromTOML (builtins.readFile ./helix-broken-pine-theme.toml);
+      broken-pine = builtins.fromTOML (builtins.readFile ../themes/broken-pine-helix.toml);
     };
   };
 }

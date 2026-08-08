@@ -36,7 +36,6 @@ in {
         };
 
         backlight = {
-          device = "intel_backlight";
           format = "{icon}  {percent}%";
           format-icons = [ "󰃞" "󰃟" "󰃠" ];
           on-scroll-up = "brightnessctl set 1%+";

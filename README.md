@@ -1,6 +1,10 @@
 # nixconfig
 
-NixOS configuration for `desk` and `book`.
+NixOS configuration for `desk` and `book` (ASUS Zenbook S 16 UM5606GA).
+
+The Disko, LUKS2, Secure Boot, TPM2, and recovery procedure is in
+[install.md](install.md). The `book` host uses Btrfs home snapshots with 24
+hourly, 7 daily, and 4 weekly retention points.
 
 ## Rebuild
 

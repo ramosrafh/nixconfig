@@ -196,7 +196,6 @@ in {
     enableFishIntegration = true;
     flags = [ "--disable-up-arrow" ];
     settings = {
-      sync_address = "";
       sync.records = false;
       style = "compact";
       inline_height = 14;

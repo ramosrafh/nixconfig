@@ -41,7 +41,7 @@ in {
         rounding = -1;
         check_color = "rgb(92, 193, 163)";
         fail_color = "rgb(234, 110, 146)";
-        placeholder_text = ''<i><span foreground="#${brokenPine.noHash brokenPine.text}">Password...</span></i>'';
+        placeholder_text = "Password...";
         hide_input = false;
         position = "0, -200";
         halign = "center";

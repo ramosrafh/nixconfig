@@ -1,4 +1,11 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+let
+  goose-cli = builtins.fetchClosure {
+    fromStore = "https://cache.numtide.com";
+    fromPath = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".goose-cli;
+    inputAddressed = true;
+  };
+in {
   imports = [
     ./themes/broken-pine-gtk.nix
     ./helix.nix
@@ -27,37 +34,29 @@
     firefox
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
     inputs.query-on.packages."${pkgs.stdenv.hostPlatform.system}".default
+    goose-cli
     claude-code
     zed-editor
-    vscodium
-    dbeaver-bin
     bottom
     font-awesome
-    onlyoffice-desktopeditors
     localsend
     awscli
     obsidian
     eog
     papers
-    libreoffice-fresh
     piper
-    inkscape
-    gimp
     google-fonts
-    clickup
-    discord
     unzip
-    tabiew
-    rclone
     netbird-ui
     # audacity
     upower
-    btrfs-assistant
     anydesk
     codex
-    bruno
     smartmontools
     nvme-cli
+    bruno
+    onlyoffice-desktopeditors
+    syswatch
 
     (wrapOBS {
       plugins = with obs-studio-plugins; [

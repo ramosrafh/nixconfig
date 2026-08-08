@@ -1,55 +1,47 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }:
+let
+  powerKeyGuard = "/run/power-key-suspend-guard";
+  suspendOnPowerKey = pkgs.writeShellScript "suspend-on-power-key" ''
+    if ${pkgs.coreutils}/bin/mkdir ${powerKeyGuard} 2>/dev/null; then
+      if ! ${pkgs.systemd}/bin/systemctl suspend; then
+        ${pkgs.coreutils}/bin/rmdir ${powerKeyGuard}
+        exit 1
+      fi
+    fi
+  '';
+in {
   imports = [
     ./hardware.nix
+    ./disko.nix
+    ./secure-boot.nix
+    ./snapshots.nix
     ../../modules/nixos
-    ../../modules/nixos/acpi.nix
     ../../modules/nixos/docker.nix
   ];
 
   system.stateVersion = "26.05";
   networking.hostName = "book";
+  console.keyMap = lib.mkForce "us";
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_6_18;
+
+  virtualisation.docker.storageDriver = "overlay2";
 
   boot = {
     loader.timeout = 3;
-    # Lunar Lake graphics and suspend tuning.
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    # The Ryzen AI 9 465 uses the amd-pstate EPP interface.
     kernelParams = [
-      "i915.enable_guc=3"
-      "i915.enable_dc=2"
-      "i915.enable_fbc=0"
-      "i915.enable_psr=0"
-      "i915.fastboot=0"
-      "acpi_osi=Linux"
-      "acpi_backlight=native"
-      "pci=noaer"
-      "intel_pstate=active"
-      "nvme_core.default_ps_max_latency_us=5500"
-      "button.lid_init_state=open"
-      "mem_sleep_default=s2idle"
-      "pcie_aspm=force"
-      "pcie_aspm.policy=powersupersave"
+      "amd_pstate=active"
     ];
-    blacklistedKernelModules = [ "intel_ish_ipc" "intel_ishtp" ];
-    kernelModules = [ "i915" ];
   };
 
   hardware = {
     enableRedistributableFirmware = true;
-    intel-gpu-tools.enable = true;
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [
-        intel-media-driver
-        intel-compute-runtime
-        vpl-gpu-rt
-        vulkan-loader
-        vulkan-validation-layers
-      ];
-      extraPackages32 = with pkgs.driversi686Linux; [
-        intel-media-driver
-      ];
     };
     firmware = with pkgs; [
       sof-firmware
@@ -58,8 +50,24 @@
   };
 
   services = {
-    thermald.enable = true;
-    xserver.videoDrivers = [ "modesetting" ];
+    fwupd.enable = true;
+    fstrim.enable = true;
+    logind.settings.Login = {
+      HandlePowerKey = "ignore";
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HoldoffTimeoutSec = "2s";
+    };
+    triggerhappy = {
+      enable = true;
+      user = "root";
+      bindings = [{
+        keys = [ "POWER" ];
+        event = "release";
+        cmd = "${suspendOnPowerKey}";
+      }];
+    };
+    xserver.videoDrivers = [ "amdgpu" ];
     auto-cpufreq = {
       enable = true;
       settings = {
@@ -67,10 +75,9 @@
           governor = "powersave";
           turbo = "never";
           energy_performance_preference = "power";
-          scaling_max_freq = 2800000;
         };
         charger = {
-          governor = "performance";
+          governor = "powersave";
           turbo = "auto";
           energy_performance_preference = "balance_performance";
         };
@@ -80,10 +87,16 @@
     power-profiles-daemon.enable = false;
   };
 
-  # PSR/DC are disabled to avoid suspend freezes on this Intel GPU.
-  boot.extraModprobeConfig = ''
-    options i915 enable_guc=3 enable_dc=2 enable_fbc=0 enable_psr=0 fastboot=0
-  '';
+  powerManagement = {
+    enable = true;
+    powerDownCommands = ''
+      ${pkgs.coreutils}/bin/mkdir -p ${powerKeyGuard}
+    '';
+    resumeCommands = ''
+      ${pkgs.coreutils}/bin/sleep 2
+      ${pkgs.coreutils}/bin/rmdir ${powerKeyGuard} 2>/dev/null || true
+    '';
+  };
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
@@ -93,10 +106,7 @@
   users.groups.video = {};
 
   environment.sessionVariables = {
-    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
-    MESA_LOADER_DRIVER_OVERRIDE = "iris";
-    MESA_VK_VERSION_OVERRIDE = "1.3";
-    ANV_VIDEO_DECODE = "1";
+    AMD_VULKAN_ICD = "RADV";
     SDL_VIDEODRIVER = "wayland";
   };
 }

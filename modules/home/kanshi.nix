@@ -29,7 +29,7 @@ let
     criteria = "eDP-1";
     mode = "2880x1800@120.000Hz";
     position = "0,0";
-    scale = 1.55;
+    scale = 1.45;
   };
 
   workMonitor = criteria: mode: {

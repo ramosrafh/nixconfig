@@ -11,7 +11,20 @@
   system.stateVersion = "26.05";
   networking.hostName = "desk";
 
-  boot.loader.timeout = 3;
+  boot.loader = {
+    timeout = 3;
+    limine = {
+      enable = true;
+      efiSupport = true;
+      maxGenerations = 3;
+
+      style = {
+        wallpapers = [ ];
+        interface.helpHidden = true;
+        interface.branding = "NixOS";
+      };
+    };
+  };
 
   hardware.enableRedistributableFirmware = true;
 

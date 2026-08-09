@@ -7,6 +7,10 @@ die() {
   exit 1
 }
 
+nix_live() {
+  command nix --extra-experimental-features "nix-command flakes" "$@"
+}
+
 [[ ${EUID} -eq 0 ]] || die "execute como root"
 [[ $# -eq 2 ]] || die "uso: bash scripts/install-server <disco> <chave-publica-ssh>"
 [[ -d /sys/firmware/efi/efivars ]] || die "o live USB não iniciou em modo UEFI"
@@ -16,7 +20,7 @@ SSH_KEY=$(realpath "$2")
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(realpath "$SCRIPT_DIR/..")
 TARGET=/mnt/server-install
-INSTALL_USER=$(nix eval --raw "path:$REPO#lib.primaryUser")
+INSTALL_USER=$(nix_live eval --raw "path:$REPO#lib.primaryUser")
 
 [[ -b "$DISK" ]] || die "disco inexistente: $DISK"
 [[ -f "$SSH_KEY" ]] || die "chave pública inexistente: $SSH_KEY"
@@ -46,12 +50,12 @@ read -r -p "Digite exatamente $DISK para continuar: " CONFIRM
 [[ "$CONFIRM" == "$DISK" ]] || die "confirmação incorreta"
 
 if [[ ! -f /var/lib/sbctl/keys/db/db.key ]]; then
-  nix shell "path:$REPO#sbctl" -c sbctl create-keys
+  nix_live shell "path:$REPO#sbctl" -c sbctl create-keys
 fi
 
 [[ -f /var/lib/sbctl/keys/db/db.key ]] || die "chave do Secure Boot não foi criada"
 
-nix run "path:$REPO#disko-install" -- \
+nix_live run "path:$REPO#disko-install" -- \
   --write-efi-boot-entries \
   --flake "path:$REPO#server" \
   --disk main "$REAL_DISK" \

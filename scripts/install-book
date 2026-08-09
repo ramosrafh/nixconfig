@@ -7,6 +7,10 @@ die() {
   exit 1
 }
 
+nix_live() {
+  command nix --extra-experimental-features "nix-command flakes" "$@"
+}
+
 [[ ${EUID} -eq 0 ]] || die "execute como root"
 [[ $# -eq 1 ]] || die "uso: bash scripts/install-book <disco>"
 [[ -d /sys/firmware/efi/efivars ]] || die "o live USB não iniciou em modo UEFI"
@@ -15,7 +19,7 @@ DISK=$1
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(realpath "$SCRIPT_DIR/..")
 TARGET=/mnt/book-install
-INSTALL_USER=$(nix eval --raw "path:$REPO#lib.primaryUser")
+INSTALL_USER=$(nix_live eval --raw "path:$REPO#lib.primaryUser")
 
 [[ -b "$DISK" ]] || die "disco inexistente: $DISK"
 REAL_DISK=$(readlink -f "$DISK")
@@ -37,12 +41,12 @@ read -r -p "Digite exatamente $DISK para continuar: " CONFIRM
 [[ "$CONFIRM" == "$DISK" ]] || die "confirmação incorreta"
 
 if [[ ! -f /var/lib/sbctl/keys/db/db.key ]]; then
-  nix shell "path:$REPO#sbctl" -c sbctl create-keys
+  nix_live shell "path:$REPO#sbctl" -c sbctl create-keys
 fi
 
 [[ -f /var/lib/sbctl/keys/db/db.key ]] || die "chave do Secure Boot não foi criada"
 
-nix run "path:$REPO#disko-install" -- \
+nix_live run "path:$REPO#disko-install" -- \
   --write-efi-boot-entries \
   --flake "path:$REPO#book" \
   --disk main "$REAL_DISK" \

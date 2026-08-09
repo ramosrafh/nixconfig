@@ -91,6 +91,11 @@
         server = mkHost {
           hostPath = ./hosts/server;
           nixpkgsInput = nixpkgs-stable;
+          # syswatch is not available in stable; expose only this package from
+          # the already pinned unstable package set.
+          hostOverlays = [
+            (_final: _prev: { inherit (pkgs) syswatch; })
+          ];
           extraModules = [
             disko.nixosModules.disko
             lanzaboote.nixosModules.lanzaboote

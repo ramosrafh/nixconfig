@@ -1,4 +1,6 @@
 { lib, primaryUser, ... }: {
+  imports = [ ./server/cli.nix ];
+
   boot.loader.timeout = 3;
 
   hardware.enableRedistributableFirmware = true;

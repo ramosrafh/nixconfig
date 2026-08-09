@@ -42,8 +42,34 @@ Prefira `/dev/disk/by-id/...` quando houver mais de um disco conectado. O
 script mostra o modelo, serial e capacidade e exige que o caminho seja digitado
 novamente antes de apagar qualquer dado.
 
-Durante a instalação, guarde a recovery key do LUKS fora do servidor. Ao fim,
-defina a senha local/sudo do usuário e reinicie.
+Durante a instalação, guarde a recovery key do LUKS fora do servidor. O
+`disko-install` desmonta o sistema ao terminar; o script o monta novamente,
+pode pedir mais uma vez a senha do LUKS, instala a chave SSH e abre o `passwd`
+dentro do novo NixOS:
+
+```text
+Defina a senha local/sudo de ramos.
+New password:
+Retype new password:
+```
+
+Essa senha precisa ser definida **antes do primeiro reboot**. Ela será usada
+para login no console e pelo `sudo`; o SSH continua aceitando somente a chave
+pública fornecida ao instalador. A conta `root` permanece bloqueada
+intencionalmente e não precisa de senha própria.
+
+O script somente exibe `Instalação concluída` depois que o `passwd` termina com
+sucesso. Antes de reiniciar, confirme que:
+
+- a recovery key do LUKS foi guardada fora do servidor;
+- apareceu `password updated successfully` para o usuário `ramos`;
+- apareceu a mensagem final de instalação concluída.
+
+Então reinicie e retire o live USB:
+
+```bash
+reboot
+```
 
 ## Primeiro boot e NetBird
 

@@ -63,6 +63,25 @@ nix_live run "path:$REPO#disko-install" -- \
   --extra-files /var/lib/sbctl /var/lib/sbctl \
   --extra-files "$REPO" "/home/$INSTALL_USER/nixconfig"
 
+# disko-install unmounts the target after a successful installation. Mount the
+# subvolumes required by nixos-enter before configuring the installed user.
+CRYPT_PARTITION=$(lsblk -nrpo PATH,PARTLABEL "$REAL_DISK" | awk '$2 == "cryptroot" { print $1; exit }')
+[[ -n "$CRYPT_PARTITION" && -b "$CRYPT_PARTITION" ]] || die "partição cryptroot não encontrada em $REAL_DISK"
+
+if ! cryptsetup status cryptroot >/dev/null 2>&1; then
+  echo "Abra novamente o LUKS para concluir a configuração do usuário."
+  cryptsetup open "$CRYPT_PARTITION" cryptroot
+fi
+
+install -d "$TARGET"
+mountpoint -q "$TARGET" || \
+  mount -o subvol=@,compress=zstd,noatime /dev/mapper/cryptroot "$TARGET"
+install -d "$TARGET/home" "$TARGET/nix"
+mountpoint -q "$TARGET/home" || \
+  mount -o subvol=@home,compress=zstd,noatime /dev/mapper/cryptroot "$TARGET/home"
+mountpoint -q "$TARGET/nix" || \
+  mount -o subvol=@nix,compress=zstd,noatime /dev/mapper/cryptroot "$TARGET/nix"
+
 install -d -m 0700 "$TARGET/home/$INSTALL_USER/.ssh"
 install -m 0600 "$SSH_KEY" "$TARGET/home/$INSTALL_USER/.ssh/authorized_keys"
 nixos-enter --root "$TARGET" -c "chown -R '$INSTALL_USER':users '/home/$INSTALL_USER'"

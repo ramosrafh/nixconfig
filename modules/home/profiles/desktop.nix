@@ -1,6 +1,6 @@
 { pkgs, inputs, ... }: {
   imports = [
-    ./base.nix
+    ./development.nix
     ../themes/broken-pine-gtk.nix
     ../programs/alacritty.nix
     ../programs/mpv.nix
@@ -12,7 +12,6 @@
     ../desktop/niri.nix
     ../desktop/swaync
     ../desktop/waybar.nix
-    ../desktop/wireplumber.nix
   ];
 
   home.packages = with pkgs; [

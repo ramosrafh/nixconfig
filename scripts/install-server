@@ -20,6 +20,11 @@ INSTALL_USER=$(nix eval --raw "path:$REPO#lib.primaryUser")
 
 [[ -b "$DISK" ]] || die "disco inexistente: $DISK"
 [[ -f "$SSH_KEY" ]] || die "chave pública inexistente: $SSH_KEY"
+read -r SSH_KEY_TYPE _ < "$SSH_KEY" || die "não foi possível ler a chave pública"
+case "$SSH_KEY_TYPE" in
+  ssh-* | ecdsa-* | sk-*) ;;
+  *) die "use uma chave SSH pública, nunca a chave privada" ;;
+esac
 ssh-keygen -l -f "$SSH_KEY" >/dev/null || die "arquivo de chave pública inválido"
 
 REAL_DISK=$(readlink -f "$DISK")

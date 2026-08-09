@@ -21,12 +21,21 @@ Identifique cuidadosamente o SSD SATA inteiro:
 lsblk -d -e 7 -o NAME,PATH,SIZE,MODEL,SERIAL,TRAN
 ```
 
-Tenha disponível a chave pública SSH da máquina administrativa e execute:
+Tenha disponível a chave pública SSH da máquina administrativa. O nome do
+arquivo não é obrigatório: `id_ed25519.pub` é apenas o nome padrão sugerido
+pelo OpenSSH. Por exemplo, para criar uma chave exclusiva para o homelab:
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/homelab_server -C "homelab-server"
+```
+
+Passe ao instalador o arquivo público terminado em `.pub`; mantenha o arquivo
+sem `.pub` somente na máquina administrativa:
 
 ```bash
 sudo -i
 cd /tmp/nixconfig
-bash scripts/install-server /dev/sda /caminho/para/id_ed25519.pub
+bash scripts/install-server /dev/sda /home/seu-usuario/.ssh/homelab_server.pub
 ```
 
 Prefira `/dev/disk/by-id/...` quando houver mais de um disco conectado. O
@@ -44,8 +53,21 @@ O primeiro boot solicita a senha LUKS. Pelo console local:
 sudo netbird up
 ```
 
+O comando mostra uma URL para concluir o login em outro dispositivo. Assim que
+o peer aparecer como conectado no painel do NetBird, obtenha o IP do servidor
+com `netbird status`. De qualquer dispositivo conectado à mesma rede NetBird e
+autorizado pela política:
+
+```bash
+ssh -i ~/.ssh/homelab_server ramos@IP_NETBIRD_DO_SERVER
+```
+
 O SSH aceita somente chave e a porta 22 está liberada apenas na interface
-NetBird `wt0`.
+NetBird `wt0`. Depois do primeiro registro, o serviço reconecta automaticamente
+a cada boot. Antes de configurar o desbloqueio TPM2, cada reinício ainda exige
+a senha LUKS no console; depois dele, basta `sudo reboot` e aguardar o servidor
+voltar à rede. Comandos diretos de desligamento são bloqueados no `sudo` para
+evitar desligamentos remotos acidentais, enquanto o reinício continua permitido.
 
 ## Secure Boot
 

@@ -7,6 +7,7 @@
     ../../modules/nixos/programs/nix-ld.nix
     ../../modules/nixos/programs/steam.nix
     ../../modules/nixos/services/docker.nix
+    ../../modules/nixos/services/localsend.nix
     ../../modules/nixos/services/netbird.nix
     ../../modules/nixos/services/ollama.nix
     ../../modules/nixos/virtualization/windows-vm.nix

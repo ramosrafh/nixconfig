@@ -9,18 +9,20 @@ let
       fi
     fi
   '';
-in {
+in
+{
   imports = [
     ./hardware.nix
     ./disko.nix
-    ./secure-boot.nix
     ./snapshots.nix
     ../../modules/nixos/base
     ../../modules/nixos/profiles/workstation
     ../../modules/nixos/profiles/laptop
     ../../modules/nixos/programs/adb.nix
     ../../modules/nixos/programs/nix-ld.nix
+    ../../modules/nixos/security/secure-boot.nix
     ../../modules/nixos/services/docker.nix
+    ../../modules/nixos/services/localsend.nix
     ../../modules/nixos/services/netbird.nix
   ];
 
@@ -62,11 +64,13 @@ in {
     triggerhappy = {
       enable = true;
       user = "root";
-      bindings = [{
-        keys = [ "POWER" ];
-        event = "release";
-        cmd = "${suspendOnPowerKey}";
-      }];
+      bindings = [
+        {
+          keys = [ "POWER" ];
+          event = "release";
+          cmd = "${suspendOnPowerKey}";
+        }
+      ];
     };
     xserver.videoDrivers = [ "amdgpu" ];
   };
@@ -87,7 +91,7 @@ in {
     ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
   '';
 
-  users.groups.video = {};
+  users.groups.video = { };
 
   environment.sessionVariables = {
     AMD_VULKAN_ICD = "RADV";

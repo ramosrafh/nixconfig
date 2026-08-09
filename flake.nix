@@ -30,18 +30,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    query-on = {
-      url = "path:/home/ramos/git/query-on";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     llm-agents-nix = {
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, nixpkgs-stable, home-manager, disko, lanzaboote, niri-flake, llm-agents-nix, ... }@inputs:
+  outputs =
+    {
+      nixpkgs,
+      nixpkgs-stable,
+      home-manager,
+      disko,
+      lanzaboote,
+      niri-flake,
+      llm-agents-nix,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
       primaryUser = "ramos";
@@ -53,7 +58,12 @@
       };
 
       mkHost = import ./lib/mk-host.nix {
-        inherit nixpkgs home-manager inputs overlays primaryUser system;
+        inherit
+          nixpkgs
+          home-manager
+          primaryUser
+          system
+          ;
       };
     in
     {
@@ -61,15 +71,17 @@
 
       nixosConfigurations = {
         desk = mkHost {
-          hostName = "desk";
           hostPath = ./hosts/desk;
           homePath = ./hosts/desk/home.nix;
+          hostOverlays = overlays;
+          homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [ niri-flake.nixosModules.niri ];
         };
         book = mkHost {
-          hostName = "book";
           hostPath = ./hosts/book;
           homePath = ./hosts/book/home.nix;
+          hostOverlays = overlays;
+          homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [
             disko.nixosModules.disko
             lanzaboote.nixosModules.lanzaboote
@@ -77,7 +89,6 @@
           ];
         };
         server = mkHost {
-          hostName = "server";
           hostPath = ./hosts/server;
           nixpkgsInput = nixpkgs-stable;
           extraModules = [
@@ -90,6 +101,8 @@
       devShells.${system} = import ./devshells {
         inherit pkgs;
       };
+
+      formatter.${system} = pkgs.nixfmt-tree;
 
       packages.${system} = {
         disko-install = disko.packages.${system}.disko-install;

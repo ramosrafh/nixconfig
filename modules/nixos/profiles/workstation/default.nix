@@ -2,6 +2,7 @@
   imports = [
     ./bluetooth.nix
     ./desktop.nix
+    ./development.nix
     ./fonts.nix
     ./greetd.nix
     ./hyprlock.nix
@@ -9,11 +10,6 @@
   ];
 
   networking.networkmanager.enable = true;
-  networking.firewall = {
-    allowedTCPPorts = [ 53317 ];
-    allowedUDPPorts = [ 53317 ];
-  };
-
   users.users.${primaryUser}.extraGroups = [
     "networkmanager"
     "video"
@@ -30,7 +26,6 @@
     "rd.systemd.show_status=false"
     "rd.udev.log_level=0"
     "udev.log_priority=0"
-    "mem_sleep_default=s2idle"
   ];
 
   zramSwap = {

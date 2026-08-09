@@ -345,23 +345,6 @@
         "type": "github"
       }
     },
-    "query-on": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785971089,
-        "narHash": "sha256-VenWXeUQt77G/3MDj+8jdTi7YhCixfLmY/AWe9TBoak=",
-        "path": "/home/ramos/git/query-on",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/ramos/git/query-on",
-        "type": "path"
-      }
-    },
     "root": {
       "inputs": {
         "disko": "disko",
@@ -371,7 +354,6 @@
         "niri-flake": "niri-flake",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable_2",
-        "query-on": "query-on",
         "zen-browser": "zen-browser"
       }
     },

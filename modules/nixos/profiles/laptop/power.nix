@@ -1,4 +1,6 @@
 { ... }: {
+  boot.kernelParams = [ "mem_sleep_default=s2idle" ];
+
   services = {
     fwupd.enable = true;
     fstrim.enable = true;

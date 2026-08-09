@@ -95,16 +95,17 @@ sudo sbctl verify
 Somente depois de confirmar o Secure Boot ativo e guardar a recovery key:
 
 ```bash
-PCRLOCK=/run/current-system/systemd/lib/systemd/systemd-pcrlock
-"$PCRLOCK" is-supported
-sudo test -s /var/lib/systemd/pcrlock.json
 sudo cryptsetup open --test-passphrase /dev/disk/by-partlabel/cryptroot
 sudo systemd-cryptenroll \
   --tpm2-device=auto \
   --tpm2-with-pin=false \
-  --tpm2-pcrlock=/var/lib/systemd/pcrlock.json \
+  --tpm2-pcrs=7 \
   /dev/disk/by-partlabel/cryptroot
 ```
+
+O PCR 7 vincula o desbloqueio à política e às chaves do Secure Boot. O measured
+boot avançado permanece desativado somente neste host porque o firmware gera um
+event log incompatível com `systemd-pcrlock`.
 
 Reinicie e confirme o desbloqueio automático. A senha e a recovery key
 continuam disponíveis como fallback.

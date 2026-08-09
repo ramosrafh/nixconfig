@@ -4,8 +4,8 @@ O instalador apaga completamente o SSD selecionado e cria:
 
 - partição EFI de 2 GiB;
 - LUKS2 no restante do SSD;
-- Btrfs separado por política: sistema, estado persistente, PostgreSQL, K3s e
-  dados de serviços em `/srv`;
+- Btrfs separado por política: sistema, estado persistente, K3s e dados de
+  serviços em `/srv`;
 - Lanzaboote/Secure Boot;
 - recovery key do LUKS e desbloqueio TPM2 configurável após o primeiro boot.
 
@@ -113,8 +113,7 @@ continuam disponíveis como fallback.
 ## Conferência
 
 ```bash
-findmnt / /boot /nix /var/log /var/lib /var/lib/postgresql \
-  /var/lib/rancher/k3s /srv
+findmnt / /boot /nix /var/log /var/lib /var/lib/rancher/k3s /srv
 systemctl status netbird sshd k3s
 systemctl --failed
 ```

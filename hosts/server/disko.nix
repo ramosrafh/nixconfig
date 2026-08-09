@@ -77,13 +77,6 @@
                     "noatime"
                   ];
                 };
-                "@postgresql" = {
-                  mountpoint = "/var/lib/postgresql";
-                  mountOptions = [
-                    "compress=zstd"
-                    "noatime"
-                  ];
-                };
                 "@k3s" = {
                   mountpoint = "/var/lib/rancher/k3s";
                   mountOptions = [

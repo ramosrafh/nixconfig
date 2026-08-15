@@ -8,6 +8,7 @@
       owner = "caddy";
       group = "caddy";
       mode = "0400";
+      restartUnits = [ "caddy.service" ];
     };
   };
 

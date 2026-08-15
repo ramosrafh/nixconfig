@@ -21,8 +21,8 @@
 
       pages = [
         {
-          name = "Homelab";
-          slug = "homelab";
+          name = "Startpage";
+          slug = "start";
           width = "wide";
           head-widgets = [
             {
@@ -44,6 +44,103 @@
               ];
             }
           ];
+          columns = [
+            {
+              size = "small";
+              widgets = [
+                { type = "calendar"; }
+                {
+                  type = "rss";
+                  title = "NixOS & self-hosting";
+                  style = "vertical-list";
+                  cache = "1h";
+                  limit = 8;
+                  collapse-after = 4;
+                  feeds = [
+                    {
+                      title = "NixOS";
+                      url = "https://nixos.org/blog/announcements-rss.xml";
+                    }
+                    {
+                      title = "selfh.st";
+                      url = "https://selfh.st/rss/";
+                    }
+                  ];
+                }
+              ];
+            }
+            {
+              size = "full";
+              widgets = [
+                {
+                  type = "group";
+                  widgets = [
+                    {
+                      type = "hacker-news";
+                      title = "Hacker News";
+                      sort-by = "top";
+                      limit = 12;
+                      collapse-after = 6;
+                    }
+                    {
+                      type = "lobsters";
+                      title = "Lobsters";
+                      sort-by = "hot";
+                      limit = 12;
+                      collapse-after = 6;
+                    }
+                  ];
+                }
+                {
+                  type = "videos";
+                  title = "Vídeos";
+                  cache = "6h";
+                  style = "horizontal-cards";
+                  limit = 6;
+                  collapse-after = 3;
+                  channels = [
+                    # Fireship, ThePrimeagen and NetworkChuck.
+                    "UCsBjURrPoezykLs9EqgamOA"
+                    "UCUyeluBRhGPCW4rPe_UvBZQ"
+                    "UCrUL8K81R4VBzm-KOYwrcxQ"
+                  ];
+                }
+              ];
+            }
+            {
+              size = "small";
+              widgets = [
+                {
+                  type = "weather";
+                  location = "Curitiba, Brazil";
+                }
+                {
+                  type = "markets";
+                  title = "Cripto";
+                  cache = "1m";
+                  markets = [
+                    {
+                      symbol = "BTC-USD";
+                      name = "Bitcoin";
+                    }
+                    {
+                      symbol = "ETH-USD";
+                      name = "Ethereum";
+                    }
+                    {
+                      symbol = "SOL-USD";
+                      name = "Solana";
+                    }
+                  ];
+                }
+              ];
+            }
+          ];
+        }
+        {
+          name = "Homelab";
+          slug = "homelab";
+          width = "wide";
           columns = [
             {
               size = "small";

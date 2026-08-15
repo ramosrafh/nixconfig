@@ -1,0 +1,12 @@
+/* Keep the Startpage's three-column layout, while giving Calendar and Weather
+   a little more room on desktop. Mobile keeps Glance's native layout. */
+@media (min-width: 1191px) {
+  .page-column-small {
+    width: 360px;
+  }
+
+  /* Fewer cards per row makes each video thumbnail about 20% larger. */
+  .widget-type-videos .cards-horizontal {
+    --cards-per-row: 4.5;
+  }
+}

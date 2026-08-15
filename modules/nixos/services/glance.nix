@@ -1,10 +1,18 @@
-{ ... }: {
+{ pkgs, ... }:
+let
+  glanceAssets = pkgs.runCommand "glance-assets" { } ''
+    mkdir -p "$out"
+    cp ${./glance.css} "$out/glance.css"
+  '';
+in
+{
   services.glance = {
     enable = true;
     settings = {
       server = {
         host = "127.0.0.1";
         port = 8080;
+        assets-path = "${glanceAssets}";
         # Glance is only reached through Caddy on the NetBird interface.
         proxied = true;
       };
@@ -17,6 +25,7 @@
         positive-color = "52 58 65";
         negative-color = "0 70 70";
         contrast-multiplier = 1.1;
+        custom-css-file = "/assets/glance.css";
       };
 
       pages = [
@@ -94,15 +103,15 @@
                 {
                   type = "videos";
                   title = "Vídeos";
-                  cache = "6h";
+                  cache = "30m";
                   style = "horizontal-cards";
-                  limit = 6;
+                  limit = 10;
                   collapse-after = 3;
                   channels = [
-                    # Fireship, ThePrimeagen and NetworkChuck.
-                    "UCsBjURrPoezykLs9EqgamOA"
-                    "UCUyeluBRhGPCW4rPe_UvBZQ"
-                    "UCrUL8K81R4VBzm-KOYwrcxQ"
+                    # Gaules, CazeTV, O POVO.
+                    "UC5ZTRH1zclthyc6b_D3m2Pw"
+                    "UCZiYbVptd3PVPf4f6eR6UaQ"
+                    "UCj-RTZE-V3Q6jleatRR9k2A"
                   ];
                 }
               ];

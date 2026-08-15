@@ -36,6 +36,8 @@ in
     virtualHosts = {
       "home.rafh.io" = mkPrivateHost "home.rafh.io" "127.0.0.1:8080";
       "dns.rafh.io" = mkPrivateHost "dns.rafh.io" "127.0.0.1:3000";
+      "uptime.rafh.io" = mkPrivateHost "uptime.rafh.io" "127.0.0.1:3001";
+      "beszel.rafh.io" = mkPrivateHost "beszel.rafh.io" "127.0.0.1:8090";
       "vault.rafh.io" = mkPrivateHost "vault.rafh.io" "127.0.0.1:8222";
     };
   };

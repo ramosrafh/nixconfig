@@ -218,14 +218,14 @@ in
                     }
                     {
                       title = "Uptime Kuma";
-                      url = "http://uptime.rafh.io";
+                      url = "https://uptime.rafh.io";
                       check-url = "http://127.0.0.1:3001";
                       icon = "si:uptimekuma";
                       same-tab = true;
                     }
                     {
                       title = "Beszel";
-                      url = "http://beszel.rafh.io";
+                      url = "https://beszel.rafh.io";
                       check-url = "http://127.0.0.1:8090";
                       icon = "si:beszel";
                       same-tab = true;
@@ -253,12 +253,12 @@ in
                         }
                         {
                           title = "Uptime Kuma";
-                          url = "http://uptime.rafh.io";
+                          url = "https://uptime.rafh.io";
                           icon = "si:uptimekuma";
                         }
                         {
                           title = "Beszel";
-                          url = "http://beszel.rafh.io";
+                          url = "https://beszel.rafh.io";
                           icon = "si:beszel";
                         }
                         {

@@ -5,8 +5,8 @@
     width: 360px;
   }
 
-  /* Fewer cards per row makes each video thumbnail about 20% larger. */
+  /* Keep roughly three visible cards, close to the reference dashboard. */
   .widget-type-videos .cards-horizontal {
-    --cards-per-row: 4.5;
+    --cards-per-row: 3.5;
   }
 }

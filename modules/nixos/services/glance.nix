@@ -92,8 +92,17 @@ in
                       collapse-after = 6;
                     }
                     {
-                      type = "lobsters";
-                      title = "Lobsters";
+                      type = "reddit";
+                      title = "Homelab";
+                      subreddit = "homelab";
+                      sort-by = "hot";
+                      limit = 12;
+                      collapse-after = 6;
+                    }
+                    {
+                      type = "reddit";
+                      title = "Niri WM";
+                      subreddit = "niri";
                       sort-by = "hot";
                       limit = 12;
                       collapse-after = 6;

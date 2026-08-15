@@ -11,7 +11,7 @@ in {
         margin-top = 6;
         modules-left = [ "clock" "niri/workspaces" ];
         modules-center = [ "niri/window" ];
-        modules-right = [ "custom/mem" "tray" "network" "backlight" "pulseaudio" "pulseaudio#source" "battery" ];
+        modules-right = [ "custom/mem" "custom/netbird-profile" "tray" "network" "backlight" "pulseaudio" "pulseaudio#source" "battery" ];
 
         "niri/window" = {
           format = "{}";
@@ -48,6 +48,14 @@ in {
           interval = 3;
           exec = "free -h | awk '/Mem:/{printf $3}'";
           tooltip = false;
+        };
+
+        "custom/netbird-profile" = {
+          exec = "netbird-profile active";
+          format = "󰒄  {}";
+          interval = 5;
+          tooltip = false;
+          on-click = "netbird-profile toggle";
         };
 
         battery = {
@@ -129,6 +137,7 @@ in {
       #network,
       #pulseaudio,
       #backlight,
+      #custom-netbird-profile,
       #tray,
       #workspaces,
       #clock {
@@ -206,6 +215,15 @@ in {
         margin: 0px;
         margin-right: 10px;
         padding: 0px 10px;
+        background-color: transparent;
+        border-radius: 4px;
+      }
+
+      #custom-netbird-profile {
+        color: #ffffff;
+        margin: 0px;
+        margin-right: 2px;
+        padding: 0px 8px;
         background-color: transparent;
         border-radius: 4px;
       }

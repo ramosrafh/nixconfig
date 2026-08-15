@@ -9,6 +9,7 @@
     ../desktop/hypridle.nix
     ../desktop/hyprlock.nix
     ../desktop/kanshi.nix
+    ../desktop/netbird-profile.nix
     ../desktop/niri.nix
     ../desktop/swaync
     ../desktop/waybar.nix

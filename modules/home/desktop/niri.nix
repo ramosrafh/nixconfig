@@ -223,6 +223,10 @@ in
         "--command=search"
       ];
       "Mod+Space".action.spawn = [ "fuzzel-window-switcher" ];
+      "Mod+Backslash".action.spawn = [
+        "netbird-profile"
+        "toggle"
+      ];
       "Alt+L".action.spawn = [ "hyprlock" ];
 
       "Mod+N".action.spawn = [

@@ -13,3 +13,4 @@ result-*
 *.key
 *.p12
 *.pfx
+docs/server-external-storage.local.md

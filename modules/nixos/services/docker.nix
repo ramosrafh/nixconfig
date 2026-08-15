@@ -4,7 +4,7 @@
     # Hosts can select a different driver without changing existing machines.
     storageDriver = lib.mkDefault "btrfs";
     daemon.settings = {
-      "data-root" = "/docker";
+      "data-root" = lib.mkDefault "/docker";
     };
   };
 

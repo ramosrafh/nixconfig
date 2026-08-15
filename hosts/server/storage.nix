@@ -21,4 +21,25 @@
   systemd.tmpfiles.rules = [
     "d /srv/homelab 0755 root root -"
   ];
+
+  virtualisation.docker = {
+    storageDriver = "overlay2";
+    daemon.settings."data-root" = "/srv/homelab/docker";
+  };
+
+  systemd.services.docker = {
+    requires = [ "srv-homelab.mount" ];
+    after = [ "srv-homelab.mount" ];
+    unitConfig.ConditionPathIsMountPoint = "/srv/homelab";
+  };
+
+  services.k3s.extraFlags = [
+    "--default-local-storage-path=/srv/homelab/k3s"
+  ];
+
+  systemd.services.k3s = {
+    requires = [ "srv-homelab.mount" ];
+    after = [ "srv-homelab.mount" ];
+    unitConfig.ConditionPathIsMountPoint = "/srv/homelab";
+  };
 }

@@ -6,7 +6,10 @@
     ../../modules/nixos/base
     ../../modules/nixos/profiles/server.nix
     ../../modules/nixos/security/secure-boot.nix
+    ../../modules/nixos/services/adguardhome.nix
     ../../modules/nixos/services/caddy.nix
+    ../../modules/nixos/services/docker.nix
+    ../../modules/nixos/services/glance.nix
     ../../modules/nixos/services/k3s.nix
     ../../modules/nixos/services/netbird.nix
     ../../modules/nixos/services/ssh.nix

@@ -20,6 +20,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     niri-flake = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,6 +48,7 @@
       home-manager,
       disko,
       lanzaboote,
+      sops-nix,
       niri-flake,
       llm-agents-nix,
       ...
@@ -99,6 +105,7 @@
           extraModules = [
             disko.nixosModules.disko
             lanzaboote.nixosModules.lanzaboote
+            sops-nix.nixosModules.sops
           ];
         };
       };

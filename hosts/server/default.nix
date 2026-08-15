@@ -2,6 +2,7 @@
   imports = [
     ./disko.nix
     ./hardware.nix
+    ./storage.nix
     ../../modules/nixos/base
     ../../modules/nixos/profiles/server.nix
     ../../modules/nixos/security/secure-boot.nix

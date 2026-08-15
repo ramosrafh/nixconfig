@@ -2,6 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
+    age
     atuin
     fzf
     git
@@ -10,6 +11,7 @@
     nvme-cli
     ripgrep
     smartmontools
+    sops
     syswatch
     zoxide
   ];

@@ -12,8 +12,10 @@
   ];
   boot.kernelModules = [ "kvm-intel" ];
 
-  # Broadcom BCM4360 wifi: wl driver, blacklists conflicting bcma/b43/brcmfmac.
-  hardware.broadcom-sta.enable = true;
+  # Broadcom BCM4360 wifi: use the proprietary `wl` driver. NixOS 26.05 dropped
+  # the hardware.broadcom-sta option, so wire it up manually.
+  boot.blacklistedKernelModules = [ "b43" "bcma" "brcmsmac" "brcmfmac" ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

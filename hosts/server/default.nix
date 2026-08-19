@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{ lib, primaryUser, ... }: {
   imports = [
     ./disko.nix
     ./hardware.nix
@@ -17,6 +17,11 @@
   ];
 
   networking.hostName = "server";
+
+  # Wifi via nmtui: NetworkManager replaces dhcpcd as the way to configure interfaces.
+  networking.networkmanager.enable = true;
+  networking.useDHCP = lib.mkForce false;
+  users.users.${primaryUser}.extraGroups = [ "networkmanager" ];
 
   # This firmware exposes TPM2 but produces an event log incompatible with
   # systemd-pcrlock. Secure Boot remains enabled; TPM unlock uses PCR 7.

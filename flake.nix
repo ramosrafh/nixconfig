@@ -21,14 +21,14 @@
     };
 
     sops-nix = {
-      # url = "github:Mic92/sops-nix";
-      # TODO: change this back after associated PR is merged: https://github.com/sodiboo/niri-flake/pull/1850
-      url = "github:sodiboo/niri-flake?rev=6bb99ff875919f03ea6054026619d999061e1170";
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     niri-flake = {
-      url = "github:sodiboo/niri-flake";
+      # url = "github:sodiboo/niri-flake";
+      # TODO: change this back after associated PR is merged: https://github.com/sodiboo/niri-flake/pull/1850
+      url = "github:sodiboo/niri-flake?rev=6bb99ff875919f03ea6054026619d999061e1170";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

@@ -64,6 +64,13 @@
         inherit overlays;
         config.allowUnfree = true;
       };
+      pkgsStable = import nixpkgs-stable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      stableMpvOverlay = _final: _prev: {
+        inherit (pkgsStable) mpv mpvScripts;
+      };
 
       mkHost = import ./lib/mk-host.nix {
         inherit
@@ -81,14 +88,14 @@
         desk = mkHost {
           hostPath = ./hosts/desk;
           homePath = ./hosts/desk/home.nix;
-          hostOverlays = overlays;
+          hostOverlays = overlays ++ [ stableMpvOverlay ];
           homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [ niri-flake.nixosModules.niri ];
         };
         book = mkHost {
           hostPath = ./hosts/book;
           homePath = ./hosts/book/home.nix;
-          hostOverlays = overlays;
+          hostOverlays = overlays ++ [ stableMpvOverlay ];
           homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [
             disko.nixosModules.disko

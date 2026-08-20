@@ -5,6 +5,7 @@
     experimental-features = [
       "nix-command"
       "flakes"
+      "fetchClosure"
     ];
     substituters = [
       "https://cache.nixos.org"

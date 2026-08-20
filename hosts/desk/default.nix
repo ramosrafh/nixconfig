@@ -9,12 +9,15 @@
     ../../modules/nixos/services/docker.nix
     ../../modules/nixos/services/localsend.nix
     ../../modules/nixos/services/netbird.nix
-    ../../modules/nixos/services/ollama.nix
     ../../modules/nixos/virtualization/windows-vm.nix
   ];
 
   system.stateVersion = "26.05";
   networking.hostName = "desk";
+
+  # llama.cpp runs in the desktop Compose stack. Its API is reachable only
+  # through the NetBird interface, for the homelab server to consume.
+  networking.firewall.interfaces."wt0".allowedTCPPorts = [ 8080 ];
 
   boot.loader = {
     timeout = 3;

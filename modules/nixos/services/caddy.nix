@@ -38,6 +38,7 @@ in
       "dns.rafh.io" = mkPrivateHost "dns.rafh.io" "127.0.0.1:3000";
       "uptime.rafh.io" = mkPrivateHost "uptime.rafh.io" "127.0.0.1:3001";
       "beszel.rafh.io" = mkPrivateHost "beszel.rafh.io" "127.0.0.1:8090";
+      "dsh.rafh.io" = mkPrivateHost "dsh.rafh.io" "127.0.0.1:3080";
       "vault.rafh.io" = mkPrivateHost "vault.rafh.io" "127.0.0.1:8222";
     };
   };

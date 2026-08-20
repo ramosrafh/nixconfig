@@ -11,6 +11,7 @@
     "dns.rafh.io"
     "uptime.rafh.io"
     "beszel.rafh.io"
+    "dsh.rafh.io"
     "vault.rafh.io"
     "photos.rafh.io"
     "drive.rafh.io"

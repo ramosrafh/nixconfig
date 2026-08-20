@@ -19,7 +19,7 @@
   # server kernel version changes.
   boot.blacklistedKernelModules = [ "b43" "bcma" "brcmsmac" "brcmfmac" ];
   boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
-  nixpkgs.config.permittedInsecurePackages = [ "broadcom-sta-6.30.223.271-59-6.18.43" ];
+  nixpkgs.config.permittedInsecurePackages = [ "broadcom-sta-6.30.223.271-59-6.18.44" ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

@@ -41,6 +41,11 @@
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    query-on = {
+      url = "git+file:///home/ramos/git/query-on";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -127,6 +132,7 @@
 
       packages.${system} = {
         disko-install = disko.packages.${system}.disko-install;
+        query-on = inputs.query-on.packages.${system}.default;
         sbctl = pkgs.sbctl;
       };
     };

@@ -1,0 +1,46 @@
+[
+{
+  "description": "rmlint json-dump of lint files",
+  "cwd": "/home/ramos/nixconfig/",
+  "args": "rmlint",
+  "version": "2.10.2",
+  "rev": "unknown",
+  "progress": 0,
+  "checksum_type": "blake2b",
+  "merge_directories": false
+}, {
+  "id": 1090980328,
+  "type": "duplicate_file",
+  "progress": 100,
+  "checksum": "3f6d880d893ac66a723f9d6578e27adb7f61b722765ead61bead43411c11f9d03b665d65dacfdc2f8c6ec93b441e91e1a2c2e6ef7702f5dbf27be3063ef04c78",
+  "path": "/home/ramos/nixconfig/assets/wallpapers/lactea.png",
+  "size": 606763,
+  "depth": 3,
+  "inode": 316,
+  "disk_id": 53,
+  "is_original": true,
+  "twins": 2,
+  "mtime": 1785712853.4711096
+}, {
+  "id": 1073590665,
+  "type": "duplicate_file",
+  "progress": 100,
+  "checksum": "3f6d880d893ac66a723f9d6578e27adb7f61b722765ead61bead43411c11f9d03b665d65dacfdc2f8c6ec93b441e91e1a2c2e6ef7702f5dbf27be3063ef04c78",
+  "path": "/home/ramos/nixconfig/assets/wallpapers/solar.png",
+  "size": 606763,
+  "depth": 3,
+  "inode": 318,
+  "disk_id": 53,
+  "is_original": false,
+  "twins": 2,
+  "mtime": 1785712853.4741096
+}, {
+  "aborted": false,
+  "progress": 100,
+  "total_files": 94,
+  "ignored_files": 5,
+  "ignored_folders": 2,
+  "duplicates": 1,
+  "duplicate_sets": 1,
+  "total_lint_size": 606763
+}]

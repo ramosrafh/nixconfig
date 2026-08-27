@@ -28,6 +28,12 @@ let
           current="$(timeout 2s netbird profile list 2>/dev/null | active_profile || true)"
           printf '%s\n' "''${current:-Indisponível}"
           ;;
+        waybar)
+          current="$(timeout 2s netbird profile list 2>/dev/null | active_profile || true)"
+          if [ "$(printf '%s' "$current" | tr '[:upper:]' '[:lower:]')" = "homelab" ]; then
+            printf '%s\n' "$current"
+          fi
+          ;;
         toggle)
           available="$(netbird profile list)" || {
             notify-send --urgency=critical "NetBird" "Não foi possível consultar os perfis."
@@ -55,7 +61,7 @@ let
           notify-send --urgency=normal "NetBird" "Perfil ativo: $target"
           ;;
         *)
-          printf 'Uso: netbird-profile [active|toggle]\n' >&2
+          printf 'Uso: netbird-profile [active|toggle|waybar]\n' >&2
           exit 2
           ;;
       esac

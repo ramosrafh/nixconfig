@@ -6,7 +6,7 @@ in {
     enable = true;
     settings = {
       font = {
-        size = 22.0;
+        size = 20.0;
       };
       colors = {
         primary = {

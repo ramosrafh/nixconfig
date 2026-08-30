@@ -5,7 +5,7 @@
     ../programs/helix.nix
     ../programs/ssh.nix
     ../programs/yazi.nix
-    ../programs/zellij.nix
+    ../programs/tmux.nix
   ];
 
   home.stateVersion = "26.05";

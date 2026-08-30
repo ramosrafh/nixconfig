@@ -119,13 +119,32 @@ let
     '';
   };
 
+  niriWorkspaceEvents = pkgs.writeShellApplication {
+    name = "waybar-niri-workspace-events";
+    runtimeInputs = with pkgs; [
+      jq
+      niri-unstable
+    ];
+    text = ''
+      waybar_pid="$PPID"
+      printf '\n'
+      niri msg --json event-stream \
+        | jq --unbuffered --raw-output \
+          'select(has("WorkspaceActivated") or has("WorkspacesChanged")) | "refresh"' \
+        | while IFS= read -r _; do
+            kill -s RTMIN+8 "$waybar_pid" 2>/dev/null || true
+          done
+    '';
+  };
+
   workspaceModules = builtins.listToAttrs (
     map (index: {
       name = "custom/niri-workspace#${index}";
       value = {
         exec = "${niriWorkspace}/bin/waybar-niri-workspace ${index}";
         return-type = "json";
-        interval = 0.1;
+        interval = 10;
+        signal = 8;
         hide-empty-text = true;
         escape = false;
         on-click = "niri msg action focus-workspace ${index}";
@@ -142,7 +161,9 @@ in
         layer = "top";
         position = "top";
         margin-top = 6;
-        modules-left = [ "clock" ] ++ map (index: "custom/niri-workspace#${index}") workspaceIndexes;
+        modules-left = [ "clock" ]
+          ++ map (index: "custom/niri-workspace#${index}") workspaceIndexes
+          ++ [ "custom/niri-workspace-events" ];
         modules-center = [ "niri/window" ];
         modules-right = [
           "custom/mem"
@@ -160,6 +181,13 @@ in
           icon = true;
           icon-size = 16;
           max-length = 80;
+        };
+
+        "custom/niri-workspace-events" = {
+          exec = "${niriWorkspaceEvents}/bin/waybar-niri-workspace-events";
+          restart-interval = 1;
+          hide-empty-text = true;
+          tooltip = false;
         };
 
         tray = {

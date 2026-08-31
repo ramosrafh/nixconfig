@@ -223,6 +223,8 @@ in
         "--command=search"
       ];
       "Mod+Space".action.spawn = [ "fuzzel-window-switcher" ];
+      "Mod+Shift+V".action.spawn = [ "fuzzel-clipboard" ];
+      "Mod+Shift+P".action.spawn = [ "fuzzel-power-menu" ];
       "Mod+Backslash".action.spawn = [
         "netbird-profile"
         "toggle"
@@ -417,7 +419,6 @@ in
       "Alt+Print".action.screenshot-window = [ ];
 
       "Mod+Shift+E".action.quit = [ ];
-      "Mod+Shift+P".action.power-off-monitors = [ ];
 
       # Toggle secondary monitor while gaming to prevent mouse escape.
       "Mod+Shift+M".action.spawn = [

@@ -54,7 +54,7 @@ let
             ascii_downcase as $app
             | if $app | test("firefox|librewolf|floorp|zen") then "<span foreground=\"#ff7139\">󰈹</span>"
               elif $app | test("chromium|chrome|brave|vivaldi") then "<span foreground=\"#4285f4\"></span>"
-              elif $app | test("alacritty|kitty|foot|wezterm|ghostty|terminal") then "<span foreground=\"${brokenPine.blue}\"></span>"
+              elif $app | test("alacritty|kitty|foot|wezterm|ghostty|terminal") then "<span foreground=\"#0b0c0e\"></span>"
               elif $app | test("code|codium") then "<span foreground=\"#23a8f2\">󰨞</span>"
               elif $app | test("zed") then "<span foreground=\"#f2f2f2\">󰅩</span>"
               elif $app | test("nautilus|thunar|pcmanfm|dolphin") then "<span foreground=\"#f9e2af\">󰉋</span>"
@@ -89,16 +89,19 @@ let
               { text: "", tooltip: "", class: ["hidden"] }
             else
               ($state.windows | map(select(.workspace_id == $workspace.id))) as $workspace_windows
-              | ($workspace_windows | map((.app_id // "") | app_icon) | unique | .[0:3]) as $app_icons
+              | ($workspace_windows | map((.app_id // "") | app_icon | gsub("<span "; "<span size=\"medium\" ")) | unique) as $app_icons
+              | ($app_icons | .[0:3]) as $visible_icons
+              | (($app_icons | length) - ($visible_icons | length)) as $extra_icon_count
               | (
-                  if $workspace.is_focused or $workspace.is_active then $app_icons
-                  else ($app_icons | map(gsub("foreground=\"#[^\"]+\""; "foreground=\"#7f7f7f\"")))
+                  if $workspace.is_focused or $workspace.is_active then $visible_icons
+                  else ($visible_icons | map(gsub("foreground=\"#[^\"]+\""; "foreground=\"#7f7f7f\"")))
                   end
                 ) as $icons
               | {
                   text: (
                     ($workspace.idx | tostring)
                     + if ($icons | length) > 0 then " " + ($icons | join(" ")) else "" end
+                    + if $extra_icon_count > 0 then " <span size=\"small\">+" + ($extra_icon_count | tostring) + "</span>" else "" end
                   ),
                   tooltip: (
                     if ($workspace_windows | length) == 0 then "Workspace vazio"
@@ -122,18 +125,64 @@ let
   niriWorkspaceEvents = pkgs.writeShellApplication {
     name = "waybar-niri-workspace-events";
     runtimeInputs = with pkgs; [
+      coreutils
       jq
       niri-unstable
     ];
     text = ''
       waybar_pid="$PPID"
       printf '\n'
-      niri msg --json event-stream \
-        | jq --unbuffered --raw-output \
-          'select(has("WorkspaceActivated") or has("WorkspacesChanged")) | "refresh"' \
-        | while IFS= read -r _; do
-            kill -s RTMIN+8 "$waybar_pid" 2>/dev/null || true
-          done
+
+      # The bounded stream prevents orphan listeners after a Waybar restart.
+      # It is renewed only every 30 seconds while its parent is alive.
+      while kill -0 "$waybar_pid" 2>/dev/null; do
+        timeout 30 niri msg --json event-stream \
+          | jq --unbuffered --raw-output \
+            'select(
+              has("WorkspaceActivated")
+              or has("WorkspacesChanged")
+              or has("WindowClosed")
+              or (
+                has("WindowOpenedOrChanged")
+                and ((.WindowOpenedOrChanged.window.title // "") | test("^[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏] ") | not)
+              )
+            ) | "refresh"' \
+          | while IFS= read -r _; do
+              kill -s RTMIN+8 "$waybar_pid" 2>/dev/null || true
+            done
+      done
+    '';
+  };
+
+  # Niri's native window module redraws on every title update (for example,
+  # Codex's spinner). Polling the focused window at a modest rate keeps the
+  # bar responsive without the redraw storm.
+  niriWindow = pkgs.writeShellApplication {
+    name = "waybar-niri-window";
+    runtimeInputs = with pkgs; [
+      jq
+      niri-unstable
+    ];
+    text = ''
+      window="$(niri msg --json focused-window 2>/dev/null || printf 'null')"
+
+      jq --compact-output --null-input \
+        --argjson window "$window" \
+        '
+          def markup_escape:
+            gsub("&"; "&amp;")
+            | gsub("<"; "&lt;")
+            | gsub(">"; "&gt;");
+
+          if $window == null then
+            { text: "", class: ["empty"] }
+          else
+            (($window.title // "")
+              | sub("^[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏] "; "")
+              | markup_escape) as $title
+            | { text: $title, class: [($window.app_id // "unknown" | ascii_downcase)] }
+          end
+        '
     '';
   };
 
@@ -160,27 +209,30 @@ in
       mainBar = workspaceModules // {
         layer = "top";
         position = "top";
+        height = 36;
         margin-top = 6;
         modules-left = [ "clock" ]
           ++ map (index: "custom/niri-workspace#${index}") workspaceIndexes
           ++ [ "custom/niri-workspace-events" ];
-        modules-center = [ "niri/window" ];
+        modules-center = [ "custom/niri-window" ];
         modules-right = [
+          "tray"
           "custom/mem"
           "custom/netbird-profile"
-          "tray"
           "network"
           "backlight"
           "pulseaudio"
-          "pulseaudio#source"
+          # "pulseaudio#source" # Microfone desativado na Waybar.
           "battery"
         ];
 
-        "niri/window" = {
-          format = "{}";
-          icon = true;
-          icon-size = 16;
+        "custom/niri-window" = {
+          exec = "${niriWindow}/bin/waybar-niri-window";
+          return-type = "json";
+          interval = 2;
           max-length = 80;
+          escape = false;
+          tooltip = false;
         };
 
         "custom/niri-workspace-events" = {
@@ -282,14 +334,14 @@ in
           };
         };
 
-        "pulseaudio#source" = {
-          format = "{format_source}";
-          format-source = "󰍬 {volume}%";
-          format-source-muted = "";
-          on-click = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
-          on-scroll-down = "pactl set-source-volume @DEFAULT_SOURCE@ -1%";
-          on-scroll-up = "pactl set-source-volume @DEFAULT_SOURCE@ +1%";
-        };
+        # "pulseaudio#source" = {
+        #   format = "{format_source}";
+        #   format-source = "󰍬 {volume}%";
+        #   format-source-muted = "";
+        #   on-click = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
+        #   on-scroll-down = "pactl set-source-volume @DEFAULT_SOURCE@ -1%";
+        #   on-scroll-up = "pactl set-source-volume @DEFAULT_SOURCE@ +1%";
+        # };
       };
     };
 
@@ -324,7 +376,7 @@ in
         color: #ffffff;
         background-color: transparent;
         margin: 0px;
-        padding: 2px 10px;
+        padding: 2px 7px;
       }
 
       #clock {
@@ -367,10 +419,10 @@ in
       }
 
       #custom-niri-workspace label {
-        font-size: 14px;
+        font-size: 16px;
       }
 
-      #window {
+      #custom-niri-window {
         font-size: 14px;
         color: #ffffff;
         background-color: transparent;
@@ -382,6 +434,7 @@ in
       #custom-niri-workspace.focused {
         background-color: transparent;
         color: #ffffff;
+        box-shadow: inset 0 -2px #0b0c0e;
       }
 
       #custom-niri-workspace.urgent {
@@ -391,8 +444,8 @@ in
       #custom-mem {
         color: #ffffff;
         margin: 0px;
-        margin-right: 10px;
-        padding: 0px 10px;
+        margin-right: 6px;
+        padding: 0px 7px;
         background-color: transparent;
         border-radius: 4px;
       }
@@ -401,7 +454,7 @@ in
         color: #ffffff;
         margin: 0px;
         margin-right: 2px;
-        padding: 0px 8px;
+        padding: 0px 6px;
         background-color: transparent;
         border-radius: 4px;
       }
@@ -412,15 +465,15 @@ in
         box-shadow: none;
       }
 
-      window#waybar.empty #window {
+      #custom-niri-window.empty {
         background-color: transparent;
         padding: 0px;
       }
 
       #tray {
         margin: 0px;
-        margin-right: 10px;
-        padding: 0px 10px;
+        margin-right: 6px;
+        padding: 0px 7px;
         background-color: transparent;
         border-radius: 4px;
       }

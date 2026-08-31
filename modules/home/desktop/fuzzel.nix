@@ -161,11 +161,113 @@ let
       niri msg action focus-window --id "$window_id"
     '';
   };
+
+  fuzzel-clipboard = pkgs.writeShellApplication {
+    name = "fuzzel-clipboard";
+    runtimeInputs = with pkgs; [
+      cliphist
+      fuzzel
+      wl-clipboard
+    ];
+    text = ''
+      clear_action="󰆴  Limpar histórico"
+
+      selection="$({
+        printf '%s\n' "$clear_action"
+        cliphist list
+      } | fuzzel \
+        --dmenu \
+        --prompt="Clipboard  " \
+        --placeholder="Buscar no histórico..." \
+        --lines=12 \
+        --width=52
+      )" || exit 0
+
+      [ -n "$selection" ] || exit 0
+
+      if [ "$selection" = "$clear_action" ]; then
+        confirmation="$(
+          printf '%s\n' "Cancelar" "Limpar histórico" \
+            | fuzzel --dmenu --prompt="Confirmar  " --lines=2 --width=28
+        )" || exit 0
+
+        [ "$confirmation" = "Limpar histórico" ] && cliphist wipe
+        exit 0
+      fi
+
+      printf '%s' "$selection" | cliphist decode | wl-copy
+    '';
+  };
+
+  fuzzel-power-menu = pkgs.writeShellApplication {
+    name = "fuzzel-power-menu";
+    runtimeInputs = with pkgs; [
+      fuzzel
+      hyprlock
+      niri-unstable
+      systemd
+    ];
+    text = ''
+      lock_action="󰌾  Bloquear"
+      logout_action="󰍃  Encerrar sessão"
+      reboot_action="󰜉  Reiniciar"
+      poweroff_action="󰐥  Desligar"
+
+      action="$(
+        printf '%s\n' \
+          "$lock_action" \
+          "$logout_action" \
+          "$reboot_action" \
+          "$poweroff_action" \
+          | fuzzel --dmenu --prompt="Power  " --lines=4 --width=30
+      )" || exit 0
+
+      confirm_action() {
+        local label="$1"
+        local confirmation
+
+        confirmation="$(
+          printf '%s\n' "Cancelar" "$label" \
+            | fuzzel --dmenu --prompt="Confirmar  " --lines=2 --width=28
+        )" || return 1
+
+        [ "$confirmation" = "$label" ]
+      }
+
+      case "$action" in
+        "$lock_action")
+          hyprlock
+          ;;
+        "$logout_action")
+          niri msg action quit
+          ;;
+        "$reboot_action")
+          confirm_action "$reboot_action" && systemctl reboot
+          ;;
+        "$poweroff_action")
+          confirm_action "$poweroff_action" && systemctl poweroff
+          ;;
+      esac
+    '';
+  };
 in {
+  services.cliphist = {
+    enable = true;
+    allowImages = false;
+    extraOptions = [
+      "-max-dedupe-search"
+      "50"
+      "-max-items"
+      "500"
+    ];
+  };
+
   home.packages = [
     pkgs.fuzzel
     fuzzel-omnibar
     fuzzel-window-switcher
+    fuzzel-clipboard
+    fuzzel-power-menu
   ];
 
   home.file.".config/fuzzel/fuzzel.ini".text = ''

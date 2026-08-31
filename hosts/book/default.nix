@@ -32,6 +32,11 @@ in
 
   boot.kernelPackages = pkgs.linuxPackages_6_18;
 
+  specialisation.kernelLatest.configuration = {
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    boot.kernelParams = [ "amdgpu.dcdebugmask=0x400" ];
+  };
+
   virtualisation.docker.storageDriver = "overlay2";
 
   boot = {

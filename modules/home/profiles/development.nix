@@ -1,5 +1,6 @@
 { pkgs, inputs, ... }:
 let
+  herdr = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".herdr;
   # goose-cli = builtins.fetchClosure {
   #   fromStore = "https://cache.numtide.com";
   #   fromPath = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".goose-cli;
@@ -17,5 +18,6 @@ in
     claude-code
     awscli
     codex
+    herdr
   ];
 }

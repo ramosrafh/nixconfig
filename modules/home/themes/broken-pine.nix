@@ -29,7 +29,8 @@ let
     attribute = "#D7AFD7";
   };
 in
-colors // {
+colors
+// {
   noHash = color: builtins.substring 1 6 color;
   withAlpha = color: alpha: "${builtins.substring 1 6 color}${alpha}";
 }

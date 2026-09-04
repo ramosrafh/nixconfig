@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ../themes/broken-pine.nix;
+  vesper = import ../themes/vesper.nix;
   fuzzel-omnibar = pkgs.writeShellApplication {
     name = "fuzzel-omnibar";
     runtimeInputs = with pkgs; [
@@ -250,7 +250,8 @@ let
       esac
     '';
   };
-in {
+in
+{
   services.cliphist = {
     enable = true;
     allowImages = false;
@@ -292,17 +293,17 @@ in {
     radius=0
 
     [colors]
-    # Broken Pine
-    background=${brokenPine.withAlpha brokenPine.background "f2"}
-    text=${brokenPine.withAlpha brokenPine.text "ff"}
-    prompt=${brokenPine.withAlpha brokenPine.blue "ff"}
-    placeholder=${brokenPine.withAlpha brokenPine.placeholder "ff"}
-    input=${brokenPine.withAlpha brokenPine.text "ff"}
-    match=${brokenPine.withAlpha brokenPine.blue "ff"}
-    selection=${brokenPine.withAlpha brokenPine.surfaceActive "ff"}
-    selection-text=${brokenPine.withAlpha brokenPine.textAlt "ff"}
-    selection-match=${brokenPine.withAlpha brokenPine.orange "ff"}
-    counter=${brokenPine.withAlpha brokenPine.mutedAlt "ff"}
-    border=${brokenPine.withAlpha brokenPine.borderFocused "80"}
+    # Vesper
+    background=${vesper.withAlpha vesper.background "f2"}
+    text=${vesper.withAlpha vesper.text "ff"}
+    prompt=${vesper.withAlpha vesper.blue "ff"}
+    placeholder=${vesper.withAlpha vesper.placeholder "ff"}
+    input=${vesper.withAlpha vesper.text "ff"}
+    match=${vesper.withAlpha vesper.blue "ff"}
+    selection=${vesper.withAlpha vesper.surfaceActive "ff"}
+    selection-text=${vesper.withAlpha vesper.textAlt "ff"}
+    selection-match=${vesper.withAlpha vesper.orange "ff"}
+    counter=${vesper.withAlpha vesper.mutedAlt "ff"}
+    border=${vesper.withAlpha vesper.borderFocused "80"}
   '';
 }

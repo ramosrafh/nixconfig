@@ -1,51 +1,153 @@
 { pkgs, ... }:
 let
-  brokenPine = import ./broken-pine.nix;
+  vesper = import ./vesper.nix;
   colorReplacements = [
-    { from = "#eff1f5"; to = brokenPine.text; }
-    { from = "#cdd6f4"; to = brokenPine.textAlt; }
-    { from = "#bac2de"; to = brokenPine.textAlt; }
-    { from = "#a6adc8"; to = brokenPine.muted; }
-    { from = "#6c7086"; to = brokenPine.disabled; }
-    { from = "#585b70"; to = brokenPine.mutedAlt; }
-    { from = "#45475a"; to = brokenPine.border; }
-    { from = "#313244"; to = brokenPine.surfaceVariant; }
-    { from = "#1e1e2e"; to = brokenPine.background; }
-    { from = "#181825"; to = brokenPine.surface; }
-    { from = "#11111b"; to = brokenPine.background; }
+    {
+      from = "#eff1f5";
+      to = vesper.text;
+    }
+    {
+      from = "#cdd6f4";
+      to = vesper.textAlt;
+    }
+    {
+      from = "#bac2de";
+      to = vesper.textAlt;
+    }
+    {
+      from = "#a6adc8";
+      to = vesper.muted;
+    }
+    {
+      from = "#6c7086";
+      to = vesper.disabled;
+    }
+    {
+      from = "#585b70";
+      to = vesper.mutedAlt;
+    }
+    {
+      from = "#45475a";
+      to = vesper.border;
+    }
+    {
+      from = "#313244";
+      to = vesper.surfaceVariant;
+    }
+    {
+      from = "#1e1e2e";
+      to = vesper.background;
+    }
+    {
+      from = "#181825";
+      to = vesper.surface;
+    }
+    {
+      from = "#11111b";
+      to = vesper.background;
+    }
 
-    { from = "#cba6f7"; to = brokenPine.blue; }
-    { from = "#f38ba8"; to = brokenPine.red; }
-    { from = "#fab387"; to = brokenPine.orange; }
-    { from = "#f9e2af"; to = brokenPine.yellow; }
-    { from = "#f9e2a7"; to = brokenPine.yellow; }
-    { from = "#a6e3a1"; to = brokenPine.green; }
-    { from = "#89dceb"; to = brokenPine.blue; }
-    { from = "#89b4fa"; to = brokenPine.blue; }
-    { from = "#74c7ec"; to = brokenPine.cyan; }
-    { from = "#94e2d5"; to = brokenPine.property; }
-    { from = "#f5c2e7"; to = brokenPine.attribute; }
-    { from = "#eba0ac"; to = brokenPine.magenta; }
-    { from = "#b4befe"; to = brokenPine.purple; }
+    {
+      from = "#cba6f7";
+      to = vesper.blue;
+    }
+    {
+      from = "#f38ba8";
+      to = vesper.red;
+    }
+    {
+      from = "#fab387";
+      to = vesper.orange;
+    }
+    {
+      from = "#f9e2af";
+      to = vesper.yellow;
+    }
+    {
+      from = "#f9e2a7";
+      to = vesper.yellow;
+    }
+    {
+      from = "#a6e3a1";
+      to = vesper.green;
+    }
+    {
+      from = "#89dceb";
+      to = vesper.blue;
+    }
+    {
+      from = "#89b4fa";
+      to = vesper.blue;
+    }
+    {
+      from = "#74c7ec";
+      to = vesper.cyan;
+    }
+    {
+      from = "#94e2d5";
+      to = vesper.property;
+    }
+    {
+      from = "#f5c2e7";
+      to = vesper.attribute;
+    }
+    {
+      from = "#eba0ac";
+      to = vesper.magenta;
+    }
+    {
+      from = "#b4befe";
+      to = vesper.purple;
+    }
 
-    { from = "#ffffff"; to = brokenPine.textAlt; }
-    { from = "#FFFFFF"; to = brokenPine.textAlt; }
+    {
+      from = "#ffffff";
+      to = vesper.textAlt;
+    }
+    {
+      from = "#FFFFFF";
+      to = vesper.textAlt;
+    }
 
-    { from = "rgba(239, 241, 245,"; to = "rgba(215, 215, 255,"; }
-    { from = "rgba(203, 166, 247,"; to = "rgba(155, 206, 214,"; }
-    { from = "rgba(243, 139, 168,"; to = "rgba(234, 110, 146,"; }
-    { from = "rgba(30, 30, 46,"; to = "rgba(17, 18, 21,"; }
-    { from = "rgba(24, 24, 37,"; to = "rgba(23, 24, 26,"; }
-    { from = "rgba(17, 17, 27,"; to = "rgba(17, 18, 21,"; }
-    { from = "rgba(49, 50, 68,"; to = "rgba(35, 33, 50,"; }
+    {
+      from = "rgba(239, 241, 245,";
+      to = "rgba(215, 215, 255,";
+    }
+    {
+      from = "rgba(203, 166, 247,";
+      to = "rgba(155, 206, 214,";
+    }
+    {
+      from = "rgba(243, 139, 168,";
+      to = "rgba(234, 110, 146,";
+    }
+    {
+      from = "rgba(30, 30, 46,";
+      to = "rgba(17, 18, 21,";
+    }
+    {
+      from = "rgba(24, 24, 37,";
+      to = "rgba(23, 24, 26,";
+    }
+    {
+      from = "rgba(17, 17, 27,";
+      to = "rgba(17, 18, 21,";
+    }
+    {
+      from = "rgba(49, 50, 68,";
+      to = "rgba(35, 33, 50,";
+    }
 
-    { from = upstreamThemeName; to = themeName; }
+    {
+      from = upstreamThemeName;
+      to = themeName;
+    }
   ];
   replaceThemeColors = pkgs.lib.concatMapStringsSep "\n        " (replacement: ''
     substituteInPlace "$file" --replace-quiet '${replacement.from}' '${replacement.to}'
   '') colorReplacements;
   upstreamThemeName = "catppuccin-mocha-mauve-standard";
-  themeName = "broken-pine";
+  themeName = "vesper";
   compactNautilusGtk4 = pkgs.writeText "broken-pine-compact-nautilus.css" ''
     window.background.csd headerbar,
     window.background.csd headerbar.titlebar,
@@ -351,15 +453,16 @@ let
       done < <(find $out/share/themes/${themeName} -type f \( -name '*.css' -o -name '*.svg' -o -name '*.theme' \))
 
       substituteInPlace $out/share/themes/${themeName}/index.theme \
-        --replace-quiet 'Name=broken-pine' 'Name=Broken Pine' \
-        --replace-quiet 'Comment=An Flat Gtk+ theme based on Elegant Design' 'Comment=Broken Pine theme based on Catppuccin Mocha Mauve'
+        --replace-quiet 'Name=vesper' 'Name=Vesper' \
+        --replace-quiet 'Comment=An Flat Gtk+ theme based on Elegant Design' 'Comment=Vesper theme based on Catppuccin Mocha'
 
       cat ${compactNautilusGtk4} >> $out/share/themes/${themeName}/gtk-4.0/gtk.css
       cat ${compactNautilusGtk4} >> $out/share/themes/${themeName}/gtk-4.0/gtk-dark.css
     '';
   };
   themeDir = "${broken-pine-gtk-theme}/share/themes/${themeName}";
-in {
+in
+{
   home.packages = with pkgs; [
     broken-pine-gtk-theme
     gnome-themes-extra

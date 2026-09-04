@@ -1,19 +1,24 @@
 { pkgs, ... }:
 let
-  brokenPine = import ../themes/broken-pine.nix;
+  vesper = import ../themes/vesper.nix;
 in
 {
   programs.yazi = {
     enable = true;
     enableFishIntegration = true;
     shellWrapperName = "y";
+    extraPackages = [ ];
 
     settings = {
-      manager = {
-        ratio = [ 1 3 4 ];
-        sort_by = "alphabetical";
+      mgr = {
+        ratio = [
+          1
+          3
+          4
+        ];
+        sort_by = "mtime";
         sort_sensitive = false;
-        sort_reverse = false;
+        sort_reverse = true;
         sort_dir_first = true;
         show_hidden = false;
         show_symlink = true;
@@ -21,145 +26,431 @@ in
       };
 
       preview = {
-        max_width = 1000;
-        max_height = 1000;
+        max_width = 4096;
+        max_height = 4096;
+        image_filter = "lanczos3";
+        image_quality = 90;
       };
 
       opener = {
         edit = [
-          { run = ''helix "$@"''; desc = "Edit in Helix"; block = true; }
+          {
+            run = ''helix %s'';
+            desc = "Edit in Helix";
+            block = true;
+          }
         ];
         open = [
-          { run = ''xdg-open "$@"''; desc = "Open"; }
+          {
+            run = ''xdg-open %s1'';
+            desc = "Open";
+            orphan = true;
+          }
+        ];
+        pdf = [
+          {
+            run = ''${pkgs.papers}/bin/papers %s'';
+            desc = "Open in Papers";
+            orphan = true;
+          }
+        ];
+        spreadsheet = [
+          {
+            run = ''visigrid --no-restore %s'';
+            desc = "Open in VisiGrid";
+            orphan = true;
+          }
+        ];
+        office = [
+          {
+            run = ''onlyoffice-desktopeditors %s'';
+            desc = "Open in OnlyOffice";
+            orphan = true;
+          }
         ];
         play = [
-          { run = ''mpv "$@"''; desc = "Play"; orphan = true; }
+          {
+            run = ''mpv %s'';
+            desc = "Play";
+            orphan = true;
+          }
         ];
       };
 
       open = {
         rules = [
-          { mime = "text/*"; use = "edit"; }
-          { mime = "video/*"; use = "play"; }
-          { mime = "audio/*"; use = "play"; }
-          { mime = "*"; use = "open"; }
+          {
+            mime = "application/pdf";
+            use = "pdf";
+          }
+          {
+            url = "*.{csv,tsv,xlsx,xls,xlsb,ods,sheet}";
+            use = "spreadsheet";
+          }
+          {
+            mime = "application/vnd.openxmlformats-officedocument.*";
+            use = "office";
+          }
+          {
+            mime = "application/vnd.ms-*";
+            use = "office";
+          }
+          {
+            mime = "application/msword";
+            use = "office";
+          }
+          {
+            mime = "text/*";
+            use = "edit";
+          }
+          {
+            mime = "video/*";
+            use = "play";
+          }
+          {
+            mime = "audio/*";
+            use = "play";
+          }
+          {
+            mime = "*";
+            use = "open";
+          }
         ];
       };
     };
 
     keymap = {
-      manager.prepend_keymap = [
-        { on = [ "<Esc>" ]; run = "escape"; desc = "Exit visual mode, clear selected, or cancel"; }
-        { on = [ "." ]; run = "hidden toggle"; desc = "Toggle hidden files"; }
-        { on = [ "g" "m" ]; run = "cd /run/media/$USER"; desc = "Go to mounted media"; }
+      mgr.prepend_keymap = [
+        {
+          on = [ "<Esc>" ];
+          run = "escape";
+          desc = "Exit visual mode, clear selected, or cancel";
+        }
+        {
+          on = [ "." ];
+          run = "hidden toggle";
+          desc = "Toggle hidden files";
+        }
+        {
+          on = [
+            "g"
+            "m"
+          ];
+          run = "cd /run/media/$USER";
+          desc = "Go to mounted media";
+        }
       ];
     };
 
     theme = {
-      manager = {
-        cwd = { fg = brokenPine.blue; };
-        hovered = { fg = brokenPine.background; bg = brokenPine.blue; };
-        preview_hovered = { underline = true; };
-        find_keyword = { fg = brokenPine.yellow; italic = true; };
-        find_position = { fg = brokenPine.magenta; bg = "reset"; italic = true; };
-        marker_selected = { fg = brokenPine.green; bg = brokenPine.green; };
-        marker_copied = { fg = brokenPine.yellow; bg = brokenPine.yellow; };
-        marker_cut = { fg = brokenPine.red; bg = brokenPine.red; };
-        tab_active = { fg = brokenPine.background; bg = brokenPine.blue; };
-        tab_inactive = { fg = brokenPine.text; bg = brokenPine.surfaceActive; };
-        tab_width = 1;
+      app.overall = {
+        bg = vesper.background;
+      };
+
+      mgr = {
+        cwd = {
+          fg = vesper.yellow;
+        };
+        find_keyword = {
+          fg = vesper.yellow;
+          bold = true;
+          italic = true;
+          underline = true;
+        };
+        find_position = {
+          fg = vesper.green;
+          bg = "reset";
+          bold = true;
+          italic = true;
+        };
+        symlink_target = {
+          fg = vesper.muted;
+          italic = true;
+        };
+        marker_selected = {
+          fg = vesper.green;
+          bg = vesper.green;
+        };
+        marker_marked = {
+          fg = vesper.yellow;
+          bg = vesper.yellow;
+        };
+        marker_copied = {
+          fg = vesper.green;
+          bg = vesper.green;
+        };
+        marker_cut = {
+          fg = vesper.red;
+          bg = vesper.red;
+        };
+        marker_symbol = "│";
+        count_copied = {
+          fg = vesper.background;
+          bg = vesper.green;
+        };
+        count_cut = {
+          fg = vesper.background;
+          bg = vesper.red;
+        };
+        count_selected = {
+          fg = vesper.background;
+          bg = vesper.yellow;
+        };
         border_symbol = "│";
-        border_style = { fg = brokenPine.border; };
+        border_style = {
+          fg = vesper.border;
+        };
+        syntect_theme = "${../themes/vesper-bat.tmTheme}";
+      };
+
+      tabs = {
+        active = {
+          fg = vesper.background;
+          bg = vesper.yellow;
+          bold = true;
+        };
+        inactive = {
+          fg = vesper.muted;
+          bg = vesper.surface;
+        };
+        sep_inner = {
+          open = "";
+          close = "";
+        };
+        sep_outer = {
+          open = "";
+          close = "";
+        };
+      };
+
+      mode = {
+        normal_main = {
+          fg = vesper.background;
+          bg = vesper.yellow;
+          bold = true;
+        };
+        normal_alt = {
+          fg = vesper.yellow;
+          bg = vesper.surfaceVariant;
+        };
+        select_main = {
+          fg = vesper.background;
+          bg = vesper.green;
+          bold = true;
+        };
+        select_alt = {
+          fg = vesper.green;
+          bg = vesper.surfaceVariant;
+        };
+        unset_main = {
+          fg = vesper.background;
+          bg = vesper.red;
+          bold = true;
+        };
+        unset_alt = {
+          fg = vesper.red;
+          bg = vesper.surfaceVariant;
+        };
+      };
+
+      indicator = {
+        parent = {
+          fg = vesper.muted;
+        };
+        current = {
+          fg = vesper.green;
+          bg = "reset";
+        };
+        preview = {
+          underline = true;
+        };
+        padding = {
+          open = "";
+          close = "";
+        };
       };
 
       status = {
-        separator_open = "";
-        separator_close = "";
-        separator_style = { fg = brokenPine.border; bg = brokenPine.border; };
-        mode_normal = { fg = brokenPine.background; bg = brokenPine.blue; bold = true; };
-        mode_select = { fg = brokenPine.background; bg = brokenPine.green; bold = true; };
-        mode_unset = { fg = brokenPine.background; bg = brokenPine.magenta; bold = true; };
-        progress_label = { fg = brokenPine.text; bold = true; };
-        progress_normal = { fg = brokenPine.blue; bg = brokenPine.background; };
-        progress_error = { fg = brokenPine.red; bg = brokenPine.background; };
-        permissions_t = { fg = brokenPine.green; };
-        permissions_r = { fg = brokenPine.yellow; };
-        permissions_w = { fg = brokenPine.red; };
-        permissions_x = { fg = brokenPine.blue; };
-        permissions_s = { fg = brokenPine.mutedAlt; };
+        overall = {
+          fg = vesper.muted;
+          bg = vesper.background;
+        };
+        sep_left = {
+          open = "";
+          close = "";
+        };
+        sep_right = {
+          open = "";
+          close = "";
+        };
+        perm_sep = {
+          fg = vesper.disabled;
+        };
+        perm_type = {
+          fg = vesper.green;
+        };
+        perm_read = {
+          fg = vesper.yellow;
+        };
+        perm_write = {
+          fg = vesper.red;
+        };
+        perm_exec = {
+          fg = vesper.green;
+        };
+        progress_label = {
+          fg = vesper.text;
+          bold = true;
+        };
+        progress_normal = {
+          fg = vesper.green;
+          bg = vesper.background;
+        };
+        progress_error = {
+          fg = vesper.red;
+          bg = vesper.background;
+        };
       };
 
-      select = {
-        border = { fg = brokenPine.blue; };
-        active = { fg = brokenPine.magenta; };
-        inactive = { fg = brokenPine.mutedAlt; };
+      pick = {
+        border = {
+          fg = vesper.yellow;
+        };
+        active = {
+          fg = vesper.yellow;
+          bold = true;
+        };
+        inactive = {
+          fg = vesper.muted;
+        };
       };
 
       input = {
-        border = { fg = brokenPine.blue; };
-        title = { fg = brokenPine.text; };
-        value = { fg = brokenPine.magenta; };
-        selected = { reversed = true; };
+        border = {
+          fg = vesper.yellow;
+        };
+        title = {
+          fg = vesper.text;
+        };
+        value = {
+          fg = vesper.green;
+        };
+        selected = {
+          reversed = true;
+        };
       };
 
-      completion = {
-        border = { fg = brokenPine.blue; };
-        active = { bg = brokenPine.surfaceActive; };
-        inactive = { fg = brokenPine.text; };
+      cmp = {
+        border = {
+          fg = vesper.yellow;
+        };
+        active = {
+          fg = vesper.yellow;
+          bg = vesper.surfaceVariant;
+          bold = true;
+        };
+        inactive = {
+          fg = vesper.text;
+        };
       };
 
       tasks = {
-        border = { fg = brokenPine.blue; };
-        title = { fg = brokenPine.text; };
-        hovered = { underline = true; };
+        border = {
+          fg = vesper.yellow;
+        };
+        title = {
+          fg = vesper.text;
+        };
+        hovered = {
+          fg = vesper.yellow;
+          bold = true;
+        };
       };
 
       which = {
         cols = 3;
-        mask = { bg = brokenPine.background; };
-        cand = { fg = brokenPine.blue; };
-        rest = { fg = brokenPine.mutedAlt; };
-        desc = { fg = brokenPine.magenta; };
+        border = {
+          fg = vesper.yellow;
+        };
+        mask = {
+          bg = vesper.background;
+        };
+        cand = {
+          fg = vesper.green;
+        };
+        rest = {
+          fg = vesper.mutedAlt;
+        };
+        desc = {
+          fg = vesper.yellow;
+        };
         separator = "  ";
-        separator_style = { fg = brokenPine.mutedAlt; };
+        separator_style = {
+          fg = vesper.disabled;
+        };
       };
 
       help = {
-        on = { fg = brokenPine.magenta; };
-        exec = { fg = brokenPine.blue; };
-        desc = { fg = brokenPine.muted; };
-        hovered = { bg = brokenPine.surfaceActive; bold = true; };
-        footer = { fg = brokenPine.background; bg = brokenPine.text; };
+        border = {
+          fg = vesper.yellow;
+        };
+        chord = {
+          fg = vesper.green;
+        };
+        action = {
+          fg = vesper.muted;
+        };
+        hovered = {
+          fg = vesper.yellow;
+          bg = vesper.surfaceVariant;
+          bold = true;
+        };
       };
 
-      filetype = {
-        rules = [
-          { mime = "image/*"; fg = brokenPine.blue; }
-          { mime = "video/*"; fg = brokenPine.yellow; }
-          { mime = "audio/*"; fg = brokenPine.magenta; }
-          { mime = "application/zip"; fg = brokenPine.red; }
-          { mime = "application/gzip"; fg = brokenPine.red; }
-          { mime = "application/x-tar"; fg = brokenPine.red; }
-          { mime = "application/x-bzip"; fg = brokenPine.red; }
-          { mime = "application/x-bzip2"; fg = brokenPine.red; }
-          { mime = "application/x-7z-compressed"; fg = brokenPine.red; }
-          { mime = "application/x-rar"; fg = brokenPine.red; }
-          { name = "*"; fg = brokenPine.text; }
-          { name = "*/"; fg = brokenPine.blue; }
-        ];
-      };
+      filetype.rules = [
+        {
+          mime = "**/image/*";
+          fg = vesper.green;
+        }
+        {
+          mime = "**/{audio,video}/*";
+          fg = vesper.yellow;
+        }
+        {
+          mime = "**/application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}";
+          fg = vesper.red;
+        }
+        {
+          mime = "**/application/{pdf,doc,rtf}";
+          fg = vesper.green;
+        }
+        {
+          url = "*";
+          is = "orphan";
+          fg = vesper.red;
+        }
+        {
+          url = "*";
+          is = "exec";
+          fg = vesper.green;
+        }
+        {
+          url = "*/";
+          fg = vesper.yellow;
+        }
+      ];
     };
   };
 
   # Essential packages for file management
   home.packages = with pkgs; [
-    file                 # File type identification
-    ffmpegthumbnailer    # Video thumbnails
-    poppler-utils        # PDF preview
-    fd                   # Better find
-    ripgrep              # Better grep
-    fzf                  # Fuzzy finder
-    zoxide               # Smart cd
+    file # File type identification
+    ffmpegthumbnailer # Video thumbnails
+    poppler-utils # PDF preview
+    fd # Better find
+    ripgrep # Better grep
+    fzf # Fuzzy finder
+    zoxide # Smart cd
   ];
 
   # Enable udiskie for automatic disk mounting

@@ -41,8 +41,12 @@ in
 
   boot = {
     loader.timeout = 3;
-    consoleLogLevel = 0;
     initrd.verbose = false;
+    consoleLogLevel = 0;
+    lanzaboote.measuredBoot.autoCryptenroll = {
+      enable = true;
+      device = "/dev/disk/by-partlabel/cryptroot";
+    };
     # The Ryzen AI 9 465 uses the amd-pstate EPP interface.
     kernelParams = [
       "amd_pstate=active"

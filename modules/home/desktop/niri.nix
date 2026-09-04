@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 let
-  brokenPine = import ../themes/broken-pine.nix;
+  vesper = import ../themes/vesper.nix;
   wallpaper = "${../../../assets/wallpapers/current_wallpaper.jpg}";
 in
 {
@@ -17,7 +17,7 @@ in
       keyboard.xkb = {
         layout = "us";
         variant = "intl";
-        options = "grp:alt_space_toggle,caps:swapescape,altwin:swap_lalt_lwin";
+        options = "grp:alt_space_toggle,altwin:swap_lalt_lwin";
       };
     };
 
@@ -35,8 +35,8 @@ in
       };
       focus-ring = {
         width = 2;
-        active.color = "#${brokenPine.withAlpha brokenPine.blue "80"}";
-        inactive.color = "#${brokenPine.withAlpha brokenPine.surfaceActive "40"}";
+        active.color = "#${vesper.withAlpha vesper.blue "80"}";
+        inactive.color = "#${vesper.withAlpha vesper.surfaceActive "40"}";
       };
       border.enable = false;
       struts = {
@@ -58,12 +58,6 @@ in
           "sh"
           "-c"
           "sleep 1.0 && waybar"
-        ];
-      }
-      {
-        command = [
-          "swaync"
-          "--skip-system-css"
         ];
       }
     ];
@@ -113,8 +107,14 @@ in
         };
       }
       {
+        matches = [ { title = "^termfilechooser$"; } ];
+        open-floating = true;
+        open-focused = true;
+        default-window-height = { proportion = 0.8; };
+        default-column-width = { proportion = 0.7; };
+      }
+      {
         matches = [
-          { app-id = "^Alacritty$"; }
           { app-id = "^kitty$"; }
           { app-id = "^foot$"; }
         ];
@@ -215,8 +215,11 @@ in
     binds = {
       "Mod+Shift+Slash".action.show-hotkey-overlay = [ ];
 
-      "Mod+Return".action.spawn = [ "alacritty" ];
-      "Mod+E".action.spawn = [ "nautilus" ];
+      "Mod+Return".action.spawn = [ "kitty" ];
+      "Mod+E".action.spawn = [
+        "kitty"
+        "yazi"
+      ];
       "Mod+R".action.spawn = [ "fuzzel" ];
       "Mod+S".action.spawn = [
         "fuzzel-omnibar"

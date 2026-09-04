@@ -1,6 +1,6 @@
 { ... }:
 let
-  brokenPine = import ../../themes/broken-pine.nix;
+  vesper = import ../../themes/vesper.nix;
 
   swaync-style = ''
     /* ===== CRITICAL: Window backgrounds must be transparent ===== */
@@ -32,7 +32,7 @@ let
     /* Individual notification row */
     .notification-row {
       outline: none;
-      margin: 6px 12px;
+      margin: 6px 24px 6px 12px;
       padding: 0;
       background: transparent;
     }
@@ -45,9 +45,9 @@ let
     /* The actual notification box */
     .notification {
       border-radius: 4px;
-      border: 2px solid alpha(${brokenPine.blue}, 0.5);
-      background: ${brokenPine.background};
-      background-color: ${brokenPine.background};
+      border: 2px solid ${vesper.yellow};
+      background: ${vesper.background};
+      background-color: ${vesper.background};
       padding: 0;
       margin: 0;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -55,32 +55,32 @@ let
 
     .notification-content {
       padding: 14px 16px;
-      background: ${brokenPine.background};
+      background: ${vesper.background};
     }
 
     .notification.critical {
-      border-color: ${brokenPine.red};
+      border-color: ${vesper.red};
     }
 
     .notification.low {
-      border-color: ${brokenPine.mutedAlt};
+      border-color: ${vesper.mutedAlt};
     }
 
     .summary {
-      color: ${brokenPine.text};
+      color: ${vesper.text};
       font-size: 14px;
       font-weight: 700;
       margin-bottom: 4px;
     }
 
     .time {
-      color: ${brokenPine.muted};
+      color: ${vesper.muted};
       font-size: 11px;
       margin-left: 12px;
     }
 
     .body {
-      color: ${brokenPine.textAlt};
+      color: ${vesper.textAlt};
       font-size: 12px;
     }
 
@@ -90,34 +90,34 @@ let
     }
 
     .notification-default-action:hover {
-      background: ${brokenPine.surfaceVariant};
+      background: ${vesper.surfaceVariant};
     }
 
     .close-button {
-      background: ${brokenPine.surfaceActive};
-      color: ${brokenPine.text};
+      background: ${vesper.surfaceActive};
+      color: ${vesper.text};
       border-radius: 6px;
       padding: 2px 8px;
       margin: 8px;
     }
 
     .close-button:hover {
-      background: ${brokenPine.red};
-      color: ${brokenPine.background};
+      background: ${vesper.red};
+      color: ${vesper.background};
     }
 
     .notification-action {
-      background: ${brokenPine.surfaceVariant};
-      color: ${brokenPine.text};
+      background: ${vesper.surfaceVariant};
+      color: ${vesper.text};
       border-radius: 8px;
       padding: 6px 12px;
       margin: 6px 4px;
-      border: 1px solid ${brokenPine.border};
+      border: 1px solid ${vesper.border};
     }
 
     .notification-action:hover {
-      background: ${brokenPine.blue};
-      color: ${brokenPine.background};
+      background: ${vesper.blue};
+      color: ${vesper.background};
     }
 
     .notification-group {
@@ -125,35 +125,35 @@ let
     }
 
     .notification-group-headers {
-      color: ${brokenPine.text};
+      color: ${vesper.text};
       font-weight: 700;
       font-size: 13px;
       padding: 6px 12px;
     }
 
     .notification-group-icon {
-      color: ${brokenPine.blue};
+      color: ${vesper.blue};
     }
 
     .notification-group-collapse-button {
-      background: ${brokenPine.surfaceVariant};
-      color: ${brokenPine.text};
+      background: ${vesper.surfaceVariant};
+      color: ${vesper.text};
       border-radius: 6px;
       padding: 4px 8px;
       margin: 4px;
     }
 
     .notification-group-collapse-button:hover {
-      background: ${brokenPine.blue};
-      color: ${brokenPine.background};
+      background: ${vesper.blue};
+      color: ${vesper.background};
     }
 
     /* Control Center - sidebar only */
     .control-center {
-      background: ${brokenPine.background};
-      background-color: ${brokenPine.background};
+      background: ${vesper.background};
+      background-color: ${vesper.background};
       border-radius: 4px;
-      border: 2px solid alpha(${brokenPine.blue}, 0.5);
+      border: 2px solid alpha(${vesper.blue}, 0.5);
       margin: 8px;
       padding: 12px 0;
     }
@@ -163,13 +163,13 @@ let
     }
 
     .control-center-list-placeholder {
-      color: ${brokenPine.mutedAlt};
+      color: ${vesper.mutedAlt};
       padding: 24px;
       background: transparent;
     }
 
     .widget-title {
-      color: ${brokenPine.text};
+      color: ${vesper.text};
       font-size: 16px;
       font-weight: 700;
       padding: 8px 16px;
@@ -177,16 +177,16 @@ let
     }
 
     .widget-title button {
-      background: ${brokenPine.surfaceVariant};
-      color: ${brokenPine.text};
+      background: ${vesper.surfaceVariant};
+      color: ${vesper.text};
       border-radius: 4px;
       padding: 6px 12px;
       border: none;
     }
 
     .widget-title button:hover {
-      background: ${brokenPine.red};
-      color: ${brokenPine.background};
+      background: ${vesper.red};
+      color: ${vesper.background};
     }
 
     .widget-dnd {
@@ -196,17 +196,17 @@ let
     }
 
     .widget-dnd > switch {
-      background: ${brokenPine.surfaceActive};
+      background: ${vesper.surfaceActive};
       border-radius: 4px;
       padding: 2px;
     }
 
     .widget-dnd > switch:checked {
-      background: ${brokenPine.blue};
+      background: ${vesper.blue};
     }
 
     .widget-dnd > switch slider {
-      background: ${brokenPine.text};
+      background: ${vesper.text};
       border-radius: 4px;
       min-width: 18px;
       min-height: 18px;
@@ -246,7 +246,7 @@ let
 
     # Only make specific notifications transient (not stored in history)
     # DO NOT use app-name = ".*" as it makes ALL notifications transient!
-    notification-visibility = {};
+    notification-visibility = { };
 
     # Control center settings
     control-center-width = 420;
@@ -280,7 +280,8 @@ let
     };
   };
 
-in {
+in
+{
   services.swaync = {
     enable = true;
     settings = swaync-config;

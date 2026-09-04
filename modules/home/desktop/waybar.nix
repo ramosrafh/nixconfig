@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 let
-  brokenPine = import ../themes/broken-pine.nix;
+  vesper = import ../themes/vesper.nix;
   workspaceIndexes = map toString (lib.range 1 9);
 
   niriWorkspace = pkgs.writeShellApplication {
@@ -54,7 +54,7 @@ let
             ascii_downcase as $app
             | if $app | test("firefox|librewolf|floorp|zen") then "<span foreground=\"#ff7139\">󰈹</span>"
               elif $app | test("chromium|chrome|brave|vivaldi") then "<span foreground=\"#4285f4\"></span>"
-              elif $app | test("alacritty|kitty|foot|wezterm|ghostty|terminal") then "<span foreground=\"#0b0c0e\"></span>"
+              elif $app | test("alacritty|kitty|foot|wezterm|ghostty|terminal") then "<span foreground=\"${vesper.yellow}\"></span>"
               elif $app | test("code|codium") then "<span foreground=\"#23a8f2\">󰨞</span>"
               elif $app | test("zed") then "<span foreground=\"#f2f2f2\">󰅩</span>"
               elif $app | test("nautilus|thunar|pcmanfm|dolphin") then "<span foreground=\"#f9e2af\">󰉋</span>"
@@ -94,7 +94,7 @@ let
               | (($app_icons | length) - ($visible_icons | length)) as $extra_icon_count
               | (
                   if $workspace.is_focused or $workspace.is_active then $visible_icons
-                  else ($visible_icons | map(gsub("foreground=\"#[^\"]+\""; "foreground=\"#7f7f7f\"")))
+                  else ($visible_icons | map(gsub("foreground=\"#[^\"]+\""; "foreground=\"${vesper.muted}\"")))
                   end
                 ) as $icons
               | {
@@ -211,9 +211,11 @@ in
         position = "top";
         height = 36;
         margin-top = 6;
-        modules-left = [ "clock" ]
-          ++ map (index: "custom/niri-workspace#${index}") workspaceIndexes
-          ++ [ "custom/niri-workspace-events" ];
+        modules-left = [
+          "clock"
+        ]
+        ++ map (index: "custom/niri-workspace#${index}") workspaceIndexes
+        ++ [ "custom/niri-workspace-events" ];
         modules-center = [ "custom/niri-window" ];
         modules-right = [
           "tray"
@@ -355,7 +357,7 @@ in
 
       window#waybar {
         background-color: transparent;
-        color: #ffffff;
+        color: ${vesper.text};
       }
 
       .modules-left {
@@ -373,40 +375,40 @@ in
       #custom-netbird-profile,
       #tray,
       #clock {
-        color: #ffffff;
+        color: ${vesper.text};
         background-color: transparent;
         margin: 0px;
         padding: 2px 7px;
       }
 
       #clock {
-        color: #ffffff;
+        color: ${vesper.text};
         background-color: transparent;
         border-radius: 4px;
         margin-left: 0px;
       }
 
       #network {
-        color: #ffffff;
+        color: ${vesper.text};
         border-radius: 4px 0px 0px 4px;
       }
 
       #battery {
-        color: #ffffff;
+        color: ${vesper.text};
         border-radius: 0px 4px 4px 0px;
       }
 
       #pulseaudio {
-        color: #ffffff;
+        color: ${vesper.text};
       }
 
       #backlight {
-        color: #ffffff;
+        color: ${vesper.text};
       }
 
       #custom-niri-workspace {
         background-color: transparent;
-        color: #7f7f7f;
+        color: ${vesper.muted};
         margin: 2px 0 2px 18px;
         padding: 0 2px;
         border-radius: 0px;
@@ -424,7 +426,7 @@ in
 
       #custom-niri-window {
         font-size: 14px;
-        color: #ffffff;
+        color: ${vesper.text};
         background-color: transparent;
         padding: 0px;
         border-radius: 0px;
@@ -433,16 +435,16 @@ in
       #custom-niri-workspace.active,
       #custom-niri-workspace.focused {
         background-color: transparent;
-        color: #ffffff;
-        box-shadow: inset 0 -2px #0b0c0e;
+        color: ${vesper.text};
+        box-shadow: inset 0 -2px ${vesper.yellow};
       }
 
       #custom-niri-workspace.urgent {
-        color: #ff6b6b;
+        color: ${vesper.red};
       }
 
       #custom-mem {
-        color: #ffffff;
+        color: ${vesper.text};
         margin: 0px;
         margin-right: 6px;
         padding: 0px 7px;
@@ -451,7 +453,7 @@ in
       }
 
       #custom-netbird-profile {
-        color: #ffffff;
+        color: ${vesper.text};
         margin: 0px;
         margin-right: 2px;
         padding: 0px 6px;
@@ -461,7 +463,7 @@ in
 
       #custom-niri-workspace:hover {
         background-color: transparent;
-        color: #cfcfcf;
+        color: ${vesper.muted};
         box-shadow: none;
       }
 

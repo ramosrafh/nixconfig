@@ -3,7 +3,7 @@
     enable = true;
     extraPackages = [ pkgs.wl-clipboard ];
     settings = {
-      theme = "broken-pine";
+      theme = "vesper";
 
       editor = {
         line-number = "relative";
@@ -98,7 +98,7 @@
     };
 
     themes = {
-      broken-pine = builtins.fromTOML (builtins.readFile ../themes/broken-pine-helix.toml);
+      vesper = builtins.fromTOML (builtins.readFile ../themes/broken-pine-helix.toml);
     };
   };
 }

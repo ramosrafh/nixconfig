@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ../themes/broken-pine.nix;
+  vesper = import ../themes/vesper.nix;
 in
 {
   programs.fish = {
@@ -19,6 +19,8 @@ in
       claude-max = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=claude/opus claude";
       claude-codex = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=codex/opus claude";
       claude-glm = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=glm/opus claude";
+      ante-driva = "ante --provider driva --model gpt-5.6-sol";
+      ante-openrouter = "ante --provider openrouter-responses --model openai/gpt-5.6-sol";
     };
     functions = {
       dev = {
@@ -31,20 +33,6 @@ in
           else
               nix develop "$flake#$argv[1]" --command fish
           end
-        '';
-      };
-
-      claude-mcp-clickhouse = {
-        description = "Register global ClickHouse MCP for Claude Code";
-        body = ''
-          claude mcp add-json clickhouse '{
-            "type": "stdio",
-            "command": "fish",
-            "args": [
-              "-lc",
-              "if test -f ~/.config/fish/secrets.fish; source ~/.config/fish/secrets.fish; end; set -q CLICKHOUSE_MCP_IMAGE; or set -gx CLICKHOUSE_MCP_IMAGE mcp/clickhouse:latest; set -q CLICKHOUSE_SECURE; or set -gx CLICKHOUSE_SECURE false; set -q CLICKHOUSE_VERIFY; or set -gx CLICKHOUSE_VERIFY true; set -q CLICKHOUSE_CONNECT_TIMEOUT; or set -gx CLICKHOUSE_CONNECT_TIMEOUT 10; set -q CLICKHOUSE_SEND_RECEIVE_TIMEOUT; or set -gx CLICKHOUSE_SEND_RECEIVE_TIMEOUT 30; exec docker run --rm -i --network host -e CLICKHOUSE_HOST -e CLICKHOUSE_PORT -e CLICKHOUSE_USER -e CLICKHOUSE_PASSWORD -e CLICKHOUSE_DATABASE -e CLICKHOUSE_SECURE -e CLICKHOUSE_VERIFY -e CLICKHOUSE_CONNECT_TIMEOUT -e CLICKHOUSE_SEND_RECEIVE_TIMEOUT \"$CLICKHOUSE_MCP_IMAGE\""
-            ]
-          }' --scope user
         '';
       };
 
@@ -88,10 +76,41 @@ in
     shellInit = ''
       set -g fish_greeting
 
+      # Drop the legacy standalone Home Manager path if it was inherited by
+      # an existing graphical session. NixOS Home Manager uses the per-user
+      # profile under /etc/profiles/per-user instead.
+      set -l legacy_home_path "$HOME/.local/state/nix/profiles/home-manager/home-path/bin"
+      set -gx PATH (string match -v -- "$legacy_home_path" $PATH)
+
       # Load secrets outside the Nix store.
       if test -f ~/.config/fish/secrets.fish
           source ~/.config/fish/secrets.fish
       end
+    '';
+
+    interactiveShellInit = ''
+      set -g fish_color_normal ${vesper.noHash vesper.text}
+      set -g fish_color_command ${vesper.noHash vesper.yellow}
+      set -g fish_color_keyword ${vesper.noHash vesper.muted}
+      set -g fish_color_quote ${vesper.noHash vesper.green}
+      set -g fish_color_redirection ${vesper.noHash vesper.yellow}
+      set -g fish_color_end ${vesper.noHash vesper.muted}
+      set -g fish_color_error ${vesper.noHash vesper.red}
+      set -g fish_color_param ${vesper.noHash vesper.text}
+      set -g fish_color_comment ${vesper.noHash vesper.mutedAlt}
+      set -g fish_color_selection --background=${vesper.noHash vesper.surfaceVariant}
+      set -g fish_color_search_match --background=${vesper.noHash vesper.surfaceActive}
+      set -g fish_color_operator ${vesper.noHash vesper.muted}
+      set -g fish_color_escape ${vesper.noHash vesper.green}
+      set -g fish_color_autosuggestion ${vesper.noHash vesper.disabled}
+      set -g fish_pager_color_progress ${vesper.noHash vesper.muted}
+      set -g fish_pager_color_prefix ${vesper.noHash vesper.yellow} --bold
+      set -g fish_pager_color_completion ${vesper.noHash vesper.text}
+      set -g fish_pager_color_description ${vesper.noHash vesper.muted}
+      set -g fish_pager_color_selected_background --background=${vesper.noHash vesper.surfaceVariant}
+      set -g fish_pager_color_selected_prefix ${vesper.noHash vesper.yellow} --bold
+      set -g fish_pager_color_selected_completion ${vesper.noHash vesper.text}
+      set -g fish_pager_color_selected_description ${vesper.noHash vesper.muted}
     '';
   };
 
@@ -105,7 +124,7 @@ in
       username = {
         show_always = true;
         format = "[$user]($style) ";
-        style_user = "bold cyan";
+        style_user = "bold blue";
         style_root = "bold error";
       };
 
@@ -181,24 +200,24 @@ in
       kubernetes.disabled = true;
       docker_context.disabled = true;
       package.disabled = true;
-      palette = "broken_pine";
-      palettes.broken_pine = {
-        accent = brokenPine.blue;
-        error = brokenPine.red;
-        success = brokenPine.green;
-        warning = brokenPine.yellow;
-        magenta = brokenPine.magenta;
-        cyan = brokenPine.cyan;
-        muted = brokenPine.muted;
+      palette = "vesper";
+      palettes.vesper = {
+        accent = vesper.yellow;
+        error = vesper.red;
+        success = vesper.green;
+        warning = vesper.yellow;
+        magenta = vesper.yellow;
+        cyan = vesper.green;
+        muted = vesper.muted;
       };
     };
   };
 
   programs.bat = {
     enable = true;
-    config.theme = "Broken Pine";
-    themes."Broken Pine" = {
-      src = ../themes/broken-pine-bat.tmTheme;
+    config.theme = "Vesper";
+    themes.Vesper = {
+      src = ../themes/vesper-bat.tmTheme;
       file = null;
     };
   };

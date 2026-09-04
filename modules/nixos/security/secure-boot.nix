@@ -11,7 +11,7 @@
     lanzaboote = {
       enable = true;
       pkiBundle = "/var/lib/sbctl";
-      configurationLimit = 5;
+      configurationLimit = 4;
       allowUnsigned = false;
 
       measuredBoot = {
@@ -19,7 +19,6 @@
         pcrs = [
           0
           4
-          7
         ];
       };
     };

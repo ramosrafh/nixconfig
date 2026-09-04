@@ -11,7 +11,7 @@
 
       # Timeouts disabled - change values to enable
       # Example: 600 = 10 minutes, 900 = 15 minutes
-      listener = [];
+      listener = [ ];
     };
   };
 }

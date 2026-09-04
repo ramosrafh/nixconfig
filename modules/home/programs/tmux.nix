@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  brokenPine = import ../themes/broken-pine.nix;
+  vesper = import ../themes/vesper.nix;
 in
 {
   programs.tmux = {
@@ -20,7 +20,11 @@ in
       set -g default-shell "${pkgs.fish}/bin/fish"
       set -g default-command "${pkgs.fish}/bin/fish"
       set -ag terminal-overrides ",xterm-256color:RGB"
-      set -as terminal-features ",alacritty:RGB"
+      set -as terminal-features ",kitty:RGB"
+
+      set -g allow-passthrough on
+      set -ga update-environment TERM
+      set -ga update-environment TERM_PROGRAM
 
       set -g renumber-windows on
       set -g pane-base-index 1
@@ -37,20 +41,20 @@ in
       set -g status-justify left
       set -g status-left-length 0
       set -g status-right-length 20
-      set -g status-style 'bg=${brokenPine.background},fg=${brokenPine.muted}'
+      set -g status-style 'bg=${vesper.background},fg=${vesper.muted}'
       set -g status-left ""
-      set -g status-right '#[fg=${brokenPine.blue}] %Y-%m-%d '
+      set -g status-right '#[fg=${vesper.yellow}] %Y-%m-%d '
 
       set -g window-status-separator ' '
-      set -g window-status-format '#[fg=${brokenPine.muted}] #I: #{?#{==:#{pane_current_command},fish},#W,#{?pane_title,#{pane_title},#W}} '
-      set -g window-status-current-format '#[bg=${brokenPine.yellow},fg=${brokenPine.background},bold] #I: #{?#{==:#{pane_current_command},fish},#W,#{?pane_title,#{pane_title},#W}} '
-      set -g window-status-activity-style 'fg=${brokenPine.orange},bold'
+      set -g window-status-format '#[fg=${vesper.muted}] #I: #{?#{==:#{pane_current_command},fish},#W,#{?pane_title,#{pane_title},#W}} '
+      set -g window-status-current-format '#[bg=${vesper.yellow},fg=${vesper.background},bold] #I: #{?#{==:#{pane_current_command},fish},#W,#{?pane_title,#{pane_title},#W}} '
+      set -g window-status-activity-style 'fg=${vesper.green},bold'
 
-      set -g pane-border-style 'fg=${brokenPine.surfaceActive}'
-      set -g pane-active-border-style 'fg=${brokenPine.yellow}'
-      set -g message-style 'bg=${brokenPine.surfaceActive},fg=${brokenPine.textAlt}'
-      set -g message-command-style 'bg=${brokenPine.surfaceActive},fg=${brokenPine.yellow}'
-      set -g mode-style 'bg=${brokenPine.blue},fg=${brokenPine.background}'
+      set -g pane-border-style 'fg=${vesper.surfaceVariant}'
+      set -g pane-active-border-style 'fg=${vesper.yellow}'
+      set -g message-style 'bg=${vesper.surfaceVariant},fg=${vesper.text}'
+      set -g message-command-style 'bg=${vesper.surfaceVariant},fg=${vesper.yellow}'
+      set -g mode-style 'bg=${vesper.green},fg=${vesper.background}'
 
       unbind '"'
       unbind %
@@ -60,6 +64,7 @@ in
       bind r command-prompt -I '#W' 'rename-window "%%"'
       bind z resize-pane -Z
       bind p display-popup -E -w 80% -h 80% -d '#{pane_current_path}'
+      bind y copy-mode
 
       bind h select-pane -L
       bind j select-pane -D

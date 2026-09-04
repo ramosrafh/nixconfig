@@ -9,6 +9,14 @@
     ./niri.nix
   ];
 
+  services.keyd = {
+    enable = true;
+    keyboards.default = {
+      ids = [ "*" ];
+      settings.main.capslock = "overload(control, esc)";
+    };
+  };
+
   networking.networkmanager.enable = true;
   users.users.${primaryUser}.extraGroups = [
     "networkmanager"

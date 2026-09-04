@@ -1,7 +1,8 @@
 { pkgs, ... }:
 let
-  brokenPine = import ../themes/broken-pine.nix;
-in {
+  vesper = import ../themes/vesper.nix;
+in
+{
   programs.mpv = {
     enable = true;
 
@@ -22,11 +23,11 @@ in {
       sub-font-size = 36;
       sub-border-size = 2;
 
-      # OSD - Broken Pine colors
+      # OSD - Vesper colors
       osd-font = "JetBrainsMono Nerd Font";
       osd-font-size = 24;
-      osd-color = brokenPine.text;
-      osd-border-color = brokenPine.background;
+      osd-color = vesper.text;
+      osd-border-color = vesper.background;
       osd-border-size = 2;
       osd-bar-align-y = 0.9;
 
@@ -65,15 +66,15 @@ in {
     };
 
     scripts = with pkgs.mpvScripts; [
-      mpris           # Media keys support
-      uosc            # Modern UI
-      thumbfast       # Thumbnails in seek bar
+      mpris # Media keys support
+      uosc # Modern UI
+      thumbfast # Thumbnails in seek bar
     ];
 
     scriptOpts = {
-      # UOSC Broken Pine theme
+      # UOSC Vesper theme
       uosc = {
-        color = "foreground=${brokenPine.noHash brokenPine.text},foreground_text=${brokenPine.noHash brokenPine.background},background=${brokenPine.noHash brokenPine.background},background_text=${brokenPine.noHash brokenPine.text},curtain=${brokenPine.noHash brokenPine.surface},success=${brokenPine.noHash brokenPine.green},error=${brokenPine.noHash brokenPine.red}";
+        color = "foreground=${vesper.noHash vesper.text},foreground_text=${vesper.noHash vesper.background},background=${vesper.noHash vesper.background},background_text=${vesper.noHash vesper.text},curtain=${vesper.noHash vesper.surface},success=${vesper.noHash vesper.green},error=${vesper.noHash vesper.red}";
 
         # UI settings
         timeline_style = "bar";

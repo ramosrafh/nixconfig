@@ -12,17 +12,23 @@ let
     AddKeysToAgent = "yes";
   };
 
-  drivaHost = hostname: user: {
-    HostName = hostname;
-    User = user;
-    IdentityFile = "~/.ssh/driva";
-  } // controlOptions;
+  drivaHost =
+    hostname: user:
+    {
+      HostName = hostname;
+      User = user;
+      IdentityFile = "~/.ssh/driva";
+    }
+    // controlOptions;
 
-  githubHost = identityFile: {
-    HostName = "github.com";
-    User = "git";
-    IdentityFile = identityFile;
-  } // agentOptions;
+  githubHost =
+    identityFile:
+    {
+      HostName = "github.com";
+      User = "git";
+      IdentityFile = identityFile;
+    }
+    // agentOptions;
 in
 {
   programs.ssh = {
@@ -41,7 +47,8 @@ in
         HostName = "46.225.24.175";
         User = "ramos";
         IdentityFile = "~/.ssh/ramos";
-      } // controlOptions;
+      }
+      // controlOptions;
 
       "github.com-ramos" = githubHost "~/.ssh/ramos";
       "github.com-driva" = githubHost "~/.ssh/driva";

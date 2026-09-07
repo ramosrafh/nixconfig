@@ -88,14 +88,34 @@ let
           | if $workspace == null then
               { text: "", tooltip: "", class: ["hidden"] }
             else
-              ($state.windows | map(select(.workspace_id == $workspace.id))) as $workspace_windows
-              | ($workspace_windows | map((.app_id // "") | app_icon | gsub("<span "; "<span size=\"medium\" ")) | unique) as $app_icons
+              ($state.windows
+                | map(select(.workspace_id == $workspace.id))
+                | sort_by([
+                    (.layout.pos_in_scrolling_layout[0] // 999999),
+                    (.layout.pos_in_scrolling_layout[1] // 999999)
+                  ])) as $workspace_windows
+              | (
+                  $workspace_windows
+                  | map({
+                      icon: ((.app_id // "") | app_icon | gsub("<span "; "<span size=\"medium\" ")),
+                      focused: .is_focused
+                    })
+                  | reduce .[] as $app ([ ];
+                      if any(.[]; .icon == $app.icon) then
+                        map(if .icon == $app.icon then .focused = (.focused or $app.focused) else . end)
+                      else . + [$app]
+                      end
+                    )
+                ) as $app_icons
               | ($app_icons | .[0:3]) as $visible_icons
               | (($app_icons | length) - ($visible_icons | length)) as $extra_icon_count
               | (
-                  if $workspace.is_focused or $workspace.is_active then $visible_icons
-                  else ($visible_icons | map(gsub("foreground=\"#[^\"]+\""; "foreground=\"${vesper.muted}\"")))
-                  end
+                  $visible_icons
+                  | map(
+                      if .focused then .icon
+                      else (.icon | gsub("<span "; "<span alpha=\"40%\" "))
+                      end
+                    )
                 ) as $icons
               | {
                   text: (
@@ -142,6 +162,7 @@ let
               has("WorkspaceActivated")
               or has("WorkspacesChanged")
               or has("WindowClosed")
+              or has("WindowFocusChanged")
               or (
                 has("WindowOpenedOrChanged")
                 and ((.WindowOpenedOrChanged.window.title // "") | test("^[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏] ") | not)

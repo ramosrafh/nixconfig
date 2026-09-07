@@ -23,6 +23,18 @@ in
       ante-openrouter = "ante --provider openrouter-responses --model openai/gpt-5.6-sol";
     };
     functions = {
+      ssh = {
+        description = "SSH with Kitty remote terminal integration";
+        wraps = "ssh";
+        body = ''
+          if set -q KITTY_WINDOW_ID; and command -q kitten
+              command kitten ssh $argv
+          else
+              command ssh $argv
+          end
+        '';
+      };
+
       dev = {
         description = "Open a nixconfig devShell";
         body = ''

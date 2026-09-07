@@ -32,7 +32,7 @@ let
     /* Individual notification row */
     .notification-row {
       outline: none;
-      margin: 6px 24px 6px 12px;
+      margin: 6px 20px 6px 12px;
       padding: 0;
       background: transparent;
     }

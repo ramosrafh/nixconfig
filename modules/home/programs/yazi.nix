@@ -56,7 +56,7 @@ in
         ];
         spreadsheet = [
           {
-            run = ''visigrid --no-restore %s'';
+            run = ''visigrid-open %s'';
             desc = "Open in VisiGrid";
             orphan = true;
           }

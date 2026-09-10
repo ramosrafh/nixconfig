@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [
     ./hardware.nix
     ../../modules/nixos/base
@@ -35,6 +35,19 @@
   };
 
   hardware.enableRedistributableFirmware = true;
+
+  fonts.packages = [
+    (pkgs.stdenvNoCC.mkDerivation {
+      pname = "halflife2-font";
+      version = "1.0";
+      src = ../../assets/fonts/halflife2.ttf;
+      dontUnpack = true;
+
+      installPhase = ''
+        install -Dm444 "$src" "$out/share/fonts/truetype/halflife2.ttf"
+      '';
+    })
+  ];
 
   services.xserver.videoDrivers = [ "amdgpu" ];
   hardware.graphics = {

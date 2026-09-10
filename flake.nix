@@ -41,6 +41,11 @@
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    query-on = {
+      url = "git+file:///home/ramos/git/query-on";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -64,6 +69,13 @@
         inherit overlays;
         config.allowUnfree = true;
       };
+      pkgsStable = import nixpkgs-stable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      stableMpvOverlay = _final: _prev: {
+        inherit (pkgsStable) mpv mpvScripts;
+      };
 
       mkHost = import ./lib/mk-host.nix {
         inherit
@@ -81,14 +93,14 @@
         desk = mkHost {
           hostPath = ./hosts/desk;
           homePath = ./hosts/desk/home.nix;
-          hostOverlays = overlays;
+          hostOverlays = overlays ++ [ stableMpvOverlay ];
           homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [ niri-flake.nixosModules.niri ];
         };
         book = mkHost {
           hostPath = ./hosts/book;
           homePath = ./hosts/book/home.nix;
-          hostOverlays = overlays;
+          hostOverlays = overlays ++ [ stableMpvOverlay ];
           homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [
             disko.nixosModules.disko
@@ -120,6 +132,7 @@
 
       packages.${system} = {
         disko-install = disko.packages.${system}.disko-install;
+        query-on = inputs.query-on.packages.${system}.default;
         sbctl = pkgs.sbctl;
       };
     };

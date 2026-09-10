@@ -1,7 +1,8 @@
 { pkgs, ... }:
 let
   brokenPine = import ../themes/broken-pine.nix;
-in {
+in
+{
   programs.fish = {
     enable = true;
     shellAliases = {
@@ -11,6 +12,9 @@ in {
       cat = "bat --paging=never";
       catp = "bat --paging=never --style=plain";
       zed = "zeditor";
+      t = "tmux new-session -A -s main";
+      ta = "tmux attach-session";
+      tls = "tmux list-sessions";
 
       claude-max = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=claude/opus claude";
       claude-codex = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=codex/opus claude";
@@ -95,8 +99,21 @@ in {
     enable = true;
     enableFishIntegration = true;
     settings = {
-      format = "$directory$git_branch$git_status$character";
+      format = "$username$hostname$directory$git_branch$git_status$cmd_duration$line_break$character";
       add_newline = true;
+
+      username = {
+        show_always = true;
+        format = "[$user]($style) ";
+        style_user = "bold cyan";
+        style_root = "bold error";
+      };
+
+      hostname = {
+        ssh_only = false;
+        format = "[$hostname]($style) ";
+        style = "bold muted";
+      };
 
       character = {
         success_symbol = "[❯](bold success)";
@@ -112,7 +129,7 @@ in {
 
       git_branch = {
         format = "[$symbol$branch]($style) ";
-        symbol = " ";
+        symbol = " ";
         style = "bold magenta";
       };
 
@@ -171,6 +188,8 @@ in {
         success = brokenPine.green;
         warning = brokenPine.yellow;
         magenta = brokenPine.magenta;
+        cyan = brokenPine.cyan;
+        muted = brokenPine.muted;
       };
     };
   };

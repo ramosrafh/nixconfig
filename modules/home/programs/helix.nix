@@ -18,30 +18,26 @@
       };
 
       keys.normal = {
-        C-h = ":sh zellij ac move-focus-or-tab left";
-        C-j = ":sh zellij ac move-focus-or-tab down";
-        C-k = ":sh zellij ac move-focus-or-tab up";
-        C-l = ":sh zellij ac move-focus-or-tab right";
+        C-h = ":sh tmux select-pane -L";
+        C-j = ":sh tmux select-pane -D";
+        C-k = ":sh tmux select-pane -U";
+        C-l = ":sh tmux select-pane -R";
 
         C-esc = [
           "goto_first_nonwhitespace"
           "select_mode"
           "extend_to_line_end"
-          ":sh zellij ac move-focus-or-tab right"
-          ":pipe-to sh -c 'zellij ac write-chars \"$(cat)\\n\"'"
-          ":sh zellij ac move-focus-or-tab left"
+          ":pipe-to sh -c 'tmux load-buffer -; tmux paste-buffer -t {right-of}; tmux send-keys -t {right-of} Enter'"
           "move_visual_line_down"
           "goto_first_nonwhitespace"
           "collapse_selection"
           "normal_mode"
         ];
 
-        C-space = [
+        C-g = [
           "select_mode"
           "extend_to_line_bounds"
-          ":sh zellij ac move-focus-or-tab right"
-          ":pipe-to sh -c 'zellij ac write-chars \"$(cat)\\n\"'"
-          ":sh zellij ac move-focus-or-tab left"
+          ":pipe-to sh -c 'tmux load-buffer -; tmux paste-buffer -t {right-of}; tmux send-keys -t {right-of} Enter'"
           "move_visual_line_down"
           "goto_first_nonwhitespace"
           "collapse_selection"
@@ -49,19 +45,18 @@
         ];
 
         C-a = {
-          C-a = ":sh zellij ac toggle-floating-panes";
-          h = ":sh zellij ac new-pane -d down";
-          n = ":sh zellij ac new-pane";
+          C-a = ":sh tmux display-popup -E -w 80% -h 80% -d '#{pane_current_path}'";
+          h = ":sh tmux split-window -v -c '#{pane_current_path}'";
+          n = ":sh tmux split-window -c '#{pane_current_path}'";
           r = [
-            ":sh zellij ac new-pane -d right -- ipython"
-            ":sh zellij ac move-focus left"
+            ":sh tmux split-window -h -d -c '#{pane_current_path}' ipython"
           ];
-          v = ":sh zellij ac new-pane -d right";
-          z = ":sh zellij ac toggle-fullscreen";
+          v = ":sh tmux split-window -h -c '#{pane_current_path}'";
+          z = ":sh tmux resize-pane -Z";
         };
 
         C-t = {
-          n = ":sh zellij ac new-tab";
+          n = ":sh tmux new-window -c '#{pane_current_path}'";
         };
       };
 
@@ -70,19 +65,15 @@
           "goto_first_nonwhitespace"
           "select_mode"
           "extend_to_line_end"
-          ":sh zellij ac move-focus-or-tab right"
-          ":pipe-to sh -c 'zellij ac write-chars \"$(cat)\\n\"'"
-          ":sh zellij ac move-focus-or-tab left"
+          ":pipe-to sh -c 'tmux load-buffer -; tmux paste-buffer -t {right-of}; tmux send-keys -t {right-of} Enter'"
           "collapse_selection"
           "insert_mode"
         ];
 
-        C-space = [
+        C-g = [
           "select_mode"
           "extend_to_line_bounds"
-          ":sh zellij ac move-focus-or-tab right"
-          ":pipe-to sh -c 'zellij ac write-chars \"$(cat)\\n\"'"
-          ":sh zellij ac move-focus-or-tab left"
+          ":pipe-to sh -c 'tmux load-buffer -; tmux paste-buffer -t {right-of}; tmux send-keys -t {right-of} Enter'"
           "collapse_selection"
           "insert_mode"
         ];
@@ -95,10 +86,8 @@
           "normal_mode"
         ];
 
-        C-space = [
-          ":sh zellij ac move-focus-or-tab right"
-          ":pipe-to sh -c 'rg -v \"^[[:space:]]*$\" | zellij ac write-chars \"$(cat)\\n\"'"
-          ":sh zellij ac move-focus-or-tab left"
+        C-g = [
+          ":pipe-to sh -c 'rg -v \"^[[:space:]]*$\" | tmux load-buffer -; tmux paste-buffer -t {right-of}; tmux send-keys -t {right-of} Enter'"
           "collapse_selection"
           "move_visual_line_down"
           "goto_first_nonwhitespace"

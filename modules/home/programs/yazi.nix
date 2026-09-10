@@ -40,6 +40,13 @@ in
             block = true;
           }
         ];
+        zed = [
+          {
+            run = ''zeditor %s'';
+            desc = "Edit in Zed";
+            orphan = true;
+          }
+        ];
         open = [
           {
             run = ''xdg-open %s1'';
@@ -100,8 +107,18 @@ in
             use = "office";
           }
           {
+            url = "*.json";
+            use = [
+              "zed"
+              "edit"
+            ];
+          }
+          {
             mime = "text/*";
-            use = "edit";
+            use = [
+              "zed"
+              "edit"
+            ];
           }
           {
             mime = "video/*";

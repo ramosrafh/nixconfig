@@ -57,19 +57,22 @@ let
       if [[ -s "$chooser_file" ]]; then
         selected="$(${pkgs.coreutils}/bin/head -n 1 "$chooser_file")"
         if [[ -d "$selected" ]]; then
-          destination="$(reserve_path "$selected" "$filename")"
-          ${pkgs.coreutils}/bin/printf '%s\n' "$destination" > "$out"
+          destination_dir="$selected"
         else
           destination_dir="$(${pkgs.coreutils}/bin/dirname "$selected")"
-          destination_name="$(${pkgs.coreutils}/bin/basename "$selected")"
-          destination="$(reserve_path "$destination_dir" "$destination_name")"
-          ${pkgs.coreutils}/bin/printf '%s\n' "$destination" > "$out"
+          filename="$(${pkgs.coreutils}/bin/basename "$selected")"
         fi
       elif [[ -s "$cwd_file" ]]; then
-        selected_dir="$(${pkgs.coreutils}/bin/head -n 1 "$cwd_file")"
-        destination="$(reserve_path "$selected_dir" "$filename")"
-        ${pkgs.coreutils}/bin/printf '%s\n' "$destination" > "$out"
+        destination_dir="$(${pkgs.coreutils}/bin/head -n 1 "$cwd_file")"
+      else
+        exit 0
       fi
+
+      read -r -e -p "Nome do arquivo [$filename]: " chosen_filename
+      [[ -n "$chosen_filename" ]] && filename="$chosen_filename"
+      [[ -n "$filename" ]] || exit 0
+      destination="$(reserve_path "$destination_dir" "$filename")"
+      ${pkgs.coreutils}/bin/printf '%s\n' "$destination" > "$out"
 
       ${pkgs.coreutils}/bin/rm -f "$chooser_file" "$cwd_file"
       exit 0

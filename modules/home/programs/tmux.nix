@@ -20,9 +20,13 @@ in
       set -g default-shell "${pkgs.fish}/bin/fish"
       set -g default-command "${pkgs.fish}/bin/fish"
       set -ag terminal-overrides ",xterm-256color:RGB"
-      set -as terminal-features ",kitty:RGB"
+      set -as terminal-features ",xterm-kitty:RGB:extkeys"
+      set -s extended-keys on
+      set -s extended-keys-format csi-u
 
       set -g allow-passthrough on
+      set -g get-clipboard both
+      set -g set-clipboard external
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
 

@@ -3,11 +3,11 @@ let
   herdr = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".herdr;
   ante = pkgs.stdenvNoCC.mkDerivation {
     pname = "ante";
-    version = "0.preview.91";
+    version = "0.preview.99";
 
     src = pkgs.fetchurl {
-      url = "https://download.ante.run/releases/v0.preview.91/ante-v0.preview.91-linux-x86_64-musl.tar.gz";
-      hash = "sha256-qdTKewsqK5v0m2ZDbTUJXP4DGtvtXukJF6QSvcQul9o=";
+      url = "https://download.ante.run/releases/v0.preview.99/ante-v0.preview.99-linux-x86_64-musl.tar.gz";
+      hash = "sha256-8mmOvzTVQzWuaMVCEJ9ihlr7X80fcOLtKdTqYKGNyMY=";
     };
 
     dontUnpack = true;
@@ -35,7 +35,7 @@ in
   home.packages = with pkgs; [
     goose-cli
     claude-code
-    awscli
+    awscli2
     codex
     herdr
     ante

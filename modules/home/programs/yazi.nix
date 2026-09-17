@@ -92,7 +92,10 @@ in
           }
           {
             url = "*.{csv,tsv,xlsx,xls,xlsb,ods,sheet}";
-            use = "spreadsheet";
+            use = [
+              "spreadsheet"
+              "office"
+            ];
           }
           {
             mime = "application/vnd.openxmlformats-officedocument.*";
@@ -142,6 +145,11 @@ in
           on = [ "<Esc>" ];
           run = "escape";
           desc = "Exit visual mode, clear selected, or cancel";
+        }
+        {
+          on = [ "<C-o>" ];
+          run = "open --interactive";
+          desc = "Open with...";
         }
         {
           on = [ "." ];

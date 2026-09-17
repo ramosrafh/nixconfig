@@ -54,7 +54,7 @@ let
             ascii_downcase as $app
             | if $app | test("firefox|librewolf|floorp|zen") then "<span foreground=\"#ff7139\">󰈹</span>"
               elif $app | test("chromium|chrome|brave|vivaldi") then "<span foreground=\"#4285f4\"></span>"
-              elif $app | test("alacritty|kitty|foot|wezterm|ghostty|terminal") then "<span foreground=\"${vesper.yellow}\"></span>"
+              elif $app | test("alacritty|kitty|foot|wezterm|ghostty|terminal") then "<span foreground=\"#000000\"></span>"
               elif $app | test("code|codium") then "<span foreground=\"#23a8f2\">󰨞</span>"
               elif $app | test("zed") then "<span foreground=\"#f2f2f2\">󰅩</span>"
               elif $app | test("nautilus|thunar|pcmanfm|dolphin") then "<span foreground=\"#f9e2af\">󰉋</span>"
@@ -302,7 +302,7 @@ in
           states = {
             good = 95;
             warning = 30;
-            critical = 20;
+            critical = 15;
           };
           format = "{icon} {capacity}%";
           format-charging = "󰂄 {capacity}%";
@@ -417,6 +417,14 @@ in
       #battery {
         color: ${vesper.text};
         border-radius: 0px 4px 4px 0px;
+      }
+
+      #battery.warning {
+        color: ${vesper.orange};
+      }
+
+      #battery.critical {
+        color: ${vesper.red};
       }
 
       #pulseaudio {

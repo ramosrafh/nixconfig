@@ -19,7 +19,7 @@ in
       claude-max = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=claude/opus claude";
       claude-codex = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=codex/opus claude";
       claude-glm = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=glm/opus claude";
-      ante-driva = "ante --provider driva --model gpt-5.6-sol";
+      ante-driva = "ante --provider driva --model gpt-6.1-sol";
       ante-openrouter = "ante --provider openrouter-responses --model openai/gpt-5.6-sol";
     };
     functions = {

@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -14,13 +15,26 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.1.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     niri-flake = {
-      url = "github:sodiboo/niri-flake";
+      # url = "github:sodiboo/niri-flake";
+      # TODO: change this back after associated PR is merged: https://github.com/sodiboo/niri-flake/pull/1850
+      url = "github:sodiboo/niri-flake?rev=6bb99ff875919f03ea6054026619d999061e1170";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -29,18 +43,29 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    query-on = {
-      url = "path:/home/ramos/git/query-on";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     llm-agents-nix = {
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    query-on = {
+      url = "git+ssh://git@github.com/ramosrafh/query-on.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, disko, lanzaboote, niri-flake, llm-agents-nix, ... }@inputs:
+  outputs =
+    {
+      nixpkgs,
+      nixpkgs-stable,
+      home-manager,
+      disko,
+      lanzaboote,
+      sops-nix,
+      niri-flake,
+      llm-agents-nix,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
       primaryUser = "ramos";
@@ -50,43 +75,70 @@
         inherit overlays;
         config.allowUnfree = true;
       };
-
-      mkHost = hostName: hostPath: nixpkgs.lib.nixosSystem {
+      pkgsStable = import nixpkgs-stable {
         inherit system;
-        specialArgs = { inherit inputs primaryUser; };
-        modules = [
-          hostPath
-          disko.nixosModules.disko
-          lanzaboote.nixosModules.lanzaboote
-          niri-flake.nixosModules.niri
-          { nixpkgs.overlays = overlays; }
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${primaryUser} = import ./modules/home;
-            home-manager.extraSpecialArgs = {
-              inherit inputs primaryUser;
-              hostConfig = hostName;
-            };
-          }
-        ];
+        config.allowUnfree = true;
+      };
+      stableMpvOverlay = _final: _prev: {
+        inherit (pkgsStable) mpv mpvScripts;
+      };
+
+      mkHost = import ./lib/mk-host.nix {
+        inherit
+          nixpkgs
+          home-manager
+          primaryUser
+          system
+          ;
       };
     in
     {
-      inherit primaryUser;
+      lib.primaryUser = primaryUser;
 
       nixosConfigurations = {
-        desk = mkHost "desk" ./hosts/desk;
-        book = mkHost "book" ./hosts/book;
+        desk = mkHost {
+          hostPath = ./hosts/desk;
+          homePath = ./hosts/desk/home.nix;
+          hostOverlays = overlays ++ [ stableMpvOverlay ];
+          homeExtraSpecialArgs = { inherit inputs; };
+          extraModules = [ niri-flake.nixosModules.niri ];
+        };
+        book = mkHost {
+          hostPath = ./hosts/book;
+          homePath = ./hosts/book/home.nix;
+          hostOverlays = overlays ++ [ stableMpvOverlay ];
+          homeExtraSpecialArgs = { inherit inputs; };
+          extraModules = [
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
+            niri-flake.nixosModules.niri
+          ];
+        };
+        server = mkHost {
+          hostPath = ./hosts/server;
+          nixpkgsInput = nixpkgs-stable;
+          # syswatch is not available in stable; expose only this package from
+          # the already pinned unstable package set.
+          hostOverlays = [
+            (_final: _prev: { inherit (pkgs) syswatch; })
+          ];
+          extraModules = [
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
+            sops-nix.nixosModules.sops
+          ];
+        };
       };
 
       devShells.${system} = import ./devshells {
         inherit pkgs;
       };
 
+      formatter.${system} = pkgs.nixfmt-tree;
+
       packages.${system} = {
         disko-install = disko.packages.${system}.disko-install;
+        query-on = inputs.query-on.packages.${system}.default;
         sbctl = pkgs.sbctl;
       };
     };

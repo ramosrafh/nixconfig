@@ -1,15 +1,24 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [
     ./hardware.nix
-    ../../modules/nixos
-    ../../modules/nixos/docker.nix
-    ../../modules/nixos/steam.nix
-    ../../modules/nixos/ollama.nix
+    ../../modules/nixos/base
+    ../../modules/nixos/profiles/workstation
+    ../../modules/nixos/programs/adb.nix
+    ../../modules/nixos/programs/nix-ld.nix
+    ../../modules/nixos/programs/steam.nix
+    ../../modules/nixos/services/docker.nix
+    ../../modules/nixos/services/localsend.nix
+    ../../modules/nixos/services/netbird.nix
     ../../modules/nixos/virtualization/windows-vm.nix
   ];
 
   system.stateVersion = "26.05";
   networking.hostName = "desk";
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # llama.cpp runs in the desktop Compose stack. Its API is reachable only
+  # through the NetBird interface, for the homelab server to consume.
+  networking.firewall.interfaces."wt0".allowedTCPPorts = [ 8080 ];
 
   boot.loader = {
     timeout = 3;

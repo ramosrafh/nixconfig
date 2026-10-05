@@ -1,16 +1,21 @@
 # nixconfig
 
-NixOS configuration for `desk` and `book` (ASUS Zenbook S 16 UM5606GA).
+NixOS configuration for `desk`, `book` (ASUS Zenbook S 16 UM5606GA), and
+`server` (Intel Core i7-6700, 32 GiB RAM, 128 GB SATA SSD).
 
 The Disko, LUKS2, Secure Boot, TPM2, and recovery procedure is in
-[install.md](install.md). The `book` host uses Btrfs home snapshots with 24
+[docs/book-installation.md](docs/book-installation.md). The `book` host uses Btrfs home snapshots with 24
 hourly, 7 daily, and 4 weekly retention points.
+
+The server installation and recovery procedure is in
+[docs/server-installation.md](docs/server-installation.md).
 
 ## Rebuild
 
 ```bash
 sudo nixos-rebuild switch --flake .#desk
 sudo nixos-rebuild switch --flake .#book
+sudo nixos-rebuild switch --flake .#server
 ```
 
 ## Development shells

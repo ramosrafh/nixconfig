@@ -9,14 +9,21 @@ let
       fi
     fi
   '';
-in {
+in
+{
   imports = [
     ./hardware.nix
     ./disko.nix
-    ./secure-boot.nix
     ./snapshots.nix
-    ../../modules/nixos
-    ../../modules/nixos/docker.nix
+    ../../modules/nixos/base
+    ../../modules/nixos/profiles/workstation
+    ../../modules/nixos/profiles/laptop
+    ../../modules/nixos/programs/adb.nix
+    ../../modules/nixos/programs/nix-ld.nix
+    ../../modules/nixos/security/secure-boot.nix
+    ../../modules/nixos/services/docker.nix
+    ../../modules/nixos/services/localsend.nix
+    ../../modules/nixos/services/netbird.nix
   ];
 
   system.stateVersion = "26.05";
@@ -25,12 +32,21 @@ in {
 
   boot.kernelPackages = pkgs.linuxPackages_6_18;
 
+  specialisation.kernelLatest.configuration = {
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    boot.kernelParams = [ "amdgpu.dcdebugmask=0x400" ];
+  };
+
   virtualisation.docker.storageDriver = "overlay2";
 
   boot = {
     loader.timeout = 3;
-    consoleLogLevel = 0;
     initrd.verbose = false;
+    consoleLogLevel = 0;
+    lanzaboote.measuredBoot.autoCryptenroll = {
+      enable = true;
+      device = "/dev/disk/by-partlabel/cryptroot";
+    };
     # The Ryzen AI 9 465 uses the amd-pstate EPP interface.
     kernelParams = [
       "amd_pstate=active"
@@ -50,41 +66,22 @@ in {
   };
 
   services = {
-    fwupd.enable = true;
-    fstrim.enable = true;
     logind.settings.Login = {
       HandlePowerKey = "ignore";
-      HandleLidSwitch = "suspend";
-      HandleLidSwitchExternalPower = "suspend";
       HoldoffTimeoutSec = "2s";
     };
     triggerhappy = {
       enable = true;
       user = "root";
-      bindings = [{
-        keys = [ "POWER" ];
-        event = "release";
-        cmd = "${suspendOnPowerKey}";
-      }];
+      bindings = [
+        {
+          keys = [ "POWER" ];
+          event = "release";
+          cmd = "${suspendOnPowerKey}";
+        }
+      ];
     };
     xserver.videoDrivers = [ "amdgpu" ];
-    auto-cpufreq = {
-      enable = true;
-      settings = {
-        battery = {
-          governor = "powersave";
-          turbo = "never";
-          energy_performance_preference = "power";
-        };
-        charger = {
-          governor = "powersave";
-          turbo = "auto";
-          energy_performance_preference = "balance_performance";
-        };
-      };
-    };
-    # auto-cpufreq owns power profiles on this host.
-    power-profiles-daemon.enable = false;
   };
 
   powerManagement = {
@@ -103,7 +100,7 @@ in {
     ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
   '';
 
-  users.groups.video = {};
+  users.groups.video = { };
 
   environment.sessionVariables = {
     AMD_VULKAN_ICD = "RADV";

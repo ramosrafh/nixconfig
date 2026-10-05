@@ -3,11 +3,11 @@ let
   herdr = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".herdr;
   ante = pkgs.stdenvNoCC.mkDerivation {
     pname = "ante";
-    version = "0.preview.99";
+    version = "0.2.7";
 
     src = pkgs.fetchurl {
-      url = "https://download.ante.run/releases/v0.preview.99/ante-v0.preview.99-linux-x86_64-musl.tar.gz";
-      hash = "sha256-8mmOvzTVQzWuaMVCEJ9ihlr7X80fcOLtKdTqYKGNyMY=";
+      url = "https://download.ante.run/releases/v0.2.7/ante-v0.2.7-linux-x86_64-musl.tar.gz";
+      hash = "sha256-caAYNMVuyhnKdZe5Y9kSD+9HzjDnxgHAOpRaJltf9ro=";
     };
 
     dontUnpack = true;

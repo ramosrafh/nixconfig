@@ -23,6 +23,11 @@ let
             display_name = "Driva GPT-5.6 Sol";
             effort = "high";
           }
+          {
+            id = "gpt-6.1-sol";
+            display_name = "Driva GPT-6.1 Sol";
+            effort = "high";
+          }
         ];
       };
     }
@@ -95,12 +100,12 @@ let
 
   settingsOverlay = pkgs.writeText "ante-settings-overlay.json" (
     builtins.toJSON {
-      model = "gpt-5.6-sol";
+      model = "gpt-6.1-sol";
       provider = "driva";
       skills = true;
-      model_effort."gpt-5.6-sol" = "high";
+      model_effort."gpt-6.1-sol" = "high";
       provider_model = {
-        driva = "gpt-5.6-sol";
+        driva = "gpt-6.1-sol";
         "openrouter-responses" = "openai/gpt-5.6-sol";
       };
       mcp_servers = {

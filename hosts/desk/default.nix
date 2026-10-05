@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [
     ./hardware.nix
     ../../modules/nixos/base
@@ -14,6 +14,7 @@
 
   system.stateVersion = "26.05";
   networking.hostName = "desk";
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # llama.cpp runs in the desktop Compose stack. Its API is reachable only
   # through the NetBird interface, for the homelab server to consume.

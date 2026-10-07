@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   inputs,
@@ -7,89 +6,6 @@
 }:
 let
   vesper = import ../themes/vesper.nix;
-  termfilechooserYazi = pkgs.writeShellScript "termfilechooser-yazi" ''
-    multiple="$1"
-    directory="$2"
-    save="$3"
-    path="$4"
-    out="$5"
-
-    if [[ "$save" == "1" ]]; then
-      filename="$(${pkgs.coreutils}/bin/basename "$path")"
-      start_dir="$(${pkgs.coreutils}/bin/dirname "$path")"
-      normalized_filename="$(${pkgs.gnused}/bin/sed 's/_*$//' <<< "$filename")"
-      if [[ "$normalized_filename" != "$filename" && -e "$start_dir/$normalized_filename" ]]; then
-        filename="$normalized_filename"
-      fi
-      chooser_file="$out.choice"
-      cwd_file="$out.cwd"
-
-      reserve_path() {
-        local dir="$1"
-        local name="$2"
-        local stem="$name"
-        local extension=""
-        local candidate="$dir/$name"
-        local index=1
-
-        if [[ "$name" == *.* && "$name" != .* ]]; then
-          stem="''${name%.*}"
-          extension=".''${name##*.}"
-        fi
-
-        while ! (set -o noclobber; : > "$candidate") 2>/dev/null; do
-          candidate="$dir/$stem ($index)$extension"
-          ((index++))
-        done
-
-        ${pkgs.coreutils}/bin/printf '%s\n' "$candidate"
-      }
-
-      [[ -d "$start_dir" ]] || start_dir="${config.home.homeDirectory}/Downloads"
-      ${pkgs.coreutils}/bin/rm -f "$chooser_file" "$cwd_file"
-
-      ${pkgs.kitty}/bin/kitty --title termfilechooser \
-        ${pkgs.yazi}/bin/yazi \
-        --chooser-file="$chooser_file" \
-        --cwd-file="$cwd_file" \
-        "$start_dir"
-
-      if [[ -s "$chooser_file" ]]; then
-        selected="$(${pkgs.coreutils}/bin/head -n 1 "$chooser_file")"
-        if [[ -d "$selected" ]]; then
-          destination_dir="$selected"
-        else
-          destination_dir="$(${pkgs.coreutils}/bin/dirname "$selected")"
-          filename="$(${pkgs.coreutils}/bin/basename "$selected")"
-        fi
-      elif [[ -s "$cwd_file" ]]; then
-        destination_dir="$(${pkgs.coreutils}/bin/head -n 1 "$cwd_file")"
-      else
-        exit 0
-      fi
-
-      read -r -e -p "Nome do arquivo [$filename]: " chosen_filename
-      [[ -n "$chosen_filename" ]] && filename="$chosen_filename"
-      [[ -n "$filename" ]] || exit 0
-      destination="$(reserve_path "$destination_dir" "$filename")"
-      ${pkgs.coreutils}/bin/printf '%s\n' "$destination" > "$out"
-
-      ${pkgs.coreutils}/bin/rm -f "$chooser_file" "$cwd_file"
-      exit 0
-    fi
-
-    export PATH=${lib.makeBinPath [
-      pkgs.bash
-      pkgs.coreutils
-      pkgs.gnused
-      pkgs.kitty
-      pkgs.yazi
-    ]}
-    export TERMCMD="${pkgs.kitty}/bin/kitty --title termfilechooser"
-    exec ${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh \
-      "$multiple" "$directory" "$save" "$path" "$out" "''${6:-0}"
-  '';
-
   strata = pkgs.stdenvNoCC.mkDerivation {
     pname = "strata";
     version = "0.8.1";
@@ -180,17 +96,12 @@ in
     dim_text = "${vesper.muted}"
   '';
 
-  xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
-    [filechooser]
-    cmd=${termfilechooserYazi}
-    default_dir=${config.home.homeDirectory}/Downloads
-  '';
-
   home.activation.setDesktopDefaults = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     set_default() {
       ${pkgs.xdg-utils}/bin/xdg-mime default "$2" "$1"
     }
 
+    set_default inode/directory io.github.lgse.Strata.desktop
     set_default text/csv visigrid.desktop
     set_default text/tab-separated-values visigrid.desktop
     set_default application/vnd.openxmlformats-officedocument.spreadsheetml.sheet visigrid.desktop

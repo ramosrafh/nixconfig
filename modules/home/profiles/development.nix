@@ -1,6 +1,6 @@
 { pkgs, inputs, ... }:
 let
-  herdr = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".herdr;
+  # herdr = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".herdr;
   ante = pkgs.stdenvNoCC.mkDerivation {
     pname = "ante";
     version = "0.2.7";
@@ -37,7 +37,7 @@ in
     claude-code
     awscli2
     codex
-    herdr
+    # herdr
     ante
   ];
 }

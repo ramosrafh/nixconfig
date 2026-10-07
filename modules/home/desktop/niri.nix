@@ -107,13 +107,6 @@ in
         };
       }
       {
-        matches = [ { title = "^termfilechooser$"; } ];
-        open-floating = true;
-        open-focused = true;
-        default-window-height = { proportion = 0.8; };
-        default-column-width = { proportion = 0.7; };
-      }
-      {
         matches = [
           { app-id = "^kitty$"; }
           { app-id = "^foot$"; }
@@ -216,10 +209,7 @@ in
       "Mod+Shift+Slash".action.show-hotkey-overlay = [ ];
 
       "Mod+Return".action.spawn = [ "kitty" ];
-      "Mod+E".action.spawn = [
-        "kitty"
-        "yazi"
-      ];
+      "Mod+E".action.spawn = [ "strata" ];
       "Mod+R".action.spawn = [ "fuzzel" ];
       "Mod+S".action.spawn = [
         "fuzzel-omnibar"

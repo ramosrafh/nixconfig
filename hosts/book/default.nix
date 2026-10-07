@@ -34,7 +34,12 @@ in
 
   specialisation.kernelLatest.configuration = {
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
-    boot.kernelParams = [ "amdgpu.dcdebugmask=0x400" ];
+    boot.kernelPatches = [
+      {
+        name = "oled-replay-freeze";
+        patch = ./oled-replay-freeze.patch;
+      }
+    ];
   };
 
   virtualisation.docker.storageDriver = "overlay2";

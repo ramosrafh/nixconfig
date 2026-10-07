@@ -119,6 +119,12 @@ let
   );
 in
 {
+  programs.fish.shellInit = ''
+    if test -x "$HOME/.ante/bin/ante"
+      fish_add_path --path --prepend "$HOME/.ante/bin"
+    end
+  '';
+
   home.packages = [
     mcpPostgres
     mcpClickhouse

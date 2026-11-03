@@ -6,7 +6,9 @@
     settings = {
       General = {
         Enable = "Source,Sink,Media,Socket";
-        Experimental = true;
+        # Experimental desligado: as flags experimentais do BlueZ podem
+        # quebrar/atrasar o handshake HFP de fones novos (ex.: FreeBuds Pro 5).
+        Experimental = false;
         # Better device discovery
         DiscoverableTimeout = 0;
         # Fast connection

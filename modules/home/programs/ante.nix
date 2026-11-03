@@ -5,7 +5,7 @@
   ...
 }:
 let
-  drivaBaseUrl = "http://vpn-driva.netbird.driva.io:8317/v1";
+  drivaBaseUrl = "http://ai-server.netbird.driva.io:8317/v1";
 
   catalogOverlay = pkgs.writeText "ante-catalog-overlay.json" (
     builtins.toJSON {
@@ -13,10 +13,8 @@ let
         display_name = "Driva";
         base_url = drivaBaseUrl;
         wire_style = "OpenAiResponse";
-        auth.header = {
-          name = "x-api-key";
-          env_key = "OPENAI_API_KEY";
-        };
+        credential = "env:OPENAI_API_KEY";
+        credential_header = "x-api-key";
         preferred_models = [
           {
             id = "gpt-5.6-sol";
@@ -26,6 +24,11 @@ let
           {
             id = "gpt-6.1-sol";
             display_name = "Driva GPT-6.1 Sol";
+            effort = "high";
+          }
+          {
+            id = "claude-opus-5-5";
+            display_name = "Driva Claude Opus 5.5";
             effort = "high";
           }
         ];
@@ -151,7 +154,9 @@ in
       temporary="$(${pkgs.coreutils}/bin/mktemp "$ante_home_dir/.ante-config.XXXXXX")"
 
       if test -s "$target"; then
-        if ! ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$target" "$overlay" > "$temporary"; then
+        # Ante 0.3.1 rejects providers that still contain the legacy `auth`
+        # field, even when the replacement credential fields are present.
+        if ! ${pkgs.jq}/bin/jq -s '.[0] * .[1] | del(.providers.driva.auth)' "$target" "$overlay" > "$temporary"; then
           ${pkgs.coreutils}/bin/rm -f "$temporary"
           return 1
         fi

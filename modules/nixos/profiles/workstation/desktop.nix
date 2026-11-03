@@ -20,11 +20,9 @@
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
-    # Force terminal-based SSH password prompts instead of gcr/askpass.
-    SSH_ASKPASS = "";
-    SSH_ASKPASS_REQUIRE = "never";
-    GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
-    GCR_SSH_ASKPASS = "";
+    # AMD GPU: use the RADV Vulkan driver and the Wayland SDL backend.
+    AMD_VULKAN_ICD = "RADV";
+    SDL_VIDEODRIVER = "wayland";
   };
 
   systemd.user.services.gnome-keyring-ssh.enable = false;
@@ -89,7 +87,6 @@
     pavucontrol
     pciutils
     usbutils
-    ntfs3g
     gnome-disk-utility
     gtk4
     libadwaita

@@ -9,7 +9,8 @@ in
     config = {
       # General
       profile = "gpu-hq";
-      vo = "gpu-next";
+      # Fall back to software Wayland output if GPU initialization fails.
+      vo = "gpu-next,wlshm";
       gpu-api = "vulkan";
       hwdec = "auto-safe";
 

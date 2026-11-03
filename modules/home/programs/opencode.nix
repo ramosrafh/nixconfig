@@ -9,7 +9,7 @@
     provider.driva = {
       npm = "@ai-sdk/openai-compatible";
       options = {
-        baseURL = "http://vpn-driva.netbird.driva.io:8317/v1";
+        baseURL = "http://ai-server.netbird.driva.io:8317/v1";
         apiKey = "{env:OPENAI_API_KEY}";
       };
       models = {

@@ -16,9 +16,9 @@ in
       ta = "tmux attach-session";
       tls = "tmux list-sessions";
 
-      claude-max = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=claude/opus claude";
-      claude-codex = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=codex/opus claude";
-      claude-glm = "env ANTHROPIC_BASE_URL=http://vpn-driva.netbird.driva.io:8317 ANTHROPIC_MODEL=glm/opus claude";
+      claude-max = "env ANTHROPIC_BASE_URL=http://ai-server.netbird.driva.io:8317 ANTHROPIC_MODEL=claude/opus claude";
+      claude-codex = "env ANTHROPIC_BASE_URL=http://ai-server.netbird.driva.io:8317 ANTHROPIC_MODEL=codex/opus claude";
+      claude-glm = "env ANTHROPIC_BASE_URL=http://ai-server.netbird.driva.io:8317 ANTHROPIC_MODEL=glm/opus claude";
       ante-driva = "ante --provider driva --model gpt-6.1-sol";
       ante-openrouter = "ante --provider openrouter-responses --model openai/gpt-5.6-sol";
     };
@@ -49,13 +49,19 @@ in
       };
 
       __nixconfig_host = {
+        description = "Resolve o host do nixconfig (padrão: hostname atual)";
         body = ''
-          switch "$argv[1]"
+          set -l host $argv[1]
+          if test -z "$host"
+              set host (hostname)
+          end
+          switch "$host"
               case book desk
+                  echo "$host"
                   return 0
               case '*'
-                  echo "host inválido: $argv[1]"
-                  echo "use: book ou desk"
+                  echo "host inválido: $host" >&2
+                  echo "use: book ou desk" >&2
                   return 1
           end
         '';
@@ -72,16 +78,16 @@ in
       nrs = {
         description = "Switch nixconfig host";
         body = ''
-          __nixconfig_host "$argv[1]"; or return 1
-          sudo nixos-rebuild switch --flake "path:$HOME/nixconfig#$argv[1]"
+          set -l host (__nixconfig_host "$argv[1]"); or return 1
+          sudo nixos-rebuild switch --flake "path:$HOME/nixconfig#$host"
         '';
       };
 
       nrb = {
         description = "Build nixconfig host for next boot";
         body = ''
-          __nixconfig_host "$argv[1]"; or return 1
-          sudo nixos-rebuild boot --flake "path:$HOME/nixconfig#$argv[1]"
+          set -l host (__nixconfig_host "$argv[1]"); or return 1
+          sudo nixos-rebuild boot --flake "path:$HOME/nixconfig#$host"
         '';
       };
     };

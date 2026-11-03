@@ -159,12 +159,6 @@ in
     })
   ];
 
-  home.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "niri";
-    XDG_SESSION_TYPE = "wayland";
-    XDG_SESSION_DESKTOP = "niri";
-  };
-
   dconf.settings = {
     "org/blueman/general".symbolic-status-icons = true;
     "org/gtk/gtk4/settings/file-chooser".sort-directories-first = true;

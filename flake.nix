@@ -43,11 +43,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    llm-agents-nix = {
-      url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     query-on = {
       url = "git+ssh://git@github.com/ramosrafh/query-on.git";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -63,24 +58,18 @@
       lanzaboote,
       sops-nix,
       niri-flake,
-      llm-agents-nix,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
       primaryUser = "ramos";
+      nixpkgsConfig = {
+        allowUnfree = true;
+      };
       overlays = import ./overlays { inherit inputs; };
       pkgs = import nixpkgs {
-        inherit system;
-        inherit overlays;
-        config.allowUnfree = true;
-      };
-      pkgsStable = import nixpkgs-stable {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      stableMpvOverlay = _final: _prev: {
-        inherit (pkgsStable) mpv mpvScripts;
+        inherit system overlays;
+        config = nixpkgsConfig;
       };
 
       mkHost = import ./lib/mk-host.nix {
@@ -99,14 +88,14 @@
         desk = mkHost {
           hostPath = ./hosts/desk;
           homePath = ./hosts/desk/home.nix;
-          hostOverlays = overlays ++ [ stableMpvOverlay ];
+          hostOverlays = overlays;
           homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [ niri-flake.nixosModules.niri ];
         };
         book = mkHost {
           hostPath = ./hosts/book;
           homePath = ./hosts/book/home.nix;
-          hostOverlays = overlays ++ [ stableMpvOverlay ];
+          hostOverlays = overlays;
           homeExtraSpecialArgs = { inherit inputs; };
           extraModules = [
             disko.nixosModules.disko
@@ -117,8 +106,8 @@
         server = mkHost {
           hostPath = ./hosts/server;
           nixpkgsInput = nixpkgs-stable;
-          # syswatch is not available in stable; expose only this package from
-          # the already pinned unstable package set.
+          # syswatch does not exist in the stable channel, so expose just that
+          # one package from the already-evaluated unstable set.
           hostOverlays = [
             (_final: _prev: { inherit (pkgs) syswatch; })
           ];

@@ -1,14 +1,7 @@
 { ... }:
 let
-  wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
-  wallpaperCmd = "awww img ${wallpaper}";
+  inherit (import ../../lib/kanshi.nix { }) mkProfile;
 
-  mkProfile = name: outputs: {
-    profile = {
-      inherit name outputs;
-      exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
-    };
-  };
   acer = position: {
     criteria = "Acer Technologies XB241YU #ASOV6yMzDgvd";
     mode = "2560x1440@165.000Hz";

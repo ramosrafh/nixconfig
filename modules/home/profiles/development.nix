@@ -1,6 +1,5 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 let
-  # herdr = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".herdr;
   ante = pkgs.stdenvNoCC.mkDerivation {
     pname = "ante";
     version = "0.2.7";
@@ -18,11 +17,6 @@ let
 
     meta.platforms = [ "x86_64-linux" ];
   };
-  # goose-cli = builtins.fetchClosure {
-  #   fromStore = "https://cache.numtide.com";
-  #   fromPath = inputs.llm-agents-nix.packages."${pkgs.stdenv.hostPlatform.system}".goose-cli;
-  #   inputAddressed = true;
-  # };
 in
 {
   imports = [
@@ -37,7 +31,6 @@ in
     claude-code
     awscli2
     codex
-    # herdr
     ante
   ];
 }

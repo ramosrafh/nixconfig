@@ -2,7 +2,6 @@
   imports = [
     ./bluetooth.nix
     ./desktop.nix
-    ./development.nix
     ./fonts.nix
     ./greetd.nix
     ./hyprlock.nix

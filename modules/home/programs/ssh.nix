@@ -50,6 +50,13 @@ in
       }
       // controlOptions;
 
+      "inovacao" = {
+        HostName = "100.90.144.234";
+        User = "ubuntu";
+        IdentityFile = "~/.ssh/driva";
+      }
+      // controlOptions;
+
       "github.com-ramos" = githubHost "~/.ssh/ramos";
       "github.com-driva" = githubHost "~/.ssh/driva";
       "github.com" = githubHost "~/.ssh/ramos";

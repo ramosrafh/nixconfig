@@ -1,14 +1,7 @@
 { ... }:
 let
-  wallpaper = "${../../assets/wallpapers/current_wallpaper.jpg}";
-  wallpaperCmd = "awww img ${wallpaper}";
+  inherit (import ../../lib/kanshi.nix { }) mkProfile;
 
-  mkProfile = name: outputs: {
-    profile = {
-      inherit name outputs;
-      exec = [ "sleep 0.5 && ${wallpaperCmd}" ];
-    };
-  };
   bookInternal = {
     criteria = "eDP-1";
     mode = "2880x1800@120.000Hz";
@@ -28,7 +21,10 @@ let
   };
 in
 {
-  imports = [ ../../modules/home/profiles/desktop.nix ];
+  imports = [
+    ../../modules/home/profiles/desktop.nix
+    ./wireplumber.nix
+  ];
 
   programs.niri.settings.input.power-key-handling.enable = false;
   services.kanshi.settings = [

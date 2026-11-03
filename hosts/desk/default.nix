@@ -42,9 +42,4 @@
     enable = true;
     enable32Bit = true;
   };
-
-  environment.sessionVariables = {
-    SDL_VIDEODRIVER = "wayland";
-    AMD_VULKAN_ICD = "RADV";
-  };
 }

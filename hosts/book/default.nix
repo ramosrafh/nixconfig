@@ -106,9 +106,4 @@ in
   '';
 
   users.groups.video = { };
-
-  environment.sessionVariables = {
-    AMD_VULKAN_ICD = "RADV";
-    SDL_VIDEODRIVER = "wayland";
-  };
 }

@@ -47,6 +47,11 @@
       url = "git+ssh://git@github.com/ramosrafh/query-on.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    grok-bot = {
+      url = "github:jordangarrison/grok-bot-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

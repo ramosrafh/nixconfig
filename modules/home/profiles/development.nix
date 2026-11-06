@@ -2,11 +2,11 @@
 let
   ante = pkgs.stdenvNoCC.mkDerivation {
     pname = "ante";
-    version = "0.2.7";
+    version = "0.3.2";
 
     src = pkgs.fetchurl {
-      url = "https://download.ante.run/releases/v0.2.7/ante-v0.2.7-linux-x86_64-musl.tar.gz";
-      hash = "sha256-caAYNMVuyhnKdZe5Y9kSD+9HzjDnxgHAOpRaJltf9ro=";
+      url = "https://download.ante.run/releases/v0.3.2/ante-v0.3.2-linux-x86_64-musl.tar.gz";
+      hash = "sha256-bJXuJ7BzfCNojono9wTOQuwwOpaCxsW4Ukv9uyUZPKQ=";
     };
 
     dontUnpack = true;

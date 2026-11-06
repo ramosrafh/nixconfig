@@ -8,11 +8,11 @@ let
   vesper = import ../themes/vesper.nix;
   strata = pkgs.stdenvNoCC.mkDerivation {
     pname = "strata";
-    version = "0.8.1";
+    version = "1.1.1";
 
     src = pkgs.fetchurl {
-      url = "https://github.com/lgse/strata/releases/download/v0.8.1/strata-0.8.1-x86_64-unknown-linux-gnu.tar.gz";
-      hash = "sha256-E14SHfP1kSRnJBEDsNbh/ISC2YHesp3Ox8322lQOOC4=";
+      url = "https://github.com/lgse/strata/releases/download/v1.1.1/strata-1.1.1-x86_64-unknown-linux-gnu.tar.gz";
+      hash = "sha256-4FUuB3L83tE6gohHR7KPCzIiCjKTHNpuVfg1dbvlBzQ=";
     };
 
     nativeBuildInputs = with pkgs; [
@@ -28,12 +28,15 @@ let
       glib
       graphene
       gsettings-desktop-schemas
+      gst_all_1.gstreamer
+      gst_all_1.gst-plugins-base
       gst_all_1.gst-libav
       gst_all_1.gst-plugins-good
       gtk4
       gtksourceview5
       pango
       poppler
+      stdenv.cc.cc.lib
     ];
 
     installPhase = ''
@@ -134,8 +137,10 @@ in
   home.packages = with pkgs; [
     strata
     firefox
+    thunderbird
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
     inputs.query-on.packages."${pkgs.stdenv.hostPlatform.system}".default
+    inputs.grok-bot.packages."${pkgs.stdenv.hostPlatform.system}".default
     zed-editor
     font-awesome
     localsend

@@ -2,7 +2,6 @@
   environment.systemPackages = [ pkgs.sbctl ];
 
   boot = {
-    initrd.systemd.enable = true;
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = lib.mkForce false;

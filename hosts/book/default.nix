@@ -46,7 +46,6 @@ in
 
   boot = {
     loader.timeout = 3;
-    initrd.verbose = false;
     consoleLogLevel = 0;
     lanzaboote.measuredBoot.autoCryptenroll = {
       enable = true;

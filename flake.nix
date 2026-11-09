@@ -52,6 +52,11 @@
       url = "github:jordangarrison/grok-bot-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # AMD NPU (XDNA2) + ROCm inference stack: XRT, amdxdna plugin,
+    # FastFlowLM, Lemonade. Intentionally NOT following our nixpkgs so the
+    # prebuilt backends keep matching the project's Cachix cache.
+    nix-amd-ai.url = "github:noamsto/nix-amd-ai";
   };
 
   outputs =
@@ -106,6 +111,7 @@
             disko.nixosModules.disko
             lanzaboote.nixosModules.lanzaboote
             niri-flake.nixosModules.niri
+            inputs.nix-amd-ai.nixosModules.default
           ];
         };
         server = mkHost {

@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  primaryUser,
+  ...
+}:
 let
   powerKeyGuard = "/run/power-key-suspend-guard";
   suspendOnPowerKey = pkgs.writeShellScript "suspend-on-power-key" ''
@@ -105,4 +110,20 @@ in
   '';
 
   users.groups.video = { };
+
+  # AMD Ryzen AI 9 465: XDNA2 NPU (Strix Point) + Radeon 890M (gfx1150).
+  # Provided by the nix-amd-ai flake module (XRT, amdxdna, FastFlowLM,
+  # Lemonade). The amdxdna kernel module is already loaded in hardware.nix.
+  hardware.amd-npu = {
+    enable = true;
+    enableNPU = true; # XDNA2 NPU
+    enableFastFlowLM = true; # LLM inference on the NPU
+    enableLemonade = true; # OpenAI-compatible local server
+    enableROCm = true; # ROCm GPU backends (llamacpp + sd-cpp)
+    enableVulkan = true; # Vulkan GPU backends
+    # gpuTarget defaults to gfx1150 (Strix Point) — correct for the 880M.
+    lemonade.user = primaryUser;
+  };
+
+  users.users.${primaryUser}.extraGroups = [ "render" ];
 }
